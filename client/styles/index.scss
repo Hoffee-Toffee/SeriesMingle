@@ -1,6 +1,101 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&display=swap');
+.layer {
+  display: flex;
+  justify-content: space-between;
+  border: darkblue 2px solid;
+  background-color: blue;
+  padding: 0.5em;
+  margin: 0.1em;
+}
 
-html, 
-body {
-  font-family: 'Montserrat', sans-serif;
+.options > *,
+.layer > button {
+  border: orangered 2px solid;
+  border-radius: 0.3em;
+  background-color: darkred;
+  color: white;
+  padding: 0.3em;
+  margin: 0 0.25em;
+  display: inline-block;
+}
+
+.options input {
+  color: orangered;
+  background-color: white;
+}
+
+.options div select {
+  border: none;
+  background-color: darkred;
+  appearance: none;
+  padding: 0 0.3em;
+  margin: 0 0.3em;
+  color: #d7e300;
+}
+
+.options span {
+  cursor: default;
+}
+
+.options div button,
+.layer > button {
+  color: hsl(60deg 100% 38.44%);
+  background-color: transparent;
+  border: none;
+  margin: 0 0.1em;
+  margin-left: 0.2em;
+  padding: 0;
+  cursor: pointer;
+  float: right;
+}
+
+.hide {
+  display: none;
+}
+
+#scheduleVisualization {
+  display: -webkit-inline-box;
+  height: auto;
+  background: repeating-linear-gradient(
+    180deg,
+    grey 0px,
+    grey 25px,
+    white 25px,
+    white 50px
+  );
+  background-color: #f0f0f0;
+}
+
+.episode-marker {
+  margin: 1px;
+  height: 20px;
+  border: 2px solid black;
+}
+
+#key span {
+  padding: 10px;
+  display: inline-block;
+  margin: 5px;
+}
+
+#key span::after {
+  content: attr(txt);
+  padding: 0 5px;
+  color: white;
+  background-color: black;
+  border: 1px solid black;
+}
+
+.part.episode-marker {
+  border-style: dashed;
+}
+
+.options span select {
+  font-size: x-small !important;
+  color: #d7e300;
+}
+
+.options label, .options span select {
+  display: flex;
+  font-size: smaller;
+  margin: 0 2px;
 }
