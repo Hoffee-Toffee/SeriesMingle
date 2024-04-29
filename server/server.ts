@@ -1,5 +1,7 @@
 import express from 'express'
 import * as Path from 'node:path'
+import dotenv from 'dotenv'
+dotenv.config()
 
 import tmdbRoutes from './routes/tmdb.ts'
 
