@@ -14,13 +14,14 @@
     "dev:client": "vite",
     "dev:server": "tsx watch server/index.ts",
     "build": "run-s build:client build:server",
-    "build:client": "vite build --base=$npm_package_config_base",
+    "build:client": "vite build --base=$npm_package_config_base --assetsDir=$npm_package_config_assets_dir",
     "build:server": "esbuild --packages=external --platform=node --format=esm --outfile=dist/server.js --bundle server/index.ts",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "knex": "knex --knexfile ./server/db/knexfile.js"
   },
   "config": {
-    "base": "/"
+    "base": "/",
+    "assets_dir": "assets"
   },
   "eslintConfig": {
     "extends": "@devacademy/eslint-config/react",
