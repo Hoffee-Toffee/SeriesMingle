@@ -2,7 +2,12 @@ import server from './server.ts'
 
 const PORT = process.env.PORT || 3000
 
-server.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log('Server listening on port', PORT)
-})
+// Check if this module is the main module
+if (require.main === module) {
+  // Start the server only if this module is the main module
+  server.listen(PORT, () => {
+    console.log('Server listening on port', PORT)
+  })
+}
+
+export default server
