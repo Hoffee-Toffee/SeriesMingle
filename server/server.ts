@@ -1,5 +1,11 @@
 import express from 'express'
 import * as Path from 'node:path'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+
+// Get the directory name of the current module file
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
 import dotenv from 'dotenv'
 dotenv.config()
 
