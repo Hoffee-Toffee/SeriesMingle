@@ -21,7 +21,15 @@ export default function Schedule({ schedule, colors }) {
           {schedule.map((entry, i) => (
             <div
               title={entry.title}
-              className={`episode-marker${entry.part ? ' part' : ''}`}
+              className={[
+                'episode-marker',
+                entry.part && 'part',
+                entry.premier && 'premier',
+                entry.finale && 'finale',
+                entry.layer % 2 && 'odd',
+              ]
+                .filter(Boolean)
+                .join(' ')}
               key={i}
               style={{
                 marginTop: `${entry.layer * 25}px`,

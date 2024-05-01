@@ -25,6 +25,9 @@ export function generateSchedule(layers, mpSpacing) {
                   season: season.season,
                   show_id: entry.id,
                   show_title: entry.title,
+                  // Set 'premier' and 'finale' depending on if first/last of this season
+                  premier: episode.episode === 1,
+                  finale: episode.episode === season.episodes.length,
                 }
               }),
             )
@@ -115,6 +118,8 @@ export function generateSchedule(layers, mpSpacing) {
                 show_title: first.show_title,
                 episodes: series,
                 part: true,
+                premier: series.some((episode) => episode.premier),
+                finale: series.some((episode) => episode.finale),
               })
             }
 

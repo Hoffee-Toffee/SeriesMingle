@@ -38,7 +38,7 @@
 
 .options div button,
 .layer > button {
-  color: hsl(60deg 100% 38.44%);
+  color: hsl(60, 100%, 38.44%);
   background-color: transparent;
   border: none;
   margin: 0 0.1em;
@@ -55,20 +55,8 @@
 #scheduleVisualization {
   display: -webkit-inline-box;
   height: auto;
-  background: repeating-linear-gradient(
-    180deg,
-    grey 0px,
-    grey 25px,
-    white 25px,
-    white 50px
-  );
+  background: repeating-linear-gradient(180deg, grey 0px, grey 25px, white 25px, white 50px);
   background-color: #f0f0f0;
-}
-
-.episode-marker {
-  margin: 1px;
-  height: 20px;
-  border: 2px solid black;
 }
 
 #key span {
@@ -98,4 +86,64 @@
   display: flex;
   font-size: smaller;
   margin: 0 2px;
+}
+
+.episode-marker {
+  margin: 1px;
+  height: 20px;
+  border: 2px solid black;
+}
+
+.episode-marker:after {
+  background-color: white;
+}
+
+.episode-marker:is(.premier, .finale):after {
+  content: "";
+  background-color: grey;
+  display: block;
+  width: 5px;
+  height: 10px;
+  position: relative;
+  border-radius: 10px;
+  border: black solid 2px;
+  transform: translate(-5px, 3px);
+}
+
+.episode-marker.odd:after {
+  background-color: white;
+}
+
+.finale.premier.episode-marker:before {
+  content: "";
+  margin-top: -2px;
+  margin-left: -1px;
+  display: block;
+  position: relative;
+  background-color: black;
+  left: 50%;
+  height: 24px;
+  width: 2px;
+}
+
+.finale.premier.episode-marker:after {
+  border: solid 2px;
+  border-radius: 10px;
+  width: 10px;
+  left: calc(50% + -2px);
+  transform: translate(-5px, -19px);
+}
+
+.finale.episode-marker:after {
+  left: 100%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: hidden;
+}
+
+.premier.episode-marker:after {
+  left: 3px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: hidden;
 }
