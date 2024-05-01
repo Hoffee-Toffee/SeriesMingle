@@ -233,5 +233,8 @@ export function generateSchedule(layers, mpSpacing) {
   return {
     schedule: processed,
     colors,
+    numberOfLayers: layers.filter((layer) =>
+      layer.some((entry) => typeof entry === 'object' && !Array.isArray(entry)),
+    ).length,
   }
 }

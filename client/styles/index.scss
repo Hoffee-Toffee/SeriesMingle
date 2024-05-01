@@ -1,3 +1,11 @@
+:root {
+  --even-stripe-col: lightgoldenrodyellow;
+  --odd-stripe-col: lightblue;
+  --scale: 1;
+  --layer-size: 15px;
+  --offset: 4px;
+}
+
 .layer {
   display: flex;
   justify-content: space-between;
@@ -52,11 +60,20 @@
   display: none;
 }
 
+#timelineContainer {
+  border: solid 2px black;
+  max-height: 100vh;
+  overflow-y: scroll;
+  display: flex;
+  margin-top: 5px;
+  justify-content: center;
+  position: relative;
+}
+
 #scheduleVisualization {
-  display: -webkit-inline-box;
-  height: auto;
-  background: repeating-linear-gradient(180deg, grey 0px, grey 25px, white 25px, white 50px);
-  background-color: #f0f0f0;
+  height: fit-content;
+  width: fit-content;
+  background: repeating-linear-gradient(90deg, black 0px, black 2px, var(--even-stripe-col) 2px, var(--even-stripe-col) 28px, black 28px, black 30px, var(--odd-stripe-col) 30px, var(--odd-stripe-col) 56px);
 }
 
 #key span {
@@ -89,61 +106,114 @@
 }
 
 .episode-marker {
-  margin: 1px;
-  height: 20px;
+  margin-top: 2px;
+  width: 20px;
+  margin-right: 3px;
   border: 2px solid black;
-}
-
-.episode-marker:after {
-  background-color: white;
 }
 
 .episode-marker:is(.premier, .finale):after {
   content: "";
-  background-color: grey;
+  background-color: var(--even-stripe-col);
   display: block;
-  width: 5px;
-  height: 10px;
+  width: 10px;
+  height: 5px;
   position: relative;
   border-radius: 10px;
   border: black solid 2px;
-  transform: translate(-5px, 3px);
+  left: 3px;
 }
 
 .episode-marker.odd:after {
-  background-color: white;
+  background-color: var(--odd-stripe-col);
 }
 
 .finale.premier.episode-marker:before {
   content: "";
-  margin-top: -2px;
-  margin-left: -1px;
+  margin-left: -2px;
+  margin-top: -1px;
   display: block;
   position: relative;
   background-color: black;
-  left: 50%;
-  height: 24px;
-  width: 2px;
+  top: 50%;
+  width: 24px;
+  height: 2px;
 }
 
 .finale.premier.episode-marker:after {
   border: solid 2px;
   border-radius: 10px;
-  width: 10px;
-  left: calc(50% + -2px);
-  transform: translate(-5px, -19px);
+  height: 10px;
+  top: calc(50% - 8px);
 }
 
 .finale.episode-marker:after {
-  left: 100%;
-  border-top-right-radius: 0;
+  top: calc(100% - 5px);
+  border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  border-right: hidden;
+  border-bottom: hidden;
 }
 
 .premier.episode-marker:after {
-  left: 3px;
+  top: -2px;
   border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-left: hidden;
+  border-top-right-radius: 0;
+  border-top: hidden;
+}
+
+.episode-detail {
+  position: absolute;
+  left: 0;
+  background-color: inherit;
+  color: white;
+  margin: 2px;
+  margin-top: -2px;
+}
+
+.episode-detail span {
+  background: black;
+  display: inline-block;
+  height: calc(100% - 12px);
+  width: calc(100% - 12px);
+  margin: 2px;
+  border: 4px solid black;
+  font-size: smaller;
+}
+
+.episode-detail.odd {
+  left: unset;
+  right: 0;
+}
+
+@media screen and (max-width: 800px) {
+  .episode-detail {
+    left: unset;
+    right: 0;
+  }
+  .episode-marker {
+    margin-top: 10px;
+  }
+  #timelineContainer {
+    justify-content: left;
+  }
+  #scheduleVisualization {
+    margin-left: -2px;
+  }
+  :root {
+    --scale: 2;
+  }
+}
+@media screen and (max-width: 500px) {
+  #scheduleVisualization {
+    width: 0;
+    margin-left: 5px;
+  }
+  .episode-marker {
+    display: inline-grid;
+  }
+
+  .episode-detail {
+    width: calc(100% - 10px) !important;
+    z-index: 1;
+  }
 }

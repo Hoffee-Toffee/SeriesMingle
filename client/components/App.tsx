@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Layer from './Layer.tsx'
 import { generateSchedule } from '../functions/generateSchedule.ts'
 import Schedule from './Schedule.tsx'
@@ -10,20 +10,19 @@ function App() {
     layers: [[]],
     mpSpacing: 'normal',
     data: { tv: {}, movie: {} },
-    schedule: null,
+    force: false,
   })
 
-  const { layers, mpSpacing, data, schedule } = state
+  const { layers, mpSpacing, data } = state
+
+  useEffect(() => {
+    setState({ mpSpacing, layers, data })
+  }, [state.force])
 
   function addData(entry, layerId: number, entryId: number) {
     data[entry.type][entry.id] = entry
     layers[layerId][entryId] = entry
-    setState({ ...state, layers, data })
-  }
-
-  function updateSchedule() {
-    const newSchedule = generateSchedule(layers, mpSpacing)
-    setState({ ...state, schedule: newSchedule })
+    setState({ ...state, layers, data, force: true })
   }
 
   // setCookie('layers', layers)
@@ -34,7 +33,6 @@ function App() {
   // })
 
   function setLayers(newLayers) {
-    // setCookie('layers', newLayers)
     setState({ ...state, layers: newLayers })
   }
 
@@ -128,8 +126,6 @@ function App() {
           </div>
         ))}
       </fieldset>
-      <button onClick={updateSchedule}>Generate Schedule</button>
-      {schedule && <Schedule {...schedule} />}
       <button
         onClick={() => {
           // Save as JSON
@@ -144,6 +140,7 @@ function App() {
       >
         Export Schedule
       </button>
+      <Schedule scheduleData={generateSchedule(layers, mpSpacing)} />
     </>
   )
 }
