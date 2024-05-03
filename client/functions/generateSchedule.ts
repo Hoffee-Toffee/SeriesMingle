@@ -112,14 +112,8 @@ export function generateSchedule(layers, mpSpacing) {
             } else {
               condensed.push({
                 type: 'multiple',
-                title,
                 runtime,
-                show_id: first.show_id,
-                show_title: first.show_title,
                 episodes: series,
-                part: true,
-                premier: series.some((episode) => episode.premier),
-                finale: series.some((episode) => episode.finale),
               })
             }
 
@@ -166,11 +160,16 @@ export function generateSchedule(layers, mpSpacing) {
           const mid = start + (entry.runtime * padding) / 2 + entry.runtime / 2
           start += entry.runtime * padding + entry.runtime
 
-          return {
+          if (entry.type !== "multiple") return {
             ...entry,
             mid,
             layer: i,
           }
+          return entry.episodes.map(episode => ({
+            ...episode,
+            mid,
+            layer: i,
+          }))
         }
       })
     })
@@ -178,14 +177,14 @@ export function generateSchedule(layers, mpSpacing) {
     .sort((a, b) => {
       if (a.mid == b.mid) return a.layer - b.layer
       return a.mid - b.mid
-    })
+    })    
 
   const sets = {
     tv: {},
     movies: {},
   }
 
-  processed.forEach((entry) => {
+  processed.forEach((entry, i) => {
     // Each show gets a unique color
     if (entry.show_id && !sets.tv[entry.show_id]) {
       sets.tv[entry.show_id] = `'${entry.show_title}'`

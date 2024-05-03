@@ -39,6 +39,7 @@ router.get('/movie', async (req, res) => {
         title: movie.title,
         year: (movie.release_date || '').split('-')[0],
         runtime: movie.runtime,
+        overview: movie.overview,
       }),
     )
     .catch((error) =>
@@ -73,6 +74,7 @@ router.get('/tv', async (req, res) => {
                 title: episode.name,
                 runtime: episode.runtime,
                 episode: episode.episode_number,
+                overview: episode.overview,
                 start:
                   seasonData.season_number + ':' + episode.episode_number ==
                   '1:1',

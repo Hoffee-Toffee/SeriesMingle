@@ -1,6 +1,8 @@
+import EpisodeDetails from './EpisodeDetails.tsx'
+
 export default function Schedule({ scheduleData }) {
-  const { schedule, colors, numberOfLayers } = scheduleData
-  console.log(scheduleData)
+  const { schedule, colors } = scheduleData
+
   return (
     <>
       <fieldset id="key">
@@ -17,51 +19,22 @@ export default function Schedule({ scheduleData }) {
       </fieldset>
       <div id="timelineContainer">
         <div id="scheduleVisualization">
-          {schedule.map((entry, i) => (
-            <div
-              className={[
-                'episode-marker',
-                entry.part && 'part',
-                entry.premier && 'premier',
-                entry.finale && 'finale',
-                entry.layer % 2 && 'odd',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              key={i}
-              style={{
-                height: `${entry.runtime}px`,
-                marginLeft: `${entry.layer * 28 + 3}px`,
-                backgroundColor: `hwb(${entry.show_id ? colors.tv[entry.show_id].color : colors.movies[entry.layer].color} 0% 25%)`,
-              }}
-            >
-              <div
-                className={['episode-detail', i % 2 && 'odd']
-                  .filter(Boolean)
-                  .join(' ')}
-                style={{
-                  minHeight: `${entry.runtime + 4}px`,
-                  maxHeight: `${entry.runtime + (schedule[i + 1] ? schedule[i + 1].runtime + 5 : 0)}px`,
-                  width: `calc(50% * var(--scale) - ${numberOfLayers} * var(--layer-size) * var(--scale) - var(--offset))`,
-                }}
-              >
-                <span
-                  style={{
-                    minHeight: `${entry.runtime - 8}px`,
-                  }}
-                >
-                  {entry.show_id ? (
-                    <>
-                      {entry.show_title}
-                      <br />S{entry.season}E{entry.episode}: {entry.title}
-                    </>
-                  ) : (
-                    entry.title
-                  )}
-                </span>
+          {schedule.map((entry, i) =>
+            entry.episodes ? (
+              <div className="multiple" key={i}>
+                {entry.episodes.map((episode, j) => (
+                  <EpisodeDetails
+                    entry={{ ...entry, ...episode }}
+                    key={`${i}.${j + 1}`}
+                    i={i}
+                    {...scheduleData}
+                  />
+                ))}
               </div>
-            </div>
-          ))}
+            ) : (
+              <EpisodeDetails entry={entry} key={i} i={i} {...scheduleData} />
+            ),
+          )}
         </div>
       </div>
     </>
