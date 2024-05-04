@@ -14,15 +14,13 @@ export default function EpisodeDetails(props) {
         .filter(Boolean)
         .join(' ')}
       style={{
-        height: `${Math.max(entry.runtime, minRuntime)}px`,
+        height: `calc(var(--scale) * ${Math.max(entry.runtime, minRuntime)}px)`,
         marginLeft: `${entry.layer * 28 + 3}px`,
         backgroundColor: `hwb(${entry.show_id ? colors.tv[entry.show_id].color : colors.movies[entry.layer].color} 0% 25%)`,
       }}
     >
       <div
-        className={['episode-detail', i % 2 && 'odd']
-          .filter(Boolean)
-          .join(' ')}
+        className={['episode-detail', i % 2 && 'odd'].filter(Boolean).join(' ')}
         style={{
           minHeight: `${Math.max(entry.runtime, minRuntime) + 4}px`,
           maxHeight: `${Math.max(entry.runtime, minRuntime) + (schedule[i + 1] ? schedule[i + 1].runtime : 30) + 10}px`,
@@ -32,7 +30,7 @@ export default function EpisodeDetails(props) {
         <div
           style={{
             minHeight: `${Math.max(entry.runtime, minRuntime) - 12}px`,
-            maxHeight: `calc(${Math.max(entry.runtime, minRuntime) - 4}px + var(--height-mult) * ${(schedule[i + 1] ? schedule[i + 1].runtime : 30) - 2}px)`,
+            maxHeight: `calc(var(--scale) * ${Math.max(entry.runtime, minRuntime) - 4}px + var(--height-mult) * ${(schedule[i + 1] ? schedule[i + 1].runtime : 30) - 2}px)`,
           }}
         >
           {entry.show_id ? (

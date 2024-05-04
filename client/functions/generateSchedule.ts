@@ -160,15 +160,17 @@ export function generateSchedule(layers, mpSpacing) {
           const mid = start + (entry.runtime * padding) / 2 + entry.runtime / 2
           start += entry.runtime * padding + entry.runtime
 
-          if (entry.type !== "multiple") return {
-            ...entry,
-            mid,
-            layer: i,
-          }
-          return entry.episodes.map(episode => ({
+          if (entry.type !== 'multiple')
+            return {
+              ...entry,
+              mid,
+              layer: i,
+            }
+          return entry.episodes.map((episode, index) => ({
             ...episode,
             mid,
             layer: i,
+            last_part: index + 1 == entry.episodes.length,
           }))
         }
       })
@@ -177,7 +179,7 @@ export function generateSchedule(layers, mpSpacing) {
     .sort((a, b) => {
       if (a.mid == b.mid) return a.layer - b.layer
       return a.mid - b.mid
-    })    
+    })
 
   const sets = {
     tv: {},
