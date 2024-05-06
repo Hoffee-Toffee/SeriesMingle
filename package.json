@@ -32,8 +32,11 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.17.2",
+    "firebase": "^10.11.1",
     "knex": "^2.5.1",
     "node-fetch": "^3.3.2",
+    "react-bootstrap": "^2.10.2",
+    "react-google-button": "^0.8.0",
     "sqlite3": "^5.1.6",
     "superagent": "7.1.1"
   },
