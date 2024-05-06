@@ -3,8 +3,6 @@ import App from './components/App.tsx'
 
 export default createRoutesFromElements(
   <>
-    <Route path="/">
-      <Route index element={<App />} />
-    </Route>
+    <Route path="/" element={<App />} />
   </>,
 )
