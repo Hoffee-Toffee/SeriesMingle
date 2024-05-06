@@ -1,0 +1,79 @@
+#login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: -8px;
+    background-color: #0a2553;
+
+  h1 {
+    color: #ff0;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  input {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #2c5aa0;
+    border-radius: 5px;
+    width: 300px;
+    color: #fff;
+    background-color: #1f3b6e;
+  }
+
+  button {
+    padding: 0 1rem;
+    background-color: #ff4500;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #ff6347;
+  }
+
+  .google-sign-in {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1f3b6e;
+    border: 1px solid #2c5aa0;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .google-sign-in:hover {
+    background-color: #29467d;
+  }
+
+  .google-sign-in img {
+    width: 24px;
+    height: 24px;
+    margin-right: 0.5rem;
+  }
+
+  .error-message {
+    color: #ff4500;
+    margin-top: 1rem;
+    font-style: italic;
+  }
+
+  a {
+    color: #ff0;
+    text-decoration: none;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
