@@ -10,19 +10,21 @@ function App() {
     layers: [[]],
     mpSpacing: 'normal',
     data: { tv: {}, movie: {} },
+    bookmark: null,
     force: false,
+    saved: true,
   })
 
-  const { layers, mpSpacing, data } = state
+  const { layers, mpSpacing, data, bookmark, saved } = state
 
   useEffect(() => {
-    setState({ mpSpacing, layers, data })
+    setState({ mpSpacing, layers, data, bookmark, saved: false })
   }, [state.force])
 
   function addData(entry, layerId: number, entryId: number) {
     data[entry.type][entry.id] = entry
     layers[layerId][entryId] = entry
-    setState({ ...state, layers, data, force: true })
+    setState({ ...state, layers, data, force: true, saved: false })
   }
 
   // setCookie('layers', layers)
@@ -32,13 +34,20 @@ function App() {
   //   // Do some stuff
   // })
 
+  function setBookmark(newBookmark) {
+    setState({ ...state, bookmark: newBookmark, saved: false })
+  }
+
   function setLayers(newLayers) {
-    setState({ ...state, layers: newLayers })
+    setState({ ...state, layers: newLayers, saved: false })
   }
 
   function setMpSpacing(mpSpacing) {
-    setState({ ...state, mpSpacing })
+    setState({ ...state, mpSpacing, saved: false })
   }
+
+  // Alert if trying to leave with unsaved changes
+  window.addEventListener('beforeunload', (e) => !saved && e.preventDefault())
 
   // function getCookie(cname, initial = null) {
   //   return initial
@@ -71,7 +80,6 @@ function App() {
 
   return (
     <>
-      {' '}
       <button
         onClick={() => {
           // Fetch from example.json
@@ -128,19 +136,27 @@ function App() {
       </fieldset>
       <button
         onClick={() => {
-          // Save as JSON
-          const text = JSON.stringify(state)
+          // Save as JSON, with saved set to true
+          const text = JSON.stringify({ ...state, saved: true })
           const blob = new Blob([text], { type: 'text/plain' })
           const url = window.URL.createObjectURL(blob)
           const a = document.createElement('a')
           a.href = url
           a.download = 'schedule.txt'
           a.click()
+          setState({ ...state, saved: true })
         }}
       >
         Export Schedule
       </button>
-      <Schedule scheduleData={generateSchedule(layers, mpSpacing)} />
+      <Schedule
+        scheduleData={generateSchedule(
+          layers,
+          mpSpacing,
+          bookmark,
+          setBookmark,
+        )}
+      />
     </>
   )
 }

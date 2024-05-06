@@ -1,4 +1,4 @@
-export function generateSchedule(layers, mpSpacing) {
+export function generateSchedule(layers, mpSpacing, bookmark, setBookmark) {
   // Loop over each layer, ignoring the final entry in each
   const schedule = layers.map((entries) => {
     // Loop over each entry, collapsing and removing some episodes
@@ -17,7 +17,7 @@ export function generateSchedule(layers, mpSpacing) {
           seasons: undefined,
           episodes: entry.seasons
             .flatMap((season) =>
-              season.episodes.map((episode) => {
+              season.episodes.map((episode, num) => {
                 if (!started && !episode.start) return undefined
                 started = true
                 return {
@@ -26,8 +26,8 @@ export function generateSchedule(layers, mpSpacing) {
                   show_id: entry.id,
                   show_title: entry.title,
                   // Set 'premier' and 'finale' depending on if first/last of this season
-                  premier: episode.episode === 1,
-                  finale: episode.episode === season.episodes.length,
+                  premier: !num,
+                  finale: num === season.episodes.length - 1,
                 }
               }),
             )
@@ -166,11 +166,10 @@ export function generateSchedule(layers, mpSpacing) {
               mid,
               layer: i,
             }
-          return entry.episodes.map((episode, index) => ({
+          return entry.episodes.map((episode) => ({
             ...episode,
             mid,
             layer: i,
-            last_part: index + 1 == entry.episodes.length,
           }))
         }
       })
@@ -186,22 +185,29 @@ export function generateSchedule(layers, mpSpacing) {
     movies: {},
   }
 
-  processed.forEach((entry, i) => {
+  processed.forEach((entry, index) => {
     // Each show gets a unique color
     if (entry.show_id && !sets.tv[entry.show_id]) {
-      sets.tv[entry.show_id] = `'${entry.show_title}'`
+      sets.tv[entry.show_id] = {
+        title: `'${entry.show_title}'`,
+        firstIndex: index,
+      }
     }
     // Each layer gets a unique movie color
     else if (entry.type == 'movie' && !sets.movies[entry.layer]) {
-      sets.movies[entry.layer] = `'${entry.title}'`
+      sets.movies[entry.layer] = {
+        title: `'${entry.title}'`,
+        firstIndex: index,
+      }
     }
     // Add ' and others' if there are multiple, but only do so once
     else if (
       entry.type == 'movie' &&
       sets.movies[entry.layer] &&
-      sets.movies[entry.layer].endsWith("'")
+      sets.movies[entry.layer].title.endsWith("'")
     ) {
-      sets.movies[entry.layer] = sets.movies[entry.layer] + ' & other movies'
+      sets.movies[entry.layer].title =
+        sets.movies[entry.layer].title + ' & other movies'
     }
   })
 
@@ -216,19 +222,19 @@ export function generateSchedule(layers, mpSpacing) {
 
   // Assign a unique hue to each show / movie layer
   Object.entries(sets.tv).forEach((entry, index) => {
-    const [show_id, text] = entry
+    const [show_id, info] = entry
 
     // Calculate the hue for each show based on its position
     const color = (index * numOfColors) % 360
-    colors.tv[show_id] = { text, color }
+    colors.tv[show_id] = { ...info, color }
   })
 
   Object.entries(sets.movies).forEach((entry, index) => {
-    const [layer_id, text] = entry
+    const [layer_id, info] = entry
 
     // Calculate the hue for each show based on its position
     const color = ((index + Object.values(sets.tv).length) * numOfColors) % 360
-    colors.movies[layer_id] = { text, color }
+    colors.movies[layer_id] = { ...info, color }
   })
 
   return {
@@ -237,5 +243,7 @@ export function generateSchedule(layers, mpSpacing) {
     numberOfLayers: layers.filter((layer) =>
       layer.some((entry) => typeof entry === 'object' && !Array.isArray(entry)),
     ).length,
+    bookmark,
+    setBookmark,
   }
 }

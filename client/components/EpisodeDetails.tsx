@@ -1,5 +1,14 @@
 export default function EpisodeDetails(props) {
-  const { entry, i, schedule, colors, numberOfLayers } = props
+  const {
+    entry,
+    i,
+    schedule,
+    colors,
+    numberOfLayers,
+    bookmark,
+    setBookmark,
+    show,
+  } = props
   const minRuntime = 30
 
   return (
@@ -10,6 +19,7 @@ export default function EpisodeDetails(props) {
         entry.premier && 'premier',
         entry.finale && 'finale',
         entry.layer % 2 && 'odd',
+        !show && 'fade',
       ]
         .filter(Boolean)
         .join(' ')}
@@ -32,7 +42,22 @@ export default function EpisodeDetails(props) {
             minHeight: `${Math.max(entry.runtime, minRuntime) - 12}px`,
             maxHeight: `calc(var(--scale) * ${Math.max(entry.runtime, minRuntime) - 4}px + var(--height-mult) * ${(schedule[i + 1] ? schedule[i + 1].runtime : 30) - 2}px)`,
           }}
+          id={bookmark == `${entry.type}-${entry.id}` ? 'bookmark' : undefined}
         >
+          <label htmlFor={`bookmark-${i}`}>
+            <i
+              className={`fa-${bookmark == `${entry.type}-${entry.id}` ? 'solid' : 'regular'} fa-bookmark`}
+            />
+          </label>
+          <input
+            type="checkbox"
+            id={`bookmark-${i}`}
+            checked={bookmark == `${entry.type}-${entry.id}`}
+            onChange={() => {
+              const newVal = `${entry.type}-${entry.id}`
+              setBookmark(newVal == bookmark ? null : newVal)
+            }}
+          />
           {entry.show_id ? (
             <>
               <span>

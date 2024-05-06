@@ -75,17 +75,7 @@
 #scheduleVisualization {
   height: fit-content;
   width: fit-content;
-  background: repeating-linear-gradient(
-    90deg,
-    black 0px,
-    black 2px,
-    var(--even-stripe-col) 2px,
-    var(--even-stripe-col) 28px,
-    black 28px,
-    black 30px,
-    var(--odd-stripe-col) 30px,
-    var(--odd-stripe-col) 56px
-  );
+  background: repeating-linear-gradient(90deg, black 0px, black 2px, var(--even-stripe-col) 2px, var(--even-stripe-col) 28px, black 28px, black 30px, var(--odd-stripe-col) 30px, var(--odd-stripe-col) 56px);
 }
 
 #scheduleVisualization::before {
@@ -100,7 +90,7 @@
 
 #scheduleVisualization::after,
 #scheduleVisualization::before {
-  content: '';
+  content: "";
   display: block;
   width: 100%;
 }
@@ -140,10 +130,16 @@
   width: 20px;
   margin-right: 3px;
   border: 2px solid black;
+  transition: var(--transition-time);
+}
+
+.episode-marker.fade:not(hover) {
+  opacity: 0.5;
+  transition: var(--transition-time) var(--transition-time);
 }
 
 .episode-marker:is(.premier, .finale):after {
-  content: '';
+  content: "";
   background-color: var(--even-stripe-col);
   display: block;
   width: 10px;
@@ -159,7 +155,7 @@
 }
 
 .finale.premier.episode-marker:before {
-  content: '';
+  content: "";
   margin-left: -2px;
   margin-top: -1px;
   display: block;
@@ -233,18 +229,42 @@
   transition: var(--transition-time) var(--transition-time);
 }
 
+.episode-detail input {
+  display: none;
+}
+
+.episode-detail label {
+  position: absolute;
+  right: 8px;
+  cursor: pointer;
+}
+
+.episode-detail label i.fa-regular {
+  opacity: 0;
+  color: grey;
+}
+
+.episode-detail label i.fa-solid:before {
+  color: #d7e300;
+}
+
+.episode-detail label i:hover:after {
+  opacity: 1;
+}
+
+.episode-marker:hover .episode-detail label i.fa-regular {
+  opacity: 1;
+}
+
 .episode-detail .spoiler {
   opacity: 0;
   line-height: 0%;
-  transition:
-    opacity var(--transition-time),
-    line-height var(--transition-time) var(--transition-time),
-    margin-top var(--transition-time) var(--transition-time);
+  transition: opacity var(--transition-time), line-height var(--transition-time) var(--transition-time), margin-top var(--transition-time) var(--transition-time);
   overflow-y: auto;
   scrollbar-gutter: stable;
 }
 
-.episode-marker:hover div * :not(.title, .spoiler) {
+.episode-marker:hover div * :not(.title, .spoiler, label, i) {
   opacity: 0;
   line-height: 0%;
   transition: var(--transition-time);
@@ -258,10 +278,7 @@
   margin-top: 5px;
   opacity: 1;
   line-height: 125%;
-  transition:
-    opacity var(--transition-time) var(--transition-time),
-    line-height var(--transition-time),
-    margin-top var(--transition-time);
+  transition: opacity var(--transition-time) var(--transition-time), line-height var(--transition-time), margin-top var(--transition-time);
 }
 
 @media screen and (max-width: 800px) {
