@@ -15,9 +15,9 @@ function Layer({
   data: object
   addData: any
 }) {
-  function setEntries(newEntries) {
+  function setEntries(newEntries, force = false) {
     layers[id] = newEntries
-    setLayers([...layers])
+    setLayers([...layers], force)
   }
 
   // If no entries exist, or all entries are objects (but not arrays) then add a blank entry

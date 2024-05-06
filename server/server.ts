@@ -10,12 +10,15 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import tmdbRoutes from './routes/tmdb.ts'
+import projectRoutes from './routes/projects.ts'
 
 const server = express()
 
-server.use(express.json())
+server.use(express.json({ limit: '50mb' }))
+server.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
 server.use('/api/v1', tmdbRoutes)
+server.use('/api/v1/projects', projectRoutes)
 
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))

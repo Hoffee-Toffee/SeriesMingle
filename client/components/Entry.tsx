@@ -149,7 +149,7 @@ function Entry({
           </span>
           <button
             onClick={() => {
-              setEntries([...entries.filter((_, i) => i !== id)])
+              setEntries([...entries.filter((_, i) => i !== id)], true)
             }}
           >
             x
