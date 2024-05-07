@@ -6,7 +6,7 @@ import example from '../data/example.json'
 import fetchProject from '../apis/fetchProject.ts'
 import setProject from '../apis/setProject.ts'
 
-function Main({ user }) {
+function Main({ user, signOut }) {
   // Layers as a state
   const [state, setState] = useState({
     layers: [[]],
@@ -33,9 +33,16 @@ function Main({ user }) {
     if (state.force) {
       console.log('force rerender')
       setProject({ ...state, force: false }, user.uid)
-      setState({ mpSpacing, layers, data, bookmark, saved: false })
+      setState({
+        mpSpacing,
+        layers,
+        data,
+        bookmark,
+        saved: false,
+        force: false,
+      })
     }
-  }, [state.force])
+  }, [bookmark, data, layers, mpSpacing, state, state.force, user.uid])
 
   function addData(entry, layerId: number, entryId: number) {
     data[entry.type][entry.id] = entry
@@ -57,6 +64,7 @@ function Main({ user }) {
 
   return (
     <>
+      <button onClick={signOut}>Sign Out</button>
       <button
         onClick={() => {
           // Fetch from example.json
