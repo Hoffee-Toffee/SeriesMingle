@@ -46,7 +46,7 @@ function Entry({
     case 'string':
     case 'undefined':
       options = (
-        <>
+        <div className="new">
           <input
             placeholder="Enter a title"
             type="text"
@@ -59,7 +59,7 @@ function Entry({
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           />
           <button onClick={handleSearch}>Search</button>
-        </>
+        </div>
       )
       break
     case 'array':

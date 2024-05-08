@@ -1,6 +1,7 @@
 :root {
-  --even-stripe-col: lightgoldenrodyellow;
-  --odd-stripe-col: lightblue;
+  --even-stripe-col: rgb(150 150 110);
+  --odd-stripe-col: rgb(15 88 110);
+  --bg-col: #0a2553;
   --scale: 1;
   --layer-size: 15px;
   --height-mult: 1;
@@ -8,16 +9,48 @@
   --transition-time: 0.3s;
 }
 
+::-webkit-scrollbar{
+	width: 10px;
+}
+
+::-webkit-scrollbar-track-piece{
+	background-color: #012;
+}
+
+::-webkit-scrollbar-thumb{
+	background-color: #0095fa;
+	outline: 3px solid #012;
+	outline-offset: -3px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+	background-color: #00f2ea;
+}
+
+html {
+  background: var(--bg-col);
+}
+
 .layer {
   display: flex;
   justify-content: space-between;
-  border: darkblue 2px solid;
-  background-color: blue;
+  border: #0095fa 2px solid;
+  background-color: var(--bg-col);
   padding: 0.5em;
-  margin: 0.1em;
+  margin: 0.5em 0.1em;
+}
+
+.options div {
+  width: max-content;
+  height: 35px;
+  vertical-align: middle;
+  align-content: center;
+  padding: 0.3em 0.5em;
+  max-width: calc(100vw - 100px);
 }
 
 .options > *,
+.new input,
 .layer > button {
   border: orangered 2px solid;
   border-radius: 0.3em;
@@ -28,9 +61,18 @@
   display: inline-block;
 }
 
-.options input {
+.new {
+  display: inline-flex;
+}
+
+.new input {
+  margin: 0.25em;
   color: orangered;
-  background-color: white;
+  background-color: #1f3b6e;
+}
+
+.new input::placeholder {
+	color: #ccc;
 }
 
 .options div select {
@@ -56,14 +98,65 @@
   padding: 0;
   cursor: pointer;
   float: right;
+  height: fit-content;
+  align-self: center;
+}
+
+.options div button {
+  margin: 0 0.35em;
 }
 
 .hide {
   display: none;
 }
 
+button, a {
+  color: #d7e300;
+  border: orangered 2px solid;
+  border-radius: 0.3em;
+  background-color: darkred;
+  padding: 0.3em;
+  margin: 0.25em;
+  margin-top: 0.8em;
+  cursor: pointer;
+  font-size: smaller;
+  text-decoration: none;
+  display: inline-block;
+}
+
+button:hover,
+.options button:hover,
+a:hover {
+  color: white;
+  border: orange 2px solid;
+  background-color: orangered;
+}
+
+.layer > button:hover,
+.options div > button:hover {
+  color: #00f2ea;
+  border: none;
+  background: none;
+}
+
+fieldset {
+  border: #0095fa 2px solid;
+  color: white;
+  background-color: #1f3b6e;
+}
+
+legend {
+  background-color: var(--bg-col);
+  padding: 5px 10px;
+}
+
+input[type=radio] {
+  accent-color: darkred;
+}
+
 #timelineContainer {
-  border: solid 2px black;
+  border: #0095fa 2px solid;
+  background-color: #1f3b6e;
   max-height: calc(100vh - 20px);
   overflow-y: scroll;
   display: flex;
@@ -75,16 +168,16 @@
 #scheduleVisualization {
   height: fit-content;
   width: fit-content;
-  background: repeating-linear-gradient(90deg, black 0px, black 2px, var(--even-stripe-col) 2px, var(--even-stripe-col) 28px, black 28px, black 30px, var(--odd-stripe-col) 30px, var(--odd-stripe-col) 56px);
+  background: repeating-linear-gradient(90deg, var(--bg-col) 0px, var(--bg-col) 2px, var(--even-stripe-col) 2px, var(--even-stripe-col) 28px, var(--bg-col) 28px, var(--bg-col) 30px, var(--odd-stripe-col) 30px, var(--odd-stripe-col) 56px);
 }
 
 #scheduleVisualization::before {
-  background: linear-gradient(white, transparent);
+  background: linear-gradient(#1f3b6e, transparent);
   height: 38px;
 }
 
 #scheduleVisualization::after {
-  background: linear-gradient(transparent, white);
+  background: linear-gradient(transparent, #1f3b6e);
   height: 53px;
 }
 
@@ -133,8 +226,8 @@
   transition: var(--transition-time);
 }
 
-.episode-marker.fade:not(hover) {
-  opacity: 0.5;
+.episode-marker.fade:not(:hover) {
+  opacity: 0.25;
   transition: var(--transition-time) var(--transition-time);
 }
 
@@ -279,6 +372,14 @@
   opacity: 1;
   line-height: 125%;
   transition: opacity var(--transition-time) var(--transition-time), line-height var(--transition-time), margin-top var(--transition-time);
+}
+
+.episode-detail ::-webkit-scrollbar-track-piece{
+	background-color: #234;
+}
+
+.episode-detail ::-webkit-scrollbar-thumb{
+	outline-color: #234;
 }
 
 @media screen and (max-width: 800px) {

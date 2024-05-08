@@ -73,7 +73,7 @@ function Main({ user, signOut }) {
       >
         Load Example
       </button>
-      <input
+      {/* <input
         type="file"
         accept=".txt"
         onChange={(e) => {
@@ -90,8 +90,9 @@ function Main({ user, signOut }) {
             console.error(e)
           }
         }}
-      />
-      <div id="layerContainer">
+      /> */}
+      <fieldset id="layerContainer">
+        <legend>Layers</legend>
         {layers.map((entries, index) => (
           <Layer
             key={index}
@@ -104,7 +105,7 @@ function Main({ user, signOut }) {
           />
         ))}
         <button onClick={() => setLayers([...layers, []])}>Add Layer</button>
-      </div>
+      </fieldset>
       <fieldset id="mp" onChange={(e) => setMpSpacing(e.target.value)}>
         <legend>Space Multi-Parters...</legend>
         {['Normally', 'Closer', 'Consecutively'].map((option, i) => (
@@ -119,7 +120,7 @@ function Main({ user, signOut }) {
           </div>
         ))}
       </fieldset>
-      <button
+      {/* <button
         onClick={() => {
           // Save as JSON, with saved set to true
           const text = JSON.stringify({ ...state, saved: true })
@@ -133,7 +134,7 @@ function Main({ user, signOut }) {
         }}
       >
         Export Schedule
-      </button>
+      </button> */}
       <Schedule
         scheduleData={generateSchedule(
           layers,
