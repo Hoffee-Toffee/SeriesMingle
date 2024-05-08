@@ -63,7 +63,7 @@ function Main({ user, signOut }) {
   }
 
   return (
-    <>
+    <div id="main">
       <button onClick={signOut}>Sign Out</button>
       <button
         onClick={() => {
@@ -143,7 +143,7 @@ function Main({ user, signOut }) {
           setBookmark,
         )}
       />
-    </>
+    </div>
   )
 }
 
