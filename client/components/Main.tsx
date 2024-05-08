@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Layer from './Layer.tsx'
 import { generateSchedule } from '../functions/generateSchedule.ts'
 import Schedule from './Schedule.tsx'
-import example from '../data/example.json'
+import example from '../files/example.json'
 import fetchProject from '../apis/fetchProject.ts'
 import setProject from '../apis/setProject.ts'
 

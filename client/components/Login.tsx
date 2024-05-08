@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth'
+import favicon from '../files/favicon.ico'
 
 export default function LogIn({ setUser }) {
   const [error, setError] = useState('')
@@ -100,7 +101,12 @@ export default function LogIn({ setUser }) {
 
   return (
     <div id="login">
-      <h1>{creatingEmail ? 'Sign Up' : 'Sign In'}</h1>
+      <img src={favicon} alt="Series Mingle logo" id="logo" />
+      <h1>
+        <span>Series</span>
+        <span>Mingle</span>
+      </h1>
+      <h2>{creatingEmail ? 'Sign Up' : 'Sign In'}</h2>
       <input
         type="email"
         id="email"
@@ -127,7 +133,7 @@ export default function LogIn({ setUser }) {
         />
       )}
       <button onClick={onSubmit} id="submit" type="submit" value="Submit">
-        <h2>Sign In</h2>
+        <h3>Sign {creatingEmail ? 'Up' : 'In'}</h3>
       </button>
       {!creatingEmail && (
         <>
@@ -141,9 +147,12 @@ export default function LogIn({ setUser }) {
         </>
       )}
       {error ? <p className="error-message">{error}</p> : <br />}
-      <a href="#" onClick={() => setCreatingEmail(!creatingEmail)}>
-        {creatingEmail ? 'Log In' : 'Sign Up'}
-      </a>
+      <span>
+        {creatingEmail ? 'Already have an account?' : "Don't have an account?"}
+        <a href="#" onClick={() => setCreatingEmail(!creatingEmail)}>
+          Sign {creatingEmail ? 'In' : 'Up'}
+        </a>
+      </span>
     </div>
   )
 }
