@@ -14,7 +14,7 @@ export default function App() {
     })
   }, [])
 
-  if (!loaded) return <p>Loading</p>
+  if (!loaded) return <p style={{ color: 'white' }}>Loading...</p>
 
   return user ? (
     <Main user={user} signOut={() => auth.signOut()} />

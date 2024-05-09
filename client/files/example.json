@@ -1,5 +1,5 @@
 {
-  "mpSpacing": "consec",
+  "mpSpacing": "closer",
   "layers": [
     [
       {
@@ -5703,5 +5703,8 @@
         "overview": "In the wake of his dramatic escape from captivity, Jesse Pinkman must come to terms with his past in order to forge some kind of future."
       }
     }
-  }
+  },
+  "bookmark": "episode-62156",
+  "saved": false,
+  "force": false
 }
