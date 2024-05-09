@@ -7,6 +7,9 @@ export default function App() {
   const [user, setUser] = useState(auth.currentUser)
   const [loaded, setLoaded] = useState(false)
 
+  const url = new URL(window.location.href)
+  const id = url.searchParams.get('id')
+
   useEffect(() => {
     return auth.onAuthStateChanged((user) => {
       setUser(user || null)
@@ -16,8 +19,8 @@ export default function App() {
 
   if (!loaded) return <p style={{ color: 'white' }}>Loading...</p>
 
-  return user ? (
-    <Main user={user} signOut={() => auth.signOut()} />
+  return user || id ? (
+    <Main user={user} id={id} signOut={() => auth.signOut()} />
   ) : (
     <LogIn setUser={setUser} />
   )

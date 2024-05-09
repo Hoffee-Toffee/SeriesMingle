@@ -6,7 +6,10 @@ import example from '../files/example.json'
 import fetchProject from '../apis/fetchProject.ts'
 import setProject from '../apis/setProject.ts'
 
-function Main({ user, signOut }) {
+function Main({ user, id, signOut }) {
+  const uid = user?.uid
+  const readOnly = !(uid == id || (uid && !id))
+
   // Layers as a state
   const [state, setState] = useState({
     layers: [[]],
@@ -19,20 +22,24 @@ function Main({ user, signOut }) {
 
   useEffect(() => {
     const fetchProjectData = async () => {
-      const fromCloud = await fetchProject(user.uid)
+      const fromCloud = await fetchProject(id || uid)
       console.log(fromCloud)
       if (fromCloud) setState(fromCloud)
     }
 
     fetchProjectData()
-  }, [user.uid])
+  }, [uid, id])
+
+  // Can edit if uid is defined and id is not
+  // Can't edit if id is defined and uid is not
+  // Can edit if both are defined and match
 
   const { layers, mpSpacing, data, bookmark, saved } = state
 
   useEffect(() => {
-    if (state.force) {
+    if (state.force && !readOnly) {
       console.log('force rerender')
-      setProject({ ...state, force: false }, user.uid)
+      setProject({ ...state, force: false }, uid)
       setState({
         mpSpacing,
         layers,
@@ -42,32 +49,41 @@ function Main({ user, signOut }) {
         force: false,
       })
     }
-  }, [bookmark, data, layers, mpSpacing, state, state.force, user.uid])
+  }, [bookmark, data, layers, mpSpacing, state, state.force, uid])
 
   function addData(entry, layerId: number, entryId: number) {
+    if (readOnly) return
     data[entry.type][entry.id] = entry
     layers[layerId][entryId] = entry
     setState({ ...state, layers, data, force: true, saved: false })
   }
 
   function setBookmark(newBookmark) {
+    if (readOnly) return
     setState({ ...state, bookmark: newBookmark, saved: false, force: true })
   }
 
   function setLayers(newLayers, force = false) {
+    if (readOnly) return
     setState({ ...state, layers: newLayers, saved: false, force })
   }
 
   function setMpSpacing(mpSpacing) {
+    if (readOnly) return
     setState({ ...state, mpSpacing, saved: false, force: true })
   }
 
   return (
     <div id="main">
-      <button onClick={signOut}>Sign Out</button>
+      {readOnly && (
+        <span style={{ color: 'white', display: 'block', textAlign: 'center' }}>
+          READ-ONLY
+        </span>
+      )}
+      {user && <button onClick={signOut}>Sign Out</button>}
       <button
         onClick={() => {
-          // Fetch from example.json
+          if (readOnly) return
           setState(example)
         }}
       >
