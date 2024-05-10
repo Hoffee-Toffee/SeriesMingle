@@ -18,7 +18,7 @@ function Entry({
   data: object
   addData: any
 }) {
-  let options
+  let options, entryData
 
   function handleSearch() {
     search(entry)
@@ -31,7 +31,7 @@ function Entry({
 
   function getMedia(type, mid) {
     if (data[type][mid]) {
-      entries[id] = data[type][mid]
+      entries[id] = { ref: [type, mid] }
       setEntries([...entries])
     } else {
       fetchMedia(type, mid)
@@ -108,26 +108,20 @@ function Entry({
       )
       break
     case 'object':
+      entryData = data[entry.ref[0]][entry.ref[1]]
+
       options = (
         <div>
-          {entry.type === 'tv' && (
+          {entryData.type === 'tv' && (
             <label>
               Start:
               <select
                 onChange={(e) => {
-                  // Remove old 'start', if it exists, and add new 'start'
-                  entries[id].seasons = entries[id].seasons.map((season) => ({
-                    ...season,
-                    episodes: season.episodes.map((episode) => ({
-                      ...episode,
-                      start:
-                        season.season + ':' + episode.episode == e.target.value,
-                    })),
-                  }))
+                  entries[id] = { ...entries[id], start: e.target.value }
                   setEntries([...entries])
                 }}
               >
-                {entry.seasons.map((season) => (
+                {entryData.seasons.map((season) => (
                   <optgroup
                     label={`Season ${season.season}`}
                     key={season.season}
@@ -136,7 +130,9 @@ function Entry({
                       <option
                         key={episode.episode}
                         value={season.season + ':' + episode.episode}
-                        selected={episode.start}
+                        selected={
+                          `${season.season}:${episode.episode}` == entry.start
+                        }
                       >{`S${season.season}E${episode.episode}: ${episode.title}`}</option>
                     ))}
                   </optgroup>
@@ -144,8 +140,12 @@ function Entry({
               </select>
             </label>
           )}
-          <span className="option" tmdb-id={entry.id} tmdb-type={entry.type}>
-            {`${entry.title}${entry.year !== '' ? ` (${entry.year})` : ''}`}
+          <span
+            className="option"
+            tmdb-id={entryData.id}
+            tmdb-type={entryData.type}
+          >
+            {`${entryData.title}${entryData.year !== '' ? ` (${entryData.year})` : ''}`}
           </span>
           <button
             onClick={() => {

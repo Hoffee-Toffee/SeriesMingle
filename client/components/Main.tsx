@@ -30,10 +30,6 @@ function Main({ user, id, signOut }) {
     fetchProjectData()
   }, [uid, id])
 
-  // Can edit if uid is defined and id is not
-  // Can't edit if id is defined and uid is not
-  // Can edit if both are defined and match
-
   const { layers, mpSpacing, data, bookmark, saved } = state
 
   useEffect(() => {
@@ -49,12 +45,12 @@ function Main({ user, id, signOut }) {
         force: false,
       })
     }
-  }, [bookmark, data, layers, mpSpacing, state, state.force, uid])
+  }, [bookmark, data, layers, mpSpacing, readOnly, state, state.force, uid])
 
   function addData(entry, layerId: number, entryId: number) {
     if (readOnly) return
     data[entry.type][entry.id] = entry
-    layers[layerId][entryId] = entry
+    layers[layerId][entryId] = { ref: [entry.type, entry.id] }
     setState({ ...state, layers, data, force: true, saved: false })
   }
 
@@ -89,24 +85,6 @@ function Main({ user, id, signOut }) {
       >
         Load Example
       </button>
-      {/* <input
-        type="file"
-        accept=".txt"
-        onChange={(e) => {
-          try {
-            // Load as JSON into state
-            const file = e.target.files[0]
-            const reader = new FileReader()
-            reader.readAsText(file, 'UTF-8')
-            reader.onload = (e) => {
-              const text = e.target.result
-              setState(JSON.parse(text))
-            }
-          } catch (e) {
-            console.error(e)
-          }
-        }}
-      /> */}
       <fieldset id="layerContainer">
         <legend>Layers</legend>
         {layers.map((entries, index) => (
@@ -136,27 +114,13 @@ function Main({ user, id, signOut }) {
           </div>
         ))}
       </fieldset>
-      {/* <button
-        onClick={() => {
-          // Save as JSON, with saved set to true
-          const text = JSON.stringify({ ...state, saved: true })
-          const blob = new Blob([text], { type: 'text/plain' })
-          const url = window.URL.createObjectURL(blob)
-          const a = document.createElement('a')
-          a.href = url
-          a.download = 'schedule.txt'
-          a.click()
-          setState({ ...state, saved: true })
-        }}
-      >
-        Export Schedule
-      </button> */}
       <Schedule
         scheduleData={generateSchedule(
           layers,
           mpSpacing,
           bookmark,
           setBookmark,
+          data,
         )}
       />
     </div>

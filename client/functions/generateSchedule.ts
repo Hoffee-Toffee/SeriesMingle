@@ -1,24 +1,33 @@
-export function generateSchedule(layers, mpSpacing, bookmark, setBookmark) {
+export function generateSchedule(
+  layers,
+  mpSpacing,
+  bookmark,
+  setBookmark,
+  data,
+) {
   // Loop over each layer, ignoring the final entry in each
   const schedule = layers.map((entries) => {
     // Loop over each entry, collapsing and removing some episodes
     return entries
-      .map((entry, i) => {
+      .map((entryRef, i) => {
         if (i === entries.length - 1) return undefined
+
+        const entry = data[entryRef.ref[0]][entryRef.ref[1]]
 
         // If a movie, simply return it
         if (entry.type === 'movie') return entry
 
         // Otherwise, its a show and needs it's episodes returned
-        let started = false
+        let started = !entryRef.start
 
         return {
           ...entry,
           seasons: undefined,
           episodes: entry.seasons
-            .flatMap((season) =>
+            .flatMap((season, i) =>
               season.episodes.map((episode, num) => {
-                if (!started && !episode.start) return undefined
+                if (!started && entryRef.start !== `${i + 1}:${num + 1}`)
+                  return undefined
                 started = true
                 return {
                   ...episode,
@@ -218,14 +227,14 @@ export function generateSchedule(layers, mpSpacing, bookmark, setBookmark) {
 
   // Calculate the step size based on the number of shows and movies
   const numOfColors =
-    360 / (Object.values(sets.tv).length + Object.values(sets.movies).length)
+    280 / (Object.values(sets.tv).length + Object.values(sets.movies).length)
 
   // Assign a unique hue to each show / movie layer
   Object.entries(sets.tv).forEach((entry, index) => {
     const [show_id, info] = entry
 
     // Calculate the hue for each show based on its position
-    const color = (index * numOfColors) % 360
+    const color = (((index * numOfColors) % 280) + 290) % 360
     colors.tv[show_id] = { ...info, color }
   })
 
@@ -233,7 +242,9 @@ export function generateSchedule(layers, mpSpacing, bookmark, setBookmark) {
     const [layer_id, info] = entry
 
     // Calculate the hue for each show based on its position
-    const color = ((index + Object.values(sets.tv).length) * numOfColors) % 360
+    const color =
+      ((((index + Object.values(sets.tv).length) * numOfColors) % 280) + 290) %
+      360
     colors.movies[layer_id] = { ...info, color }
   })
 

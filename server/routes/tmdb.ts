@@ -75,9 +75,6 @@ router.get('/tv', async (req, res) => {
                 runtime: episode.runtime,
                 episode: episode.episode_number,
                 overview: episode.overview,
-                start:
-                  seasonData.season_number + ':' + episode.episode_number ==
-                  '1:1',
               })),
             }
           }),
