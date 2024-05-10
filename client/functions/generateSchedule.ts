@@ -4,6 +4,7 @@ export function generateSchedule(
   bookmark,
   setBookmark,
   data,
+  setLayers,
 ) {
   // Loop over each layer, ignoring the final entry in each
   const schedule = layers.map((entries) => {
@@ -77,7 +78,15 @@ export function generateSchedule(
       let temp
 
       layer
-        .map((entry) => (entry.type == 'tv' ? entry.episodes : entry))
+        .map((entry, layer_id) =>
+          entry.type == 'tv'
+            ? entry.episodes.map((episode) => ({
+                ...episode,
+                layer_id,
+                layer: i,
+              }))
+            : { ...entry, layer_id, layer: i },
+        )
         .flat()
         .concat({ check: true })
         .forEach((entry) => {
@@ -158,7 +167,6 @@ export function generateSchedule(
             return {
               ...part,
               mid,
-              layer: i,
             }
           })
 
@@ -173,12 +181,10 @@ export function generateSchedule(
             return {
               ...entry,
               mid,
-              layer: i,
             }
           return entry.episodes.map((episode) => ({
             ...episode,
             mid,
-            layer: i,
           }))
         }
       })
@@ -256,5 +262,8 @@ export function generateSchedule(
     ).length,
     bookmark,
     setBookmark,
+    data,
+    layers,
+    setLayers,
   }
 }

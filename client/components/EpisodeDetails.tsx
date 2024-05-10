@@ -1,14 +1,6 @@
 export default function EpisodeDetails(props) {
-  const {
-    entry,
-    i,
-    schedule,
-    colors,
-    numberOfLayers,
-    bookmark,
-    setBookmark,
-    show,
-  } = props
+  const { entry, i, schedule, colors, numberOfLayers, bookmark, setBookmark } =
+    props
   const minRuntime = 30
 
   return (
@@ -19,7 +11,7 @@ export default function EpisodeDetails(props) {
         entry.premier && 'premier',
         entry.finale && 'finale',
         entry.layer % 2 && 'odd',
-        !show && 'fade',
+        !entry.show && 'fade',
       ]
         .filter(Boolean)
         .join(' ')}

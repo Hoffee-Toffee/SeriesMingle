@@ -61,7 +61,13 @@ function Main({ user, id, signOut }) {
 
   function setLayers(newLayers, force = false) {
     if (readOnly) return
-    setState({ ...state, layers: newLayers, saved: false, force })
+    setState({
+      ...state,
+      layers: newLayers,
+      saved: false,
+      force,
+      bookmark: undefined,
+    })
   }
 
   function setMpSpacing(mpSpacing) {
@@ -87,32 +93,44 @@ function Main({ user, id, signOut }) {
       </button>
       <fieldset id="layerContainer">
         <legend>Layers</legend>
-        {layers.map((entries, index) => (
-          <Layer
-            key={index}
-            id={index}
-            entries={entries}
-            layers={layers}
-            setLayers={setLayers}
-            data={data}
-            addData={addData}
-          />
-        ))}
-        <button onClick={() => setLayers([...layers, []])}>Add Layer</button>
+        {bookmark ? (
+          <span>Layer editing locked while bookmark exists.</span>
+        ) : (
+          <>
+            {layers.map((entries, index) => (
+              <Layer
+                key={index}
+                id={index}
+                entries={entries}
+                layers={layers}
+                setLayers={setLayers}
+                data={data}
+                addData={addData}
+              />
+            ))}
+            <button onClick={() => setLayers([...layers, []])}>
+              Add Layer
+            </button>
+          </>
+        )}
       </fieldset>
       <fieldset id="mp" onChange={(e) => setMpSpacing(e.target.value)}>
         <legend>Space Multi-Parters...</legend>
-        {['Normally', 'Closer', 'Consecutively'].map((option, i) => (
-          <div key={i}>
-            <input
-              type="radio"
-              name={`mp-opt-${i}`}
-              value={option.toLowerCase().slice(0, 6)}
-              checked={mpSpacing === option.toLowerCase().slice(0, 6)}
-            />
-            <label htmlFor={`mp-opt-${i}`}>{option}</label>
-          </div>
-        ))}
+        {bookmark ? (
+          <span>Spacing adjustment locked while bookmark exists.</span>
+        ) : (
+          ['Normally', 'Closer', 'Consecutively'].map((option, i) => (
+            <div key={i}>
+              <input
+                type="radio"
+                name={`mp-opt-${i}`}
+                value={option.toLowerCase().slice(0, 6)}
+                checked={mpSpacing === option.toLowerCase().slice(0, 6)}
+              />
+              <label htmlFor={`mp-opt-${i}`}>{option}</label>
+            </div>
+          ))
+        )}
       </fieldset>
       <Schedule
         scheduleData={generateSchedule(
@@ -121,6 +139,7 @@ function Main({ user, id, signOut }) {
           bookmark,
           setBookmark,
           data,
+          setLayers,
         )}
       />
     </div>
