@@ -16,7 +16,7 @@ export function generateSchedule(
         const entry = data[entryRef.ref[0]][entryRef.ref[1]]
 
         // If a movie, simply return it
-        if (entry.type === 'movie') return entry
+        if (entry.type === 'movie') return { ...entry, average_run_time: 30 }
 
         // Otherwise, its a show and needs it's episodes returned
         let started = !entryRef.start
@@ -32,6 +32,8 @@ export function generateSchedule(
                 started = true
                 return {
                   ...episode,
+                  average_run_time:
+                    data.tv[entryRef.ref[1]].episode_run_time || 30,
                   season: season.season,
                   show_id: entry.id,
                   show_title: entry.title,
@@ -52,9 +54,10 @@ export function generateSchedule(
       (running, entry) =>
         running +
         (entry.type === 'movie'
-          ? entry.runtime
+          ? Math.max(entry.runtime, entry.average_run_time)
           : entry.episodes.reduce(
-              (running, episode) => running + episode.runtime,
+              (running, episode) =>
+                running + Math.max(episode.runtime, episode.average_run_time),
               0,
             )),
       0,
@@ -111,7 +114,10 @@ export function generateSchedule(
             const title = series.some((ce) => ce.title !== first.title)
               ? series.map((ce) => ce.title).join(' / ')
               : first.title
-            const runtime = series.reduce((rt, ce) => rt + ce.runtime, 0)
+            const runtime = series.reduce(
+              (rt, ce) => rt + Math.max(ce.runtime, ce.average_run_time),
+              0,
+            )
 
             if (title == first.title) {
               series = series.map((ce) => ({
@@ -132,6 +138,7 @@ export function generateSchedule(
                 type: 'multiple',
                 runtime,
                 episodes: series,
+                average_run_time: series[0].average_run_time,
               })
             }
 
@@ -151,18 +158,27 @@ export function generateSchedule(
       let start = 0
 
       return condensed.map((entry) => {
+        console.log(entry.average_run_time)
         // If normal and near...
         if (entry.type == 'multiple' && mpSpacing == 'closer') {
           // Ratio of content to gap
           // Needs to be maintained
-          const area = (entry.runtime * padding + entry.runtime) / 4
+          const area =
+            (Math.max(entry.runtime, entry.average_run_time) * padding +
+              Math.max(entry.runtime, entry.average_run_time)) /
+            4
 
           start += area
 
           const res = entry.episodes.map((part) => {
             const mid =
-              start + ((part.runtime * padding) / 2 + part.runtime / 2 / 2)
-            start += (part.runtime * padding + part.runtime) / 2
+              start +
+              ((Math.max(part.runtime, part.average_run_time) * padding) / 2 +
+                Math.max(part.runtime, part.average_run_time) / 2 / 2)
+            start +=
+              (Math.max(part.runtime, part.average_run_time) * padding +
+                Math.max(part.runtime, part.average_run_time)) /
+              2
 
             return {
               ...part,
@@ -174,8 +190,13 @@ export function generateSchedule(
 
           return res
         } else {
-          const mid = start + (entry.runtime * padding) / 2 + entry.runtime / 2
-          start += entry.runtime * padding + entry.runtime
+          const mid =
+            start +
+            (Math.max(entry.runtime, entry.average_run_time) * padding) / 2 +
+            Math.max(entry.runtime, entry.average_run_time) / 2
+          start +=
+            Math.max(entry.runtime, entry.average_run_time) * padding +
+            Math.max(entry.runtime, entry.average_run_time)
 
           if (entry.type !== 'multiple')
             return {

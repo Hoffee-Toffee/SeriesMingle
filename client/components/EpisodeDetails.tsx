@@ -1,7 +1,6 @@
 export default function EpisodeDetails(props) {
   const { entry, i, schedule, colors, numberOfLayers, bookmark, setBookmark } =
     props
-  const minRuntime = 30
 
   return (
     <div
@@ -16,7 +15,7 @@ export default function EpisodeDetails(props) {
         .filter(Boolean)
         .join(' ')}
       style={{
-        height: `calc(var(--scale) * ${Math.max(entry.runtime, minRuntime)}px)`,
+        height: `calc(var(--scale) * ${Math.max(entry.runtime, entry.average_run_time)}px)`,
         marginLeft: `${entry.layer * 28 + 3}px`,
         backgroundColor: `hwb(${entry.show_id ? colors.tv[entry.show_id].color : colors.movies[entry.layer].color} 0% 25%)`,
       }}
@@ -24,15 +23,15 @@ export default function EpisodeDetails(props) {
       <div
         className={['episode-detail', i % 2 && 'odd'].filter(Boolean).join(' ')}
         style={{
-          minHeight: `${Math.max(entry.runtime, minRuntime) + 4}px`,
-          maxHeight: `${Math.max(entry.runtime, minRuntime) + (schedule[i + 1] ? schedule[i + 1].runtime : 30) + 10}px`,
+          minHeight: `${Math.max(entry.runtime, entry.average_run_time) + 4}px`,
+          maxHeight: `${Math.max(entry.runtime, entry.average_run_time) + Math.max(schedule[i + 1] && schedule[i + 1].runtime, schedule[i + 1] && schedule[i + 1].average_run_time) + 10}px`,
           width: `calc(50% * var(--scale) - ${numberOfLayers} * var(--layer-size) * var(--scale) - var(--offset))`,
         }}
       >
         <div
           style={{
-            minHeight: `${Math.max(entry.runtime, minRuntime) - 12}px`,
-            maxHeight: `calc(var(--scale) * ${Math.max(entry.runtime, minRuntime) - 4}px + var(--height-mult) * ${(schedule[i + 1] ? schedule[i + 1].runtime : 30) - 2}px)`,
+            minHeight: `${Math.max(entry.runtime, entry.average_run_time) - 12}px`,
+            maxHeight: `calc(var(--scale) * ${Math.max(entry.runtime, entry.average_run_time) - 4}px + var(--height-mult) * ${Math.max(schedule[i + 1] && schedule[i + 1].runtime, schedule[i + 1] && schedule[i + 1].average_run_time) - 2}px)`,
           }}
           id={bookmark == `${entry.type}-${entry.id}` ? 'bookmark' : undefined}
         >

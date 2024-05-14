@@ -54,6 +54,7 @@ router.get('/tv', async (req, res) => {
     .then((response) => response.json())
     .then(async (show) => {
       const numOfSeasons = show.number_of_seasons
+      let withRuntime = 0
 
       // Fetch all seasons data
       const seasons = await Promise.all(
@@ -85,6 +86,17 @@ router.get('/tv', async (req, res) => {
         type: 'tv',
         title: show.name,
         year: (show.first_air_date || '').split('-')[0],
+        episode_run_time: Math.round(
+          seasons.reduce(
+            (grandTotal, season) =>
+              grandTotal +
+              season.episodes.reduce((seasonTotal, episode) => {
+                if (episode.runtime > 0) withRuntime++
+                return seasonTotal + (episode.runtime || 0)
+              }, 0),
+            0,
+          ) / Math.max(withRuntime, 1),
+        ),
         seasons,
       })
     })
