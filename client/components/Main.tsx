@@ -185,6 +185,7 @@ function Main({ user, id, signOut }) {
 
   function onDragStart(event: DragStartEvent) {
     console.log('drag start')
+    setTempLayers(null)
     setActiveEntry({ ...event.active, ...event.active.data.current.entry });
   }
 
@@ -193,6 +194,7 @@ function Main({ user, id, signOut }) {
     setActiveEntry(null);
     setOutlinePos(null)
     if (JSON.stringify(tempLayers) !== JSON.stringify(layers)) setLayers(tempLayers, true)
+    setTempLayers(null)
   }
 
   function onDragOver(event: DragOverEvent) {

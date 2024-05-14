@@ -158,7 +158,6 @@ export function generateSchedule(
       let start = 0
 
       return condensed.map((entry) => {
-        console.log(entry.average_run_time)
         // If normal and near...
         if (entry.type == 'multiple' && mpSpacing == 'closer') {
           // Ratio of content to gap

@@ -141,7 +141,7 @@ function Entry({
                 <select
                   onChange={(e) => {
                     entries[id] = { ...entries[id], start: e.target.value }
-                    setEntries([...entries])
+                    setEntries([...entries], true)
                   }}
                 >
                   {entryData.seasons.map((season) => (
