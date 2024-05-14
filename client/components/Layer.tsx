@@ -1,4 +1,5 @@
 import Entry from './Entry.tsx'
+import { SortableContext } from "@dnd-kit/sortable";
 
 function Layer({
   id,
@@ -7,6 +8,7 @@ function Layer({
   setLayers,
   data,
   addData,
+  outlinePos
 }: {
   id: number
   entries: any[]
@@ -14,6 +16,7 @@ function Layer({
   setLayers: any
   data: object
   addData: any
+  outlinePos: any
 }) {
   function setEntries(newEntries, force = false) {
     layers[id] = newEntries
@@ -31,18 +34,21 @@ function Layer({
   return (
     <div className="layer" id={`layer-${id}`}>
       <div className="options">
-        {entries.map((entry, index) => (
-          <Entry
-            id={index}
-            key={index}
-            entry={entry}
-            entries={entries}
-            setEntries={setEntries}
-            layer={id}
-            data={data}
-            addData={addData}
-          />
-        ))}
+        <SortableContext items={Array(entries.length)}>
+          {entries.map((entry, index) => (
+            <Entry
+              id={index}
+              key={`${id}-${index}`}
+              entry={entry}
+              entries={entries}
+              setEntries={setEntries}
+              layer={id}
+              data={data}
+              addData={addData}
+              className={outlinePos == `${id}-${index}` && 'outline'}
+            />
+          ))}
+        </SortableContext>
       </div>
       <button onClick={() => setLayers(layers.filter((_, i) => i !== id))}>
         x

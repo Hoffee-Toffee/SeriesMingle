@@ -40,16 +40,23 @@ html {
     padding: 0.5em;
     margin: 0.5em 0.1em;
   }
-  .options div {
+  .dx-state-invisible{
+    display: none;
+  }
+  .options div,
+  .overlay {
     min-height: 35px;
     vertical-align: middle;
     align-content: center;
     padding: 0.3em 0.5em;
     max-width: calc(100vw - 100px);
+    position: relative;
+    padding-left: 17px;
   }
   .options > *,
   .new input,
-  .layer > button {
+  .layer > button,
+  .overlay {
     border: orangered 2px solid;
     border-radius: 0.3em;
     background-color: darkred;
@@ -58,18 +65,33 @@ html {
     margin: 0.25em;
     display: inline-block;
   }
-  .new {
+  .overlay {
+    padding: 0.3em 0.5em;
+    padding-left: 17px;
+  }
+  .outline {
+    border-style: dashed;
+    opacity: 0.5;
+    filter: grayscale(0.5);
+  }
+  :is(.new, .pick) {
     display: inline-flex;
+  }
+  .pick {
+    padding-left: 0.3em !important;
   }
   .new input {
     margin: 0.25em;
     color: orangered;
     background-color: white;
+    margin-left: calc(0.25em - 10px);
   }
   .new input::placeholder {
     color: #888;
   }
-  .options div select {
+  .options div select,
+  .overlay select {
+    cursor: pointer;
     border: none;
     background-color: darkred;
     appearance: none;
@@ -78,11 +100,13 @@ html {
     color: #d7e300;
     width: 100%;
   }
-  .options span {
+  .options span,
+  .overlay span {
     cursor: default;
   }
   .options div button,
-  .layer > button {
+  .layer > button,
+  .overlay button {
     color: #d7e300;
     background-color: transparent;
     border: none;
@@ -94,7 +118,8 @@ html {
     height: auto;
     align-self: center;
   }
-  .options div button {
+  .options div button,
+  .overlay button {
     margin: 0 0.35em;
   }
   .hide {
@@ -127,6 +152,13 @@ html {
     border: none;
     background: none;
   }
+  .fa-grip-vertical {
+    position: absolute;
+    transform: translate(-10px, -50%);
+    top: 50%;
+    cursor: grab;
+    font-size: x-small;
+}
   fieldset {
     border: #0095fa 2px solid;
     color: white;
@@ -193,12 +225,12 @@ html {
   .part.episode-marker {
     border-style: dashed;
   }
-  .options span select {
+  :is(.options, .overlay) span select {
     font-size: x-small !important;
     color: #d7e300;
   }
-  .options label,
-  .options span select {
+  :is(.options, .overlay) label,
+  :is(.options, .overlay) span select {
     display: flex;
     font-size: smaller;
     margin: 0 2px;

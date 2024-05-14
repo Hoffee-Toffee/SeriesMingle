@@ -1,5 +1,7 @@
 import search from '../apis/search.ts'
 import fetchMedia from '../apis/fetchMedia.ts'
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 function Entry({
   id,
@@ -9,6 +11,7 @@ function Entry({
   setEntries,
   data,
   addData,
+  className,
 }: {
   id: number
   layer: number
@@ -17,6 +20,7 @@ function Entry({
   setEntries: any
   data: object
   addData: any
+  className: string | undefined
 }) {
   let options, entryData
 
@@ -42,11 +46,24 @@ function Entry({
     }
   }
 
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    isDragging,
+  } = useSortable({
+    id: `${layer}-${id}`,
+    data: {
+      type: "Entry",
+      entry
+    }
+  });
+
   switch (Array.isArray(entry) ? 'array' : typeof entry) {
     case 'string':
     case 'undefined':
       options = (
-        <div className="new">
+        <div className="new" ref={setNodeRef}>
           <input
             placeholder="Enter a title"
             type="text"
@@ -64,7 +81,7 @@ function Entry({
       break
     case 'array':
       options = (
-        <>
+        <div ref={setNodeRef} className="pick">
           <select
             onChange={(e) => {
               entries[id] = entry.map((option) => ({
@@ -104,42 +121,49 @@ function Entry({
           >
             Back
           </button>
-        </>
+        </div>
       )
       break
     case 'object':
       entryData = data[entry.ref[0]][entry.ref[1]]
 
       options = (
-        <div>
-          {entryData.type === 'tv' && (
-            <label>
-              Start:
-              <select
-                onChange={(e) => {
-                  entries[id] = { ...entries[id], start: e.target.value }
-                  setEntries([...entries])
-                }}
-              >
-                {entryData.seasons.map((season) => (
-                  <optgroup
-                    label={`Season ${season.season}`}
-                    key={season.season}
-                  >
-                    {season.episodes.map((episode) => (
-                      <option
-                        key={episode.episode}
-                        value={season.season + ':' + episode.episode}
-                        selected={
-                          `${season.season}:${episode.episode}` == entry.start
-                        }
-                      >{`S${season.season}E${episode.episode}: ${episode.title}`}</option>
-                    ))}
-                  </optgroup>
-                ))}
-              </select>
-            </label>
-          )}
+        <div
+          ref={setNodeRef}
+          className={className}>
+          <i className="handle fa-solid fa-grip-vertical"
+            {...attributes}
+            {...listeners} />
+          {
+            entryData.type === 'tv' && (
+              <label>
+                Start:
+                <select
+                  onChange={(e) => {
+                    entries[id] = { ...entries[id], start: e.target.value }
+                    setEntries([...entries])
+                  }}
+                >
+                  {entryData.seasons.map((season) => (
+                    <optgroup
+                      label={`Season ${season.season}`}
+                      key={season.season}
+                    >
+                      {season.episodes.map((episode) => (
+                        <option
+                          key={episode.episode}
+                          value={season.season + ':' + episode.episode}
+                          selected={
+                            `${season.season}:${episode.episode}` == entry.start
+                          }
+                        >{`S${season.season}E${episode.episode}: ${episode.title}`}</option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </label>
+            )
+          }
           <span
             className="option"
             tmdb-id={entryData.id}
@@ -154,7 +178,7 @@ function Entry({
           >
             x
           </button>
-        </div>
+        </div >
       )
   }
 
