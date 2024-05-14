@@ -125,6 +125,9 @@ html {
   .hide {
     display: none;
   }
+  .handle {
+    touch-action: none;
+  }
   button,
   a {
     color: #d7e300;
