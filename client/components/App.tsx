@@ -17,11 +17,10 @@ export default function App() {
     })
   }, [])
 
-  if (!loaded) return <p style={{ color: 'white' }}>Loading...</p>
-
-  return user || id ? (
-    <Main user={user} id={id} signOut={() => auth.signOut()} />
-  ) : (
-    <LogIn setUser={setUser} />
-  )
+  return <>
+    {loaded && (user || id ? (
+      <Main user={user} id={id} signOut={() => auth.signOut()} />
+    ) : (
+      <LogIn setUser={setUser} />
+    ))}</>
 }

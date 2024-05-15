@@ -36,6 +36,8 @@ function Main({ user, id, signOut }) {
   const [activeEntry, setActiveEntry] = useState(null)
   const [tempLayers, setTempLayers] = useState(null)
   const [outlinePos, setOutlinePos] = useState(null)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [loadAnimation, setLoadAnimation] = useState(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -48,6 +50,8 @@ function Main({ user, id, signOut }) {
   useEffect(() => {
     const fetchProjectData = async () => {
       const fromCloud = await fetchProject(id || uid)
+      setIsLoaded(true)
+      setLoadAnimation('fadein')
       console.log(fromCloud)
       if (fromCloud) setState(fromCloud)
     }
@@ -101,13 +105,20 @@ function Main({ user, id, signOut }) {
     setState({ ...state, mpSpacing, saved: false, force: true })
   }
 
-  return (
-    <div id="main">
-      {readOnly && (
+  return (<>
+    <div id="loading-projects" className={isLoaded ? 'loaded' : 'loading'}>
+      <div className="lds-ripple">
+        <div></div>
+        <div></div>
+      </div>
+      <span className="scanline"></span>
+    </div>
+    {isLoaded && (<div id="main" className={loadAnimation}>
+      {readOnly &&
         <span style={{ color: 'white', display: 'block', textAlign: 'center' }}>
           READ-ONLY
         </span>
-      )}
+      }
       {user && <button onClick={signOut}>Sign Out</button>}
       <button
         onClick={() => {
@@ -180,8 +191,7 @@ function Main({ user, id, signOut }) {
           setLayers,
         )}
       />
-    </div>
-  )
+    </div>)}</>)
 
   function onDragStart(event: DragStartEvent) {
     console.log('drag start')
