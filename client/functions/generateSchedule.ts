@@ -54,10 +54,10 @@ export function generateSchedule(
       (running, entry) =>
         running +
         (entry.type === 'movie'
-          ? Math.max(entry.runtime, entry.average_run_time)
+          ? entry.runtime || entry.average_run_time
           : entry.episodes.reduce(
               (running, episode) =>
-                running + Math.max(episode.runtime, episode.average_run_time),
+                running + (episode.runtime || episode.average_run_time),
               0,
             )),
       0,
@@ -115,7 +115,7 @@ export function generateSchedule(
               ? series.map((ce) => ce.title).join(' / ')
               : first.title
             const runtime = series.reduce(
-              (rt, ce) => rt + Math.max(ce.runtime, ce.average_run_time),
+              (rt, ce) => rt + (ce.runtime || ce.average_run_time),
               0,
             )
 
@@ -163,8 +163,8 @@ export function generateSchedule(
           // Ratio of content to gap
           // Needs to be maintained
           const area =
-            (Math.max(entry.runtime, entry.average_run_time) * padding +
-              Math.max(entry.runtime, entry.average_run_time)) /
+            ((entry.runtime || entry.average_run_time) * padding +
+              (entry.runtime || entry.average_run_time)) /
             4
 
           start += area
@@ -172,11 +172,11 @@ export function generateSchedule(
           const res = entry.episodes.map((part) => {
             const mid =
               start +
-              ((Math.max(part.runtime, part.average_run_time) * padding) / 2 +
-                Math.max(part.runtime, part.average_run_time) / 2 / 2)
+              (((part.runtime || part.average_run_time) * padding) / 2 +
+                (part.runtime || part.average_run_time) / 2 / 2)
             start +=
-              (Math.max(part.runtime, part.average_run_time) * padding +
-                Math.max(part.runtime, part.average_run_time)) /
+              ((part.runtime || part.average_run_time) * padding +
+                (part.runtime || part.average_run_time)) /
               2
 
             return {
@@ -191,11 +191,11 @@ export function generateSchedule(
         } else {
           const mid =
             start +
-            (Math.max(entry.runtime, entry.average_run_time) * padding) / 2 +
-            Math.max(entry.runtime, entry.average_run_time) / 2
+            ((entry.runtime || entry.average_run_time) * padding) / 2 +
+            (entry.runtime || entry.average_run_time) / 2
           start +=
-            Math.max(entry.runtime, entry.average_run_time) * padding +
-            Math.max(entry.runtime, entry.average_run_time)
+            (entry.runtime || entry.average_run_time) * padding +
+            (entry.runtime || entry.average_run_time)
 
           if (entry.type !== 'multiple')
             return {
@@ -280,6 +280,7 @@ export function generateSchedule(
     numberOfLayers: layers.filter((layer) =>
       layer.some((entry) => typeof entry === 'object' && !Array.isArray(entry)),
     ).length,
+    totalSpan,
     bookmark,
     setBookmark,
     data,

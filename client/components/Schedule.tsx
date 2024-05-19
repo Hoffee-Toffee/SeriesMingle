@@ -1,15 +1,22 @@
 import EpisodeDetails from './EpisodeDetails.tsx'
 
 export default function Schedule({ scheduleData }) {
-  let { schedule, colors, bookmark, data, layers, setLayers } = scheduleData
+  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan } = scheduleData
 
   let showing = !bookmark
+  let seenSpan = 0
 
-  schedule = schedule.map((entry) => ({
-    ...entry,
-    show: (showing =
-      showing || (bookmark && `${entry.type}-${entry.id}` == bookmark)),
-  }))
+  schedule = schedule.map((entry) => {
+    const show = (showing =
+      showing || (bookmark && `${entry.type}-${entry.id}` == bookmark))
+    if (!showing) seenSpan += (entry.runtime || entry.average_run_time)
+    return {
+      ...entry,
+      show
+    }
+  })
+
+  const seenPercentage = seenSpan / totalSpan * 100
 
   function removeWatched() {
     const seenProgress = {}
@@ -63,8 +70,8 @@ export default function Schedule({ scheduleData }) {
       </fieldset>
       {bookmark && (
         <>
-          <a href="#bookmark">Jump to Progress</a>
-          <button onClick={removeWatched}>Trim Watched</button>
+          <a href="#bookmark">Jump to Progress ({Math.round(seenPercentage * 100) / 100}% complete)</a>
+          <button onClick={removeWatched}>Remove Watched</button>
         </>
       )}
       <div id="timelineContainer">
