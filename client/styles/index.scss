@@ -40,7 +40,7 @@ html {
     padding: 0.5em;
     margin: 0.5em 0.1em;
   }
-  .dx-state-invisible{
+  .dx-state-invisible {
     display: none;
   }
   .options div,
@@ -162,7 +162,7 @@ html {
     top: 50%;
     cursor: grab;
     font-size: x-small;
-}
+  }
   fieldset {
     border: #0095fa 2px solid;
     color: white;
@@ -240,11 +240,12 @@ html {
     margin: 0 2px;
   }
   .episode-marker {
-    margin-top: 2px;
+    margin-top: 8px;
     width: 20px;
     margin-right: 3px;
     border: 2px solid black;
     transition: var(--transition-time);
+    scroll-margin-top: 5px;
   }
   .episode-marker.fade:not(:hover) {
     opacity: 0.25;
@@ -427,7 +428,8 @@ html {
 }
 
 @keyframes fadein {
-  0%, 75% {
+  0%,
+  75% {
     opacity: 0;
   }
   100% {
@@ -438,18 +440,19 @@ html {
   0% {
     opacity: 1;
   }
-  75%, 100% {
+  75%,
+  100% {
     opacity: 0;
   }
 }
 @keyframes lds-ripple {
-  0%, 4.9% {
+  0%,
+  4.9% {
     top: 36px;
     left: 36px;
     width: 0;
     height: 0;
     opacity: 0;
-  
   }
   5% {
     top: 36px;
@@ -467,7 +470,8 @@ html {
   }
 }
 
-.loading, .loaded {
+.loading,
+.loaded {
   transition-duration: 0.5s;
   position: absolute;
   left: calc(50vw - 50px);
@@ -485,7 +489,9 @@ html {
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  box-shadow: 0 0 20px 20px var(--bg-col) inset, 0 0 2px 2px var(--bg-col) inset;
+  box-shadow:
+    0 0 20px 20px var(--bg-col) inset,
+    0 0 2px 2px var(--bg-col) inset;
   outline: solid var(--bg-col) 10px;
 }
 

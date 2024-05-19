@@ -1,6 +1,5 @@
 export default function EpisodeDetails(props) {
-  const { entry, i, schedule, colors, numberOfLayers, bookmark, setBookmark } =
-    props
+  const { entry, i, schedule, colors, numberOfLayers, bookmark, setBookmark } = props
 
   return (
     <div
@@ -19,6 +18,7 @@ export default function EpisodeDetails(props) {
         marginLeft: `${entry.layer * 28 + 3}px`,
         backgroundColor: `hwb(${entry.show_id ? colors.tv[entry.show_id].color : colors.movies[entry.layer].color} 0% 25%)`,
       }}
+      id={bookmark == `${entry.type}-${entry.id}` ? 'bookmark' : undefined}
     >
       <div
         className={['episode-detail', i % 2 && 'odd'].filter(Boolean).join(' ')}
@@ -33,7 +33,6 @@ export default function EpisodeDetails(props) {
             minHeight: `${Math.max(entry.runtime, entry.average_run_time) - 12}px`,
             maxHeight: `calc(var(--scale) * ${Math.max(entry.runtime, entry.average_run_time) - 4}px + var(--height-mult) * ${Math.max(schedule[i + 1] && schedule[i + 1].runtime, schedule[i + 1] && schedule[i + 1].average_run_time) - 2}px)`,
           }}
-          id={bookmark == `${entry.type}-${entry.id}` ? 'bookmark' : undefined}
         >
           <label htmlFor={`bookmark-${i}`}>
             <i
@@ -49,24 +48,15 @@ export default function EpisodeDetails(props) {
               setBookmark(newVal == bookmark ? null : newVal)
             }}
           />
-          {entry.show_id ? (
-            <>
-              <span>
-                {entry.show_title} (S{entry.season}E{entry.episode})
-              </span>
-              <span className="title">{entry.title}</span>
-              <span className="spoiler">
-                {entry.overview || 'No Description Available'}
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="title">{entry.title}</span>
-              <span className="spoiler">
-                {entry.overview || 'No Description Available'}
-              </span>
-            </>
+          {entry.show_id && (
+            <span>
+              {entry.show_title} (S{entry.season}E{entry.episode})
+            </span>
           )}
+          <span className="title">{entry.title}</span>
+          <span className="spoiler">
+            {entry.overview || 'No Description Available'}
+          </span>
         </div>
       </div>
     </div>
