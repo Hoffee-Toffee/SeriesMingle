@@ -28,7 +28,7 @@ router.get('/:user', async (req, res) => {
 
   // Check if the project exists
   if (!projectData) {
-    return res.status(404).send('Project not found')
+    return res.send(null)
   }
 
   res.send(projectData)
