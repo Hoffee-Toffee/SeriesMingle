@@ -216,16 +216,36 @@ html {
   }
   #key span {
     padding: 10px;
-    display: inline-block;
+    display: inline-grid;
     margin: 5px;
+    text-align: center;
+    vertical-align: top;
+  }
+  #key span::before {
+    content: attr(txt);
+    line-height: 300%;
   }
   #key span::after {
-    content: attr(txt);
-    padding: 0 5px;
-    color: white;
+    content: attr(watched);
+    line-height: 0%;
+    color: transparent;
+  }
+  #key span::before,
+  #key span::after {
+    transition: var(--transition-time) var(--transition-time), color var(--transition-time);
+    padding: 0 10px;
     background-color: black;
     border: 1px solid black;
   }
+  #key span:hover::before,
+  #key span:hover::after {
+    line-height: 150%;
+    transition: var(--transition-time), color var(--transition-time) var(--transition-time);
+  }
+  #key span:hover::after {
+    color: white;
+  }
+
   .part.episode-marker {
     border-style: dashed;
   }
@@ -472,6 +492,7 @@ html {
 
 .loading,
 .loaded {
+  pointer-events: none;
   transition-duration: 0.5s;
   position: absolute;
   left: calc(50vw - 50px);

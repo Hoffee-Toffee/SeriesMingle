@@ -9,7 +9,20 @@ export default function Schedule({ scheduleData }) {
   schedule = schedule.map((entry) => {
     const show = (showing =
       showing || (bookmark && `${entry.type}-${entry.id}` == bookmark))
-    if (!showing) seenSpan += (entry.runtime || entry.average_run_time)
+    const span = entry.runtime || entry.average_run_time
+    const type = entry.show_id ? 'tv' : 'movies'
+    const index = entry.show_id || entry.layer
+
+    if (!colors[type][index].span) {
+      colors[type][index].span = 0
+      colors[type][index].watched = 0
+    }
+    colors[type][index].span += span
+
+    if (!showing) {
+      seenSpan += span
+      colors[type][index].watched += span
+    }
     return {
       ...entry,
       show
@@ -65,12 +78,13 @@ export default function Schedule({ scheduleData }) {
               txt={color.title}
               key={color.firstIndex}
               style={{ backgroundColor: `hwb(${color.color} 0% 25%)` }}
+              watched={`(${Math.round((color.watched / color.span) * 10000) / 100}% watched)`}
             />
           ))}
       </fieldset>
       {bookmark && (
         <>
-          <a href="#bookmark">Jump to Progress ({Math.round(seenPercentage * 100) / 100}% complete)</a>
+          <a href="#bookmark">Jump to Progress ({Math.round(seenPercentage * 100) / 100}% watched)</a>
           <button onClick={removeWatched}>Remove Watched</button>
         </>
       )}
