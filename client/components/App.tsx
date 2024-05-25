@@ -2,6 +2,8 @@ import Main from './Main.tsx'
 import LogIn from './Login.tsx'
 import { auth } from '../../server/firebase.ts'
 import { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import favicon from '../files/favicon.ico'
 
 export default function App() {
   const [user, setUser] = useState(auth.currentUser)
@@ -17,10 +19,36 @@ export default function App() {
     })
   }, [])
 
-  return <>
-    {loaded && (user || id ? (
-      <Main user={user} id={id} signOut={() => auth.signOut()} />
-    ) : (
-      <LogIn setUser={setUser} />
-    ))}</>
+  return (
+    <>
+      <Helmet>
+        <meta
+          property="og:url"
+          content={`${window.location.origin}${window.location.pathname}`}
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content={favicon}
+        />
+        {id ? (
+          <meta
+            property="og:description"
+            content="Check out my TV and movie schedule on SeriesMingle!"
+          />
+        ) : (
+          <meta
+            property="og:description"
+            content="Create your own personal TV and movie schedule with SeriesMingle!"
+          />
+        )}
+      </Helmet>
+      {loaded &&
+        (user || id ? (
+          <Main user={user} id={id} signOut={() => auth.signOut()} />
+        ) : (
+          <LogIn setUser={setUser} />
+        ))}
+    </>
+  )
 }

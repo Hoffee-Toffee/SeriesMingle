@@ -1,7 +1,9 @@
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client';
+import App from './components/App.tsx';
 
-import App from './components/App.tsx'
-
-document.addEventListener('DOMContentLoaded', () => {
-  createRoot(document.getElementById('app') as HTMLElement).render(<App />)
-})
+const rootElement = document.getElementById('app');
+if (rootElement.hasChildNodes()) {
+  hydrateRoot(rootElement, <App />);
+} else {
+  createRoot(rootElement).render(<App />);
+}
