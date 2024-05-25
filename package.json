@@ -24,6 +24,9 @@
     "assets_dir": "assets",
     "base": "/"
   },
+  "reactSnap": {
+    "source": "./dist"
+  },
   "eslintConfig": {
     "extends": "@devacademy/eslint-config/react",
     "ignorePatterns": [
