@@ -1,3 +1,5 @@
+import generateColors from '../functions/generateColors.ts'
+
 export function generateSchedule(
   layers,
   mpSpacing,
@@ -253,14 +255,16 @@ export function generateSchedule(
 
   // Calculate the step size based on the number of shows and movies
   const numOfColors =
-    280 / (Object.values(sets.tv).length + Object.values(sets.movies).length)
+    Object.values(sets.tv).length + Object.values(sets.movies).length
+
+  const allColors = generateColors(numOfColors)
 
   // Assign a unique hue to each show / movie layer
   Object.entries(sets.tv).forEach((entry, index) => {
     const [show_id, info] = entry
 
     // Calculate the hue for each show based on its position
-    const color = (((index * numOfColors) % 280) + 290) % 360
+    const color = allColors[index]
     colors.tv[show_id] = { ...info, color }
   })
 
@@ -268,9 +272,7 @@ export function generateSchedule(
     const [layer_id, info] = entry
 
     // Calculate the hue for each show based on its position
-    const color =
-      ((((index + Object.values(sets.tv).length) * numOfColors) % 280) + 290) %
-      360
+    const color = allColors[index + Object.values(sets.tv).length]
     colors.movies[layer_id] = { ...info, color }
   })
 

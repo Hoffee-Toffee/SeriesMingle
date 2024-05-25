@@ -27,6 +27,11 @@
   background-color: #00f2ea;
 }
 
+* {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
 html {
   background: var(--bg-col);
 }
@@ -62,7 +67,6 @@ html {
     background-color: darkred;
     color: white;
     padding: 0.3em;
-    margin: 0.25em;
     display: inline-block;
   }
   .overlay {
@@ -100,6 +104,11 @@ html {
     color: #d7e300;
     width: 100%;
   }
+  .options div select *,
+  .overlay select optgroup {
+    color: #d7e300;
+    background-color: darkred;
+  }
   .options span,
   .overlay span {
     cursor: default;
@@ -110,17 +119,17 @@ html {
     color: #d7e300;
     background-color: transparent;
     border: none;
-    margin: 0 0.1em;
-    margin-left: 0.2em;
-    padding: 0;
     cursor: pointer;
     float: right;
     height: auto;
     align-self: center;
+    padding: 0 0.3em;
+    margin: 0;
   }
   .options div button,
   .overlay button {
-    margin: 0 0.35em;
+    padding: 0 0.3em;
+    margin: 0 0.15em;
   }
   .hide {
     display: none;
@@ -132,16 +141,20 @@ html {
   a {
     color: #d7e300;
     border: orangered 2px solid;
-    border-radius: 0.3em;
     background-color: darkred;
     padding: 0.3em;
     margin: 0.25em;
-    margin-top: 0.8em;
     cursor: pointer;
     font-size: smaller;
     text-decoration: none;
     display: inline-block;
-    font-family: sans-serif;
+  }
+  button, a, select {
+    transition: var(--transition-time);
+    outline: solid transparent 2px;
+    border-radius: 0.3em;
+    z-index: 1;
+    position: relative;
   }
   button:hover,
   .options button:hover,
@@ -151,10 +164,15 @@ html {
     background-color: orangered;
   }
   .layer > button:hover,
-  .options div > button:hover {
+  .options div > :is(button, select):hover,
+  .options div > :is(button, select):focus,
+  .options div label select:hover,
+  .options div label select:focus {
     color: #00f2ea;
+    background: #00000040;
     border: none;
-    background: none;
+    outline: #ffffff88 solid 2px;
+    border-radius: 5px;
   }
   .fa-grip-vertical {
     position: absolute;
@@ -217,9 +235,9 @@ html {
   #key span {
     padding: 10px;
     display: inline-grid;
-    margin: 5px;
     text-align: center;
     vertical-align: top;
+    font-size: smaller;
   }
   #key span::before {
     content: attr(txt);
@@ -232,7 +250,9 @@ html {
   }
   #key span::before,
   #key span::after {
-    transition: var(--transition-time) var(--transition-time), color var(--transition-time);
+    transition:
+      var(--transition-time) var(--transition-time),
+      color var(--transition-time);
     padding: 0 10px;
     background-color: black;
     border: 1px solid black;
@@ -240,12 +260,20 @@ html {
   #key span:hover::before,
   #key span:hover::after {
     line-height: 150%;
-    transition: var(--transition-time), color var(--transition-time) var(--transition-time);
+    transition:
+      var(--transition-time),
+      color var(--transition-time) var(--transition-time);
   }
   #key span:hover::after {
     color: white;
   }
-
+  #key,
+  .options,
+  #mp {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
   .part.episode-marker {
     border-style: dashed;
   }
@@ -357,6 +385,9 @@ html {
     right: 8px;
     cursor: pointer;
   }
+  .episode-detail label i:before {
+    transition: var(--transition-time);
+  }
   .episode-detail label i.fa-regular {
     opacity: 0;
     color: grey;
@@ -364,8 +395,8 @@ html {
   .episode-detail label i.fa-solid:before {
     color: #d7e300;
   }
-  .episode-detail label i:hover:after {
-    opacity: 1;
+  .episode-detail label i:hover:before {
+    color: white;
   }
   .episode-marker:hover .episode-detail label i.fa-regular {
     opacity: 1;
