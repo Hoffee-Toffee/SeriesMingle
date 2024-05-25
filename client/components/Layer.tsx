@@ -50,7 +50,7 @@ function Layer({
           ))}
         </SortableContext>
       </div>
-      <button onClick={() => setLayers(layers.filter((_, i) => i !== id))}>
+      <button onClick={() => setLayers(layers.filter((_, i) => i !== id), true)}>
         x
       </button>
     </div>

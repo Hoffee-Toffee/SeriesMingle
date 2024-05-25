@@ -10,7 +10,7 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { SortableContext } from '@dnd-kit/sortable'
-import { createPortal } from 'react-dom'
+import favicon from '../files/favicon.ico'
 import Layer from './Layer.tsx'
 import { generateSchedule } from '../functions/generateSchedule.ts'
 import Schedule from './Schedule.tsx'
@@ -105,6 +105,15 @@ function Main({ user, id, signOut }) {
     setState({ ...state, mpSpacing, saved: false, force: true })
   }
 
+  const scheduleData = generateSchedule(
+    layers,
+    mpSpacing,
+    bookmark,
+    setBookmark,
+    data,
+    setLayers,
+  )
+
   return (<>
     <div id="loading-projects" className={isLoaded ? 'loaded' : 'loading'}>
       <div className="lds-ripple">
@@ -120,14 +129,20 @@ function Main({ user, id, signOut }) {
         </span>
       }
       {user && <button onClick={signOut}>Sign Out</button>}
-      <button
-        onClick={() => {
-          if (readOnly) return
-          setState(example)
-        }}
-      >
-        Load Example
-      </button>
+      {user && scheduleData.schedule.length > 0 && <button onClick={() => navigator.share({
+        title: 'My Watching Schedule',
+        text: 'Check out my watching schedule on SeriesMingle!',
+        url: `${window.location.origin}${window.location.pathname}?id=${uid}`
+      })}>Share Schedule</button>}
+      {scheduleData.schedule.length == 0 &&
+        <button
+          onClick={() => {
+            if (readOnly) return
+            setState(example)
+          }}
+        >
+          Load Example
+        </button>}
       <fieldset id="layerContainer">
         <legend>Layers</legend>
         {bookmark ? (
@@ -155,7 +170,7 @@ function Main({ user, id, signOut }) {
             </SortableContext>
 
             <button onClick={() => setLayers([...layers, []])}>
-              Add Layer
+              New Layer
             </button>
             <DragOverlay dropAnimation={null}>
               {activeEntry && <Entry entry={activeEntry} data={data} className="overlay" />}
@@ -181,16 +196,9 @@ function Main({ user, id, signOut }) {
           ))
         )}
       </fieldset>
-      <Schedule
-        scheduleData={generateSchedule(
-          layers,
-          mpSpacing,
-          bookmark,
-          setBookmark,
-          data,
-          setLayers,
-        )}
-      />
+      {scheduleData.schedule.length > 0 && <Schedule
+        scheduleData={scheduleData}
+      />}
     </div>)}</>)
 
   function onDragStart(event: DragStartEvent) {
