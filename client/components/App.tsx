@@ -26,22 +26,16 @@ export default function App() {
           property="og:url"
           content={`${window.location.origin}${window.location.pathname}`}
         />
-        <meta property="og:type" content="website" />
         <meta
           property="og:image"
           content={favicon}
         />
-        {id ? (
+        {id &&
           <meta
             property="og:description"
             content="Check out my TV and movie schedule on SeriesMingle!"
           />
-        ) : (
-          <meta
-            property="og:description"
-            content="Create your own personal TV and movie schedule with SeriesMingle!"
-          />
-        )}
+        }
       </Helmet>
       {loaded &&
         (user || id ? (

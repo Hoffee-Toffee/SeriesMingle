@@ -1,6 +1,8 @@
 export default function EpisodeDetails(props) {
   const { entry, i, schedule, colors, numberOfLayers, bookmark, setBookmark, last } = props
 
+  const minHeight = 30
+
   return (
     <div
       className={[
@@ -14,24 +16,26 @@ export default function EpisodeDetails(props) {
         .filter(Boolean)
         .join(' ')}
       style={{
-        height: `calc(var(--scale) * ${(entry.runtime || entry.average_run_time)}px)`,
+        height: `calc(var(--scale) * ${entry.runtime || entry.average_run_time}px)`,
         marginLeft: `${entry.layer * 28 + 3}px`,
         backgroundColor: `hwb(${entry.show_id ? colors.tv[entry.show_id].color : colors.movies[entry.layer].color} 0% 25%)`,
+        marginTop: `calc(var(--scale) * ${Math.max(0, minHeight - (entry.runtime || entry.average_run_time)) + 30}px / 2)`,
+        marginBottom: `calc(var(--scale) * ${Math.max(0, minHeight - (entry.runtime || entry.average_run_time)) + 30}px / 2)`
       }}
       id={bookmark == `${entry.type}-${entry.id}` ? 'bookmark' : undefined}
     >
       <div
         className={['episode-detail', i % 2 && 'odd'].filter(Boolean).join(' ')}
         style={{
-          minHeight: `${(entry.runtime || entry.average_run_time) + 4}px`,
-          maxHeight: `${(entry.runtime || entry.average_run_time) + (schedule[i + 1] && (schedule[i + 1].runtime || schedule[i + 1].average_run_time)) + 20}px`,
+          minHeight: `${(Math.max(minHeight, (entry.runtime || entry.average_run_time))) + 4}px`,
+          maxHeight: `${(Math.max(minHeight, (entry.runtime || entry.average_run_time))) + (schedule[i + 1] && Math.max(minHeight, (schedule[i + 1].runtime || schedule[i + 1].average_run_time))) + 20}px`,
           width: `calc(50% * var(--scale) - ${numberOfLayers} * var(--layer-size) * var(--scale) - var(--offset))`,
         }}
       >
         <div
           style={{
-            minHeight: `${(entry.runtime || entry.average_run_time) - 12}px`,
-            maxHeight: `calc(var(--scale) * ${(entry.runtime || entry.average_run_time) - 2}px + var(--height-mult) * ${(schedule[i + 1] ? (schedule[i + 1].runtime || schedule[i + 1].average_run_time) : 40) - 2}px)`,
+            minHeight: `${(Math.max(minHeight, (entry.runtime || entry.average_run_time))) - 12}px`,
+            maxHeight: `calc(var(--scale) * ${(Math.max(minHeight, (entry.runtime || entry.average_run_time))) - 2}px + var(--height-mult) * ${(schedule[i + 1] ? Math.max(minHeight, (schedule[i + 1].runtime || schedule[i + 1].average_run_time)) : 40) - 2}px)`,
           }}
         >
           <label htmlFor={`bookmark-${i}`}>
