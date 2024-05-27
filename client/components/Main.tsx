@@ -23,15 +23,17 @@ function Main({ user, id, signOut }) {
   const uid = user?.uid
   const readOnly = !(uid == id || (uid && !id))
 
-  // Layers as a state
-  const [state, setState] = useState({
+  const initialState = {
     layers: [[]],
     mpSpacing: 'normal',
     data: { tv: {}, movie: {} },
     bookmark: null,
     force: false,
     saved: true,
-  })
+    titles: []
+  }
+  // Layers as a state
+  const [state, setState] = useState(initialState)
 
   const [activeEntry, setActiveEntry] = useState(null)
   const [tempLayers, setTempLayers] = useState(null)
@@ -59,7 +61,7 @@ function Main({ user, id, signOut }) {
     fetchProjectData()
   }, [uid, id])
 
-  const { layers, mpSpacing, data, bookmark, saved } = state
+  const { layers, mpSpacing, data, bookmark, saved, titles } = { ...initialState, ...state }
   const shown = tempLayers || layers
 
   useEffect(() => {
@@ -73,9 +75,10 @@ function Main({ user, id, signOut }) {
         bookmark,
         saved: false,
         force: false,
+        titles
       })
     }
-  }, [bookmark, data, layers, mpSpacing, readOnly, state, state.force, uid])
+  }, [bookmark, data, layers, mpSpacing, readOnly, state, state.force, uid, titles])
 
   function addData(entry, layerId: number, entryId: number) {
     if (readOnly) return
@@ -105,6 +108,16 @@ function Main({ user, id, signOut }) {
     setState({ ...state, mpSpacing, saved: false, force: true })
   }
 
+  function setTitle(layer, title) {
+    titles[layer] = title
+    setState({
+      ...state,
+      titles,
+      saved: false,
+      force: true
+    })
+  }
+
   const scheduleData = generateSchedule(
     layers,
     mpSpacing,
@@ -112,6 +125,8 @@ function Main({ user, id, signOut }) {
     setBookmark,
     data,
     setLayers,
+    titles,
+    setTitle
   )
 
   return (<>

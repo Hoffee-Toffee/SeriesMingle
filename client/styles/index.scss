@@ -237,19 +237,24 @@ html {
     display: inline-grid;
     text-align: center;
     vertical-align: top;
-    font-size: smaller;
+    font-size: small;
   }
-  #key span::before {
-    content: attr(txt);
+  #key span .setTitle {
     line-height: 300%;
+    outline: none;
   }
-  #key span::after {
-    content: attr(watched);
+  #key span .editTitle {
+    text-decoration: underline dashed transparent;
+  }
+  #key span:hover .editTitle,
+  #key span .editTitle:focus {
+    text-decoration-color: white;
+  }
+  #key span .setWatched {
     line-height: 0%;
     color: transparent;
   }
-  #key span::before,
-  #key span::after {
+  #key span span {
     transition:
       var(--transition-time) var(--transition-time),
       color var(--transition-time);
@@ -257,14 +262,13 @@ html {
     background-color: black;
     border: 1px solid black;
   }
-  #key span:hover::before,
-  #key span:hover::after {
+  #key span:hover span {
     line-height: 150%;
     transition:
       var(--transition-time),
       color var(--transition-time) var(--transition-time);
   }
-  #key span:hover::after {
+  #key span:hover .setWatched {
     color: white;
   }
   #key,

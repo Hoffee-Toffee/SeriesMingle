@@ -52,11 +52,13 @@ export default function EpisodeDetails(props) {
               setBookmark(newVal == bookmark ? null : newVal)
             }}
           />
-          {entry.show_id && (
+          {entry.show_id ? (
             <span>
               {entry.show_title} (S{entry.season}E{entry.episode})
             </span>
-          )}
+          ) : colors.movies[entry.layer].set && <span>
+            {colors.movies[entry.layer].userTitle}
+          </span>}
           <span className="title">{entry.title}</span>
           <span className="spoiler">
             {entry.overview || 'No Description Available'}

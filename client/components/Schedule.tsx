@@ -1,7 +1,7 @@
 import EpisodeDetails from './EpisodeDetails.tsx'
 
 export default function Schedule({ scheduleData }) {
-  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan } = scheduleData
+  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitle } = scheduleData
 
   let showing = !bookmark
   let seenSpan = 0
@@ -65,21 +65,41 @@ export default function Schedule({ scheduleData }) {
       true,
     )
   }
-
+  console.log(colors)
   return (
     <>
       <fieldset id="key">
         <legend>Key:</legend>
-        {Object.values(colors.movies)
+        {Object.values(colors.movies).map(color => ({ ...color, edit: true }))
           .concat(Object.values(colors.tv))
           .sort((a, b) => a.firstIndex - b.firstIndex)
           .map((color) => (
             <span
-              txt={color.title}
               key={color.firstIndex}
               style={{ backgroundColor: `hwb(${color.color} 0% 25%)` }}
-              watched={`(${Math.round((color.watched / color.span) * 10000) / 100}% watched)`}
-            />
+            >
+              <span className={`setTitle${color.edit ? " editTitle" : ""}`} contentEditable={color.edit}
+                onBlur={(e) => {
+                  let newText = null
+                  if (!e.target.innerText.trim()) {
+                    e.target.innerText = color.title
+                  }
+                  else if ((color.userTitle || color.title) == e.target.innerText) {
+                    e.target.innerText = (color.userTitle || color.title)
+                    return
+                  }
+                  else {
+                    newText = e.target.innerText
+                  }
+                  setTitle(color.layer, newText)
+                }}
+              >
+                {color.userTitle || color.title}
+              </span>
+              <span className="setWatched">
+                {`(${Math.round((color.watched / color.span) * 10000) / 100}% watched)`}
+              </span>
+            </span>
           ))}
       </fieldset>
       {bookmark && (

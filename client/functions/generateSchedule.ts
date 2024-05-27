@@ -7,6 +7,8 @@ export function generateSchedule(
   setBookmark,
   data,
   setLayers,
+  titles,
+  setTitle,
 ) {
   // Loop over each layer, ignoring the final entry in each
   const schedule = layers.map((entries) => {
@@ -234,7 +236,10 @@ export function generateSchedule(
     else if (entry.type == 'movie' && !sets.movies[entry.layer]) {
       sets.movies[entry.layer] = {
         title: `'${entry.title}'`,
+        userTitle: titles[entry.layer],
         firstIndex: index,
+        layer: entry.layer,
+        set: !!titles[entry.layer],
       }
     }
     // Add ' and others' if there are multiple, but only do so once
@@ -288,5 +293,6 @@ export function generateSchedule(
     data,
     layers,
     setLayers,
+    setTitle,
   }
 }
