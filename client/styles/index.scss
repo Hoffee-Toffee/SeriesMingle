@@ -242,13 +242,16 @@ html {
   #key span .setTitle {
     line-height: 300%;
     outline: none;
-  }
-  #key span .editTitle {
     text-decoration: underline dashed transparent;
+    display: block;
   }
-  #key span:hover .editTitle,
-  #key span .editTitle:focus {
+  #key span:hover .setTitle,
+  #key span .setTitle:focus {
     text-decoration-color: white;
+  }
+  #key span .showTitle::before, 
+  #key span .showTitle::after {
+    content: "'";
   }
   #key span .setWatched {
     line-height: 0%;

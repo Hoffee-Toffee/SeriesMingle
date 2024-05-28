@@ -1,7 +1,7 @@
 import EpisodeDetails from './EpisodeDetails.tsx'
 
 export default function Schedule({ scheduleData }) {
-  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitle } = scheduleData
+  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitle, setShow } = scheduleData
 
   let showing = !bookmark
   let seenSpan = 0
@@ -72,13 +72,13 @@ export default function Schedule({ scheduleData }) {
         <legend>Key:</legend>
         {Object.values(colors.movies).map(color => ({ ...color, edit: true }))
           .concat(Object.values(colors.tv))
-          .sort((a, b) => a.firstIndex - b.firstIndex)
+          .sort((a, b) => a.indices[0] - b.indices[0])
           .map((color) => (
             <span
-              key={color.firstIndex}
+              key={color.indices[0]}
               style={{ backgroundColor: `hwb(${color.color} 0% 25%)` }}
             >
-              <span className={`setTitle${color.edit ? " editTitle" : ""}`} contentEditable={color.edit}
+              <span className={`setTitle${color.isShow ? " showTitle" : ""}`} contentEditable
                 onBlur={(e) => {
                   let newText = null
                   if (!e.target.innerText.trim()) {
@@ -91,7 +91,13 @@ export default function Schedule({ scheduleData }) {
                   else {
                     newText = e.target.innerText
                   }
-                  setTitle(color.layer, newText)
+
+                  if (color.isShow) {
+                    setShow(color.show, newText)
+                  }
+                  else {
+                    setTitle(color.layer, newText)
+                  }
                 }}
               >
                 {color.userTitle || color.title}

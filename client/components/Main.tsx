@@ -109,10 +109,45 @@ function Main({ user, id, signOut }) {
   }
 
   function setTitle(layer, title) {
+    if (readOnly) return
     titles[layer] = title
     setState({
       ...state,
       titles,
+      saved: false,
+      force: true
+    })
+  }
+
+  function setShow(showId, newData) {
+    if (readOnly) return
+    // If data is a string then it is just the 'userTitle'
+    // If not then it is an object and will replace the entire record
+    if (typeof newData === 'string' || newData == null) {
+      data.tv[showId].userTitle = newData
+      setState({
+        ...state,
+        data,
+        saved: false,
+        force: true
+      })
+    }
+    else {
+      data.tv[showId] = newData
+      setState({
+        ...state,
+        data,
+        saved: false,
+        force: true
+      })
+    }
+  }
+
+  function setMovie(movieId, newData) {
+    data.movies[movie] = newData
+    setState({
+      ...state,
+      data,
       saved: false,
       force: true
     })
@@ -126,7 +161,8 @@ function Main({ user, id, signOut }) {
     data,
     setLayers,
     titles,
-    setTitle
+    setTitle,
+    setShow
   )
 
   return (<>

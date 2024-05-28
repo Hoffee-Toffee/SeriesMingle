@@ -54,10 +54,10 @@ export default function EpisodeDetails(props) {
           />
           {entry.show_id ? (
             <span>
-              {entry.show_title} (S{entry.season}E{entry.episode})
+              {colors.tv[entry.show_id].userTitle || entry.show_title} (S{entry.season}E{entry.episode})
             </span>
-          ) : colors.movies[entry.layer].set && <span>
-            {colors.movies[entry.layer].userTitle}
+          ) : colors.movies[entry.layer].userTitle && <span>
+            {colors.movies[entry.layer].userTitle} ({colors.movies[entry.layer].indices.findIndex(e => e == i) + 1} of {colors.movies[entry.layer].indices.length})
           </span>}
           <span className="title">{entry.title}</span>
           <span className="spoiler">

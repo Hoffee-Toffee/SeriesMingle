@@ -9,6 +9,7 @@ export function generateSchedule(
   setLayers,
   titles,
   setTitle,
+  setShow,
 ) {
   // Loop over each layer, ignoring the final entry in each
   const schedule = layers.map((entries) => {
@@ -228,8 +229,11 @@ export function generateSchedule(
     // Each show gets a unique color
     if (entry.show_id && !sets.tv[entry.show_id]) {
       sets.tv[entry.show_id] = {
-        title: `'${entry.show_title}'`,
-        firstIndex: index,
+        title: entry.show_title,
+        userTitle: data.tv[entry.show_id].userTitle,
+        show: entry.show_id,
+        indices: [index],
+        isShow: true,
       }
     }
     // Each layer gets a unique movie color
@@ -237,9 +241,8 @@ export function generateSchedule(
       sets.movies[entry.layer] = {
         title: `'${entry.title}'`,
         userTitle: titles[entry.layer],
-        firstIndex: index,
+        indices: [index],
         layer: entry.layer,
-        set: !!titles[entry.layer],
       }
     }
     // Add ' and others' if there are multiple, but only do so once
@@ -250,6 +253,9 @@ export function generateSchedule(
     ) {
       sets.movies[entry.layer].title =
         sets.movies[entry.layer].title + ' & other movies'
+      sets.movies[entry.layer].indices.push(index)
+    } else if (entry.type == 'movie') {
+      sets.movies[entry.layer].indices.push(index)
     }
   })
 
@@ -294,5 +300,6 @@ export function generateSchedule(
     layers,
     setLayers,
     setTitle,
+    setShow,
   }
 }
