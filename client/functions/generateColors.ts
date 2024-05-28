@@ -6,6 +6,18 @@
 // We will assume we already have 'n' and 'n' equally spread hues (by number, i.e. 10 different, not spread by even contrast, this will be the baseline)
 const logging = false
 
+function maximizeSpread(array) {
+  const n = array.length;
+  const numGroups = Math.ceil(Math.sqrt(n));
+
+  // Sort the array using a custom comparator based on modulus
+  const spreadArray = array.slice().sort((a, b) => {
+      return (array.indexOf(a) % numGroups) - (array.indexOf(b) % numGroups);
+  });
+
+  return spreadArray;
+}
+
 export default function generateColors(n) {
   const hues = Array(n)
     .fill(null)
@@ -80,7 +92,7 @@ export default function generateColors(n) {
 
   // Right now, we will only log these values and then return the initial hues
   if (logging) console.log(JSON.stringify(contrasts, null, 2))
-  return bestSet
+  return maximizeSpread(bestSet)
 }
 
 function makeColor(hue) {

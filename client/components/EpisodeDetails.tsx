@@ -16,7 +16,7 @@ export default function EpisodeDetails(props) {
         .filter(Boolean)
         .join(' ')}
       style={{
-        height: `calc(var(--scale) * ${entry.runtime || entry.average_run_time}px)`,
+        height: `calc(var(--scale) * ${Math.max(10, entry.runtime || entry.average_run_time)}px)`,
         marginLeft: `${entry.layer * 28 + 3}px`,
         backgroundColor: `hwb(${entry.show_id ? colors.tv[entry.show_id].color : colors.movies[entry.layer].color} 0% 25%)`,
         marginTop: `calc(var(--scale) * ${Math.max(0, minHeight - (entry.runtime || entry.average_run_time)) + 30}px / 2)`,
