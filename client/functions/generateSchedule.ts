@@ -271,21 +271,14 @@ export function generateSchedule(
   const allColors = generateColors(numOfColors)
 
   // Assign a unique hue to each show / movie layer
-  Object.entries(sets.tv).forEach((entry, index) => {
-    const [show_id, info] = entry
-
-    // Calculate the hue for each show based on its position
-    const color = allColors[index]
-    colors.tv[show_id] = { ...info, color }
-  })
-
-  Object.entries(sets.movies).forEach((entry, index) => {
-    const [layer_id, info] = entry
-
-    // Calculate the hue for each show based on its position
-    const color = allColors[index + Object.values(sets.tv).length]
-    colors.movies[layer_id] = { ...info, color }
-  })
+  Object.values(sets.movies)
+    .concat(Object.values(sets.tv))
+    .sort((a, b) => a.indices[0] - b.indices[0])
+    .forEach((set, index) => {
+      const color = allColors[index]
+      colors[set.isShow ? 'tv' : 'movies'][set.isShow ? set.show : set.layer] =
+        { ...set, color }
+    })
 
   return {
     schedule: processed,
