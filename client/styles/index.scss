@@ -84,6 +84,24 @@ html {
   .pick {
     padding-left: 0.3em !important;
   }
+  // .new,
+  // .new * {
+  //   white-space: nowrap;
+  //   place-self: center;
+  //   white-space: nowrap;
+  //   place-self: center;
+  //   transition:
+  //     opacity var(--transition-time);
+  // }
+  // .new:not(:hover),
+  // .new:not(:hover) * {
+  //   // width: 0;
+  //   // padding-left: 0 !important;
+  //   // padding-right: 0 !important;
+  // }
+  // .new:not(:hover) {
+  //   opacity: 0;
+  // }
   .new input {
     margin: 0.25em;
     color: orangered;
@@ -93,8 +111,8 @@ html {
   .new input::placeholder {
     color: #888;
   }
-  .options div select,
-  .overlay select {
+  .options div :is(select, input.value),
+  .overlay :is(select, input.value) {
     cursor: pointer;
     border: none;
     background-color: darkred;
@@ -102,16 +120,32 @@ html {
     padding: 0 0.3em;
     margin: 0 0.3em;
     color: #d7e300;
-    width: 100%;
+    width: auto;
   }
   .options div select *,
   .overlay select optgroup {
     color: #d7e300;
     background-color: darkred;
   }
-  .options span,
-  .overlay span {
+  .setting {
+    display: flex;
+  }
+  .setting label {
+    margin-left: -2px;
+    padding: 0 2px;
+  }
+  .setting i {
+    align-content: center;
+    font-size: x-small;
+    margin-right: 2px;
+    opacity: 0.5;
+  }
+  .options span:not(.setting),
+  .overlay span:not(.setting) {
     cursor: default;
+    height: 100%;
+    align-content: center;
+    margin: 0 2px;
   }
   .options div button,
   .layer > button,
@@ -149,7 +183,9 @@ html {
     text-decoration: none;
     display: inline-block;
   }
-  button, a, select {
+  button,
+  a,
+  select {
     transition: var(--transition-time);
     outline: solid transparent 2px;
     border-radius: 0.3em;
@@ -164,10 +200,10 @@ html {
     background-color: orangered;
   }
   .layer > button:hover,
-  .options div > :is(button, select):hover,
-  .options div > :is(button, select):focus,
-  .options div label select:hover,
-  .options div label select:focus {
+  .options div > :is(button, :is(select, input.value)):hover,
+  .options div > :is(button, :is(select, input.value)):focus,
+  .options div span > :hover,
+  .options div span > :focus {
     color: #00f2ea;
     background: #00000040;
     border: none;
@@ -249,7 +285,7 @@ html {
   #key span .setTitle:focus {
     text-decoration-color: white;
   }
-  #key span .showTitle::before, 
+  #key span .showTitle::before,
   #key span .showTitle::after {
     content: "'";
   }
@@ -284,12 +320,12 @@ html {
   .part.episode-marker {
     border-style: dashed;
   }
-  :is(.options, .overlay) span select {
-    font-size: x-small !important;
+  :is(.options, .overlay) span :is(select, input.value) {
+    font-size: small !important;
     color: #d7e300;
   }
   :is(.options, .overlay) label,
-  :is(.options, .overlay) span select {
+  :is(.options, .overlay) span :is(select, input.value) {
     display: flex;
     font-size: smaller;
     margin: 0 2px;

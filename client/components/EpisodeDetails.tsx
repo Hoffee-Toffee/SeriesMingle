@@ -18,7 +18,7 @@ export default function EpisodeDetails(props) {
       style={{
         height: `calc(var(--scale) * ${Math.max(10, entry.runtime || entry.average_run_time)}px)`,
         marginLeft: `${entry.layer * 28 + 3}px`,
-        backgroundColor: `hwb(${entry.show_id ? colors.tv[entry.show_id].color : colors.movies[entry.layer].color} 0% 25%)`,
+        backgroundColor: `hwb(${entry.show_id ? colors.tv[entry.show_id].color : entry.type == 'movie' ? colors.movie[entry.layer].color : colors.custom[entry.set].color} 0% 25%)`,
         marginTop: `calc(var(--scale) * ${Math.max(0, minHeight - (entry.runtime || entry.average_run_time)) + 30}px / 2)`,
         marginBottom: `calc(var(--scale) * ${Math.max(0, minHeight - (entry.runtime || entry.average_run_time)) + 30}px / 2)`
       }}
@@ -56,13 +56,14 @@ export default function EpisodeDetails(props) {
             <span>
               {colors.tv[entry.show_id].userTitle || entry.show_title} (S{entry.season}E{entry.episode})
             </span>
-          ) : colors.movies[entry.layer].userTitle && <span>
-            {colors.movies[entry.layer].userTitle} ({colors.movies[entry.layer].indices.findIndex(e => e == i) + 1} of {colors.movies[entry.layer].indices.length})
-          </span>}
-          <span className="title">{entry.title}</span>
-          <span className="spoiler">
-            {entry.overview || 'No Description Available'}
+          ) : entry.type == 'movie' && colors.movie[entry.layer].userTitle && <span>
+            {colors.movie[entry.layer].userTitle} ({colors.movie[entry.layer].indices.findIndex(e => e == i) + 1} of {colors.movie[entry.layer].indices.length})
           </span>
+          }
+          <span className="title">{entry.type == 'custom' ? `${entry.title}${colors.custom[entry.set].indices.length > 1 ? ` (${entry.term} ${colors.custom[entry.set].indices.findIndex(e => e == i) + 1})` : ''}` : entry.title}</span>
+          {entry.type !== 'custom' && <span className="spoiler">
+            {entry.overview || 'No Description Available'}
+          </span>}
         </div>
       </div>
     </div>

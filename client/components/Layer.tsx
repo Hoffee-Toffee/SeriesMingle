@@ -8,7 +8,8 @@ function Layer({
   setLayers,
   data,
   addData,
-  outlinePos
+  outlinePos,
+  setCustom
 }: {
   id: number
   entries: any[]
@@ -16,7 +17,8 @@ function Layer({
   setLayers: any
   data: object
   addData: any
-  outlinePos: any
+  outlinePos: any,
+  setCustom: any
 }) {
   function setEntries(newEntries, force = false) {
     layers[id] = newEntries
@@ -45,6 +47,7 @@ function Layer({
               layer={id}
               data={data}
               addData={addData}
+              setCustom={setCustom}
               className={outlinePos == `${id}-${index}` && 'outline'}
             />
           ))}

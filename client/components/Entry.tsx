@@ -1,7 +1,8 @@
 import search from '../apis/search.ts'
+import { useState } from 'react'
 import fetchMedia from '../apis/fetchMedia.ts'
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 function Entry({
   id,
@@ -12,6 +13,7 @@ function Entry({
   data,
   addData,
   className,
+  setCustom,
 }: {
   id: number
   layer: number
@@ -21,8 +23,11 @@ function Entry({
   data: object
   addData: any
   className: string | undefined
+  setCustom: any
 }) {
-  let options, entryData
+  let options, entryData, settings
+  const [setting, setSetting] = useState(0)
+  const [value, setValue] = useState(null)
 
   function handleSearch() {
     search(entry)
@@ -36,7 +41,7 @@ function Entry({
   function getMedia(type, mid) {
     if (data[type][mid]) {
       entries[id] = { ref: [type, mid] }
-      setEntries([...entries])
+      setEntries([...entries], true)
     } else {
       fetchMedia(type, mid)
         .then((res) => {
@@ -46,18 +51,13 @@ function Entry({
     }
   }
 
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    isDragging,
-  } = useSortable({
+  const { setNodeRef, attributes, listeners, isDragging } = useSortable({
     id: `${layer}-${id}`,
     data: {
-      type: "Entry",
-      entry
-    }
-  });
+      type: 'Entry',
+      entry,
+    },
+  })
 
   switch (Array.isArray(entry) ? 'array' : typeof entry) {
     case 'string':
@@ -76,43 +76,58 @@ function Entry({
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           />
           <button onClick={handleSearch}>Search</button>
+          <button onClick={() => setCustom(entry, layer, id)}>
+            Create Custom
+          </button>
         </div>
       )
       break
     case 'array':
       options = (
         <div ref={setNodeRef} className="pick">
-          <select
-            onChange={(e) => {
-              entries[id] = entry.map((option) => ({
-                ...option,
-                selected: option.id == e.target.value,
-              }))
-              setEntries([...entries])
-            }}
-          >
-            {entry.map((option, index) => {
-              const year = (
-                option.first_air_date ||
-                option.release_date ||
-                ''
-              ).split('-')[0]
-              return (
-                <option key={index} value={option.id} title={option.overview}>
-                  {`${option.name || option.title} (${option.media_type}${year !== '' ? `, ${year}` : ''})`}
-                </option>
-              )
-            })}
-          </select>
-          <button
-            onClick={() => {
-              const selected =
-                entry.find((option) => option.selected) || entry[0]
-              getMedia(selected.media_type, selected.id)
-            }}
-          >
-            Add
-          </button>
+          {entry.length == 1 ? (
+            <span>No results found</span>
+          ) : (
+            <>
+              <select
+                onChange={(e) => {
+                  entries[id] = entry.map((option) => ({
+                    ...option,
+                    selected: option.id == e.target.value,
+                  }))
+                  setEntries([...entries])
+                }}
+              >
+                {entry.map((option, index) => {
+                  if (!index) return
+
+                  const year = (
+                    option.first_air_date ||
+                    option.release_date ||
+                    ''
+                  ).split('-')[0]
+                  return (
+                    <option
+                      key={index}
+                      value={option.id}
+                      title={option.overview}
+                    >
+                      {`${option.name || option.title} (${option.media_type}${year !== '' ? `, ${year}` : ''})`}
+                    </option>
+                  )
+                })}
+              </select>
+              <button
+                onClick={() => {
+                  const selected =
+                    entry.find((option) => option.selected) || entry[0]
+                  getMedia(selected.media_type, selected.id)
+                }}
+              >
+                Add
+              </button>
+            </>
+          )}
           <button
             onClick={() => {
               entries[id] = ''
@@ -127,49 +142,161 @@ function Entry({
     case 'object':
       entryData = data[entry.ref[0]][entry.ref[1]]
 
-      options = (
-        <div
-          ref={setNodeRef}
-          className={className}>
-          <i className="handle fa-solid fa-grip-vertical"
-            {...attributes}
-            {...listeners} />
-          {
-            entryData.type === 'tv' && (
-              <label>
-                Start:
+      settings =
+        entryData.type == 'tv'
+          ? [
+            {
+              title: 'Start',
+              content: (
                 <select
                   onChange={(e) => {
                     entries[id] = { ...entries[id], start: e.target.value }
                     setEntries([...entries], true)
                   }}
                 >
-                  {entryData.seasons.map((season) => (
+                  {(entry.end
+                    ? entryData.seasons.slice(
+                      0,
+                      parseInt(entry.end.split(':')[0]),
+                    )
+                    : entryData.seasons
+                  ).map((season) => (
                     <optgroup
                       label={`Season ${season.season}`}
                       key={season.season}
                     >
-                      {season.episodes.map((episode) => (
+                      {(entry.end
+                        ? season.episodes.slice(
+                          0,
+                          parseInt(entry.end.split(':')[1]),
+                        )
+                        : season.episodes
+                      ).map((episode) => (
                         <option
                           key={episode.episode}
                           value={season.season + ':' + episode.episode}
                           selected={
-                            `${season.season}:${episode.episode}` == entry.start
+                            `${season.season}:${episode.episode}` ==
+                            entry.start
                           }
                         >{`S${season.season}E${episode.episode}: ${episode.title}`}</option>
                       ))}
                     </optgroup>
                   ))}
                 </select>
+              ),
+            },
+            {
+              title: 'End',
+              content: (
+                <select
+                  onChange={(e) => {
+                    entries[id] = { ...entries[id], end: e.target.value }
+                    setEntries([...entries], true)
+                  }}
+                >
+                  {entryData.seasons
+                    .slice(
+                      entry.start
+                        ? parseInt(entry.start.split(':')[0] - 1)
+                        : 0,
+                    )
+                    .map((season) => (
+                      <optgroup
+                        label={`Season ${season.season}`}
+                        key={season.season}
+                      >
+                        {season.episodes
+                          .slice(
+                            entry.start
+                              ? parseInt(entry.start.split(':')[1] - 1)
+                              : 0,
+                          )
+                          .map((episode) => (
+                            <option
+                              key={episode.episode}
+                              value={season.season + ':' + episode.episode}
+                              selected={
+                                `${season.season}:${episode.episode}` ==
+                                (entry.end || `${entryData.seasons.at(-1).season}:${entryData.seasons.at(-1).episodes.at(-1).episode}`)
+                              }
+                            >{`S${season.season}E${episode.episode}: ${episode.title}`}</option>
+                          ))}
+                      </optgroup>
+                    ))}
+                </select>
+              ),
+            },
+          ]
+          : entryData.type == 'custom'
+            ? [
+              {
+                title: 'Repeat',
+                content: (
+                  <input
+                    className="value"
+                    type="number"
+                    min="1"
+                    value={value || entryData.repeat}
+                    onChange={(e) => setValue(e.target.value)}
+                    onBlur={() => setCustom({ ...entryData, repeat: parseInt(value || entryData.repeat) })}
+                  />
+                ),
+              },
+              {
+                title: 'Term',
+                content: (
+                  <input
+                    className="value"
+                    type="text"
+                    value={value || entryData.term}
+                    onChange={(e) => setValue(e.target.value)}
+                    onBlur={() => setCustom({ ...entryData, term: value || entryData.term })}
+                  />
+                ),
+              }, {
+                title: 'Duration (mins)',
+                content: (
+                  <input
+                    className="value"
+                    type="number"
+                    min="1"
+                    value={value || entryData.runtime}
+                    onChange={(e) => setValue(e.target.value)}
+                    onBlur={() => setCustom({ ...entryData, runtime: parseInt(value || entryData.runtime) })}
+                  />
+                ),
+              },
+            ]
+            : null
+
+      options = (
+        <div ref={setNodeRef} className={className}>
+          <i
+            className="handle fa-solid fa-grip-vertical"
+            {...attributes}
+            {...listeners}
+          />
+          {entryData.type !== 'movie' && (
+            <span className="setting">
+              <label
+                onClick={() => {
+                  setSetting((setting + 1) % settings.length)
+                  setValue(null)
+                }}
+              >
+                <i className="fa-solid fa-sort"></i>
+                {settings[setting].title}:
               </label>
-            )
-          }
+              {settings[setting].content}
+            </span>
+          )}
           <span
             className="option"
             tmdb-id={entryData.id}
             tmdb-type={entryData.type}
           >
-            {`${entryData.title}${entryData.year !== '' ? ` (${entryData.year})` : ''}`}
+            {`${entryData.title}${![undefined, ''].includes(entryData.year) ? ` (${entryData.year})` : ''}`}
           </span>
           <button
             onClick={() => {
@@ -178,7 +305,7 @@ function Entry({
           >
             x
           </button>
-        </div >
+        </div>
       )
   }
 

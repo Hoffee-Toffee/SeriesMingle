@@ -1,17 +1,19 @@
 import EpisodeDetails from './EpisodeDetails.tsx'
 
 export default function Schedule({ scheduleData }) {
-  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitle, setShow } = scheduleData
+  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitle, setShow, setCustom } = scheduleData
 
   let showing = !bookmark
   let seenSpan = 0
+
+  console.log(schedule)
 
   schedule = schedule.map((entry) => {
     const show = (showing =
       showing || (bookmark && `${entry.type}-${entry.id}` == bookmark))
     const span = entry.runtime || entry.average_run_time
-    const type = entry.show_id ? 'tv' : 'movies'
-    const index = entry.show_id || entry.layer
+    const type = entry.show_id ? 'tv' : entry.type
+    const index = entry.show_id || (entry.type == 'movie' ? entry.layer : entry.set)
 
     if (!colors[type][index].span) {
       colors[type][index].span = 0
@@ -70,8 +72,8 @@ export default function Schedule({ scheduleData }) {
     <>
       <fieldset id="key">
         <legend>Key:</legend>
-        {Object.values(colors.movies).map(color => ({ ...color, edit: true }))
-          .concat(Object.values(colors.tv))
+        {Object.values(colors.movie)
+          .concat(Object.values(colors.tv)).concat(Object.values(colors.custom))
           .sort((a, b) => a.indices[0] - b.indices[0])
           .map((color) => (
             <span
@@ -95,8 +97,11 @@ export default function Schedule({ scheduleData }) {
                   if (color.isShow) {
                     setShow(color.show, newText)
                   }
-                  else {
+                  else if (color.type == 'movie') {
                     setTitle(color.layer, newText)
+                  }
+                  else {
+                    setCustom({ ...data.custom[color.layer], title: newText })
                   }
                 }}
               >

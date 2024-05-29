@@ -1,3 +1,5 @@
+import { sortCollisionsDesc } from '@dnd-kit/core/dist/utilities/algorithms/helpers'
+import Entry from '../components/Entry.tsx'
 import generateColors from '../functions/generateColors.ts'
 
 export function generateSchedule(
@@ -10,6 +12,7 @@ export function generateSchedule(
   titles,
   setTitle,
   setShow,
+  setCustom,
 ) {
   // Loop over each layer, ignoring the final entry in each
   const schedule = layers.map((entries) => {
@@ -21,10 +24,20 @@ export function generateSchedule(
         const entry = data[entryRef.ref[0]][entryRef.ref[1]]
 
         // If a movie, simply return it
-        if (entry.type === 'movie') return { ...entry, average_run_time: 30 }
+        if (entry.type == 'movie') return { ...entry, average_run_time: 30 }
+        // If custom, give it 'n' entries
+        else if (entry.type == 'custom')
+          return {
+            ...entry,
+            entries: Array(entry.repeat)
+              .fill(0)
+              .map((_) => ({
+                ...entry,
+              })),
+          }
 
         // Otherwise, its a show and needs it's episodes returned
-        let started = !entryRef.start
+        let inRange = !entryRef.start
 
         return {
           ...entry,
@@ -32,9 +45,9 @@ export function generateSchedule(
           episodes: entry.seasons
             .flatMap((season, i) =>
               season.episodes.map((episode, num) => {
-                if (!started && entryRef.start !== `${i + 1}:${num + 1}`)
+                if (!inRange && entryRef.start !== `${i + 1}:${num + 1}`)
                   return undefined
-                started = true
+                inRange = entryRef.end !== `${i + 1}:${num + 1}`
                 return {
                   ...episode,
                   average_run_time:
@@ -58,8 +71,8 @@ export function generateSchedule(
     layer.reduce(
       (running, entry) =>
         running +
-        (entry.type === 'movie'
-          ? entry.runtime || entry.average_run_time
+        (entry.type !== 'tv'
+          ? (entry.runtime || entry.average_run_time) * (entry.repeat || 1)
           : entry.episodes.reduce(
               (running, episode) =>
                 running + (episode.runtime || episode.average_run_time),
@@ -87,18 +100,24 @@ export function generateSchedule(
 
       layer
         .map((entry, layer_id) =>
-          entry.type == 'tv'
-            ? entry.episodes.map((episode) => ({
-                ...episode,
-                layer_id,
-                layer: i,
-              }))
+          entry.type !== 'movie'
+            ? entry[entry.type == 'tv' ? 'episodes' : 'entries'].map(
+                (episode) => ({
+                  ...episode,
+                  layer_id,
+                  layer: i,
+                  set: entry.id,
+                }),
+              )
             : { ...entry, layer_id, layer: i },
         )
         .flat()
         .concat({ check: true })
         .forEach((entry) => {
-          if (entry.title) {
+          if (entry.type == 'custom') {
+            condensed.push(entry)
+            return
+          } else if (entry.title) {
             // Check if the title is in a multiple episode set
             const [full, title, part] =
               entry.title.match(/^(.*) \((\d+)\)$/) || []
@@ -222,11 +241,12 @@ export function generateSchedule(
 
   const sets = {
     tv: {},
-    movies: {},
+    movie: {},
+    custom: {},
   }
 
   processed.forEach((entry, index) => {
-    // Each show gets a unique color
+    // Each show and custom entry gets a unique color
     if (entry.show_id && !sets.tv[entry.show_id]) {
       sets.tv[entry.show_id] = {
         title: entry.show_title,
@@ -234,50 +254,65 @@ export function generateSchedule(
         show: entry.show_id,
         indices: [index],
         isShow: true,
+        type: 'tv',
       }
+    } else if (entry.type == 'custom') {
+      if (!sets.custom[entry.id])
+        sets.custom[entry.id] = {
+          title: entry.title,
+          indices: [index],
+          isCustom: true,
+          type: 'custom',
+          layer: entry.id,
+        }
+      else sets.custom[entry.id].indices.push(index)
     }
     // Each layer gets a unique movie color
-    else if (entry.type == 'movie' && !sets.movies[entry.layer]) {
-      sets.movies[entry.layer] = {
+    else if (entry.type == 'movie' && !sets.movie[entry.layer]) {
+      sets.movie[entry.layer] = {
         title: `'${entry.title}'`,
         userTitle: titles[entry.layer],
         indices: [index],
         layer: entry.layer,
+        type: 'movie',
       }
     }
     // Add ' and others' if there are multiple, but only do so once
     else if (
       entry.type == 'movie' &&
-      sets.movies[entry.layer] &&
-      sets.movies[entry.layer].title.endsWith("'")
+      sets.movie[entry.layer] &&
+      sets.movie[entry.layer].title.endsWith("'")
     ) {
-      sets.movies[entry.layer].title =
-        sets.movies[entry.layer].title + ' & other movies'
-      sets.movies[entry.layer].indices.push(index)
+      sets.movie[entry.layer].title =
+        sets.movie[entry.layer].title + ' & other movies'
+      sets.movie[entry.layer].indices.push(index)
     } else if (entry.type == 'movie') {
-      sets.movies[entry.layer].indices.push(index)
+      sets.movie[entry.layer].indices.push(index)
     }
   })
 
   const colors = {
     tv: {},
-    movies: {},
+    movie: {},
+    custom: {},
   }
 
   // Calculate the step size based on the number of shows and movies
   const numOfColors =
-    Object.values(sets.tv).length + Object.values(sets.movies).length
+    Object.values(sets.tv).length +
+    Object.values(sets.movie).length +
+    Object.values(sets.custom).length
 
   const allColors = generateColors(numOfColors)
 
   // Assign a unique hue to each show / movie layer
-  Object.values(sets.movies)
+  Object.values(sets.movie)
     .concat(Object.values(sets.tv))
+    .concat(Object.values(sets.custom))
     .sort((a, b) => a.indices[0] - b.indices[0])
     .forEach((set, index) => {
       const color = allColors[index]
-      colors[set.isShow ? 'tv' : 'movies'][set.isShow ? set.show : set.layer] =
-        { ...set, color }
+      colors[set.type][set.isShow ? set.show : set.layer] = { ...set, color }
     })
 
   return {
@@ -294,5 +329,6 @@ export function generateSchedule(
     setLayers,
     setTitle,
     setShow,
+    setCustom,
   }
 }

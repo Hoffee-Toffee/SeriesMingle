@@ -26,7 +26,7 @@ function Main({ user, id, signOut }) {
   const initialState = {
     layers: [[]],
     mpSpacing: 'normal',
-    data: { tv: {}, movie: {} },
+    data: { tv: {}, movie: {}, custom: {} },
     bookmark: null,
     force: false,
     saved: true,
@@ -54,7 +54,6 @@ function Main({ user, id, signOut }) {
       const fromCloud = await fetchProject(id || uid)
       setIsLoaded(true)
       setLoadAnimation('fadein')
-      console.log(fromCloud)
       if (fromCloud) setState(fromCloud)
     }
 
@@ -62,6 +61,8 @@ function Main({ user, id, signOut }) {
   }, [uid, id])
 
   const { layers, mpSpacing, data, bookmark, saved, titles } = { ...initialState, ...state }
+
+
   const shown = tempLayers || layers
 
   useEffect(() => {
@@ -82,9 +83,30 @@ function Main({ user, id, signOut }) {
 
   function addData(entry, layerId: number, entryId: number) {
     if (readOnly) return
+    data[entry.type] = data[entry.type] || {}
     data[entry.type][entry.id] = entry
     layers[layerId][entryId] = { ref: [entry.type, entry.id] }
     setState({ ...state, layers, data, force: true, saved: false })
+  }
+
+  function setCustom(newData = null, layer = null, id = null) {
+    if (readOnly) return
+    const defaultData = {
+      title: newData || "Custom Set",
+      type: "custom",
+      id: data.custom ? Object.keys(data.custom).length + 1 : 1,
+      runtime: 30,
+      repeat: 1,
+      term: "Session"
+    }
+    if (!layer) {
+      data.custom = data.custom || {}
+      data.custom[newData.id] = newData
+      setState({ ...state, data, force: true, saved: false })
+    }
+    else {
+      addData(typeof newData == 'string' ? defaultData : newData, layer, id)
+    }
   }
 
   function setBookmark(newBookmark) {
@@ -162,7 +184,8 @@ function Main({ user, id, signOut }) {
     setLayers,
     titles,
     setTitle,
-    setShow
+    setShow,
+    setCustom
   )
 
   return (<>
@@ -216,6 +239,7 @@ function Main({ user, id, signOut }) {
                   data={data}
                   addData={addData}
                   outlinePos={outlinePos}
+                  setCustom={setCustom}
                 />
               ))}
             </SortableContext>
