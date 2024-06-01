@@ -29,7 +29,6 @@ function Main({ user, id, signOut }) {
     data: { tv: {}, movie: {}, custom: {} },
     bookmark: null,
     force: false,
-    saved: true,
     titles: []
   }
   // Layers as a state
@@ -40,6 +39,21 @@ function Main({ user, id, signOut }) {
   const [outlinePos, setOutlinePos] = useState(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const [loadAnimation, setLoadAnimation] = useState(null)
+  const [changedProps, setChangedProps] = useState([])
+  const [saved, setSaved] = useState(true)
+
+  useEffect(() => {
+    const onBeforeUnload = (e) => {
+      if (!saved) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [saved]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -60,33 +74,35 @@ function Main({ user, id, signOut }) {
     fetchProjectData()
   }, [uid, id])
 
-  const { layers, mpSpacing, data, bookmark, saved, titles } = { ...initialState, ...state }
-
+  const { layers, mpSpacing, data, bookmark, titles } = { ...initialState, ...state }
 
   const shown = tempLayers || layers
 
   useEffect(() => {
     if (state.force && !readOnly) {
       console.log('force rerender')
-      setProject({ ...state, force: false }, uid)
+      // Compare the new state with the old state
+      setSaved(false)
+      setProject({ ...state, force: false }, uid, changedProps).then(_ => setSaved(true))
+      setChangedProps([])
       setState({
         mpSpacing,
         layers,
         data,
         bookmark,
-        saved: false,
         force: false,
         titles
       })
     }
-  }, [bookmark, data, layers, mpSpacing, readOnly, state, state.force, uid, titles])
+  }, [bookmark, data, layers, mpSpacing, readOnly, state, state.force, uid, titles, changedProps])
 
   function addData(entry, layerId: number, entryId: number) {
     if (readOnly) return
     data[entry.type] = data[entry.type] || {}
     data[entry.type][entry.id] = entry
     layers[layerId][entryId] = { ref: [entry.type, entry.id] }
-    setState({ ...state, layers, data, force: true, saved: false })
+    setState({ ...state, layers, data, force: true })
+    setChangedProps([...changedProps, 'data'])
   }
 
   function setCustom(newData = null, layer = null, id = null) {
@@ -102,7 +118,8 @@ function Main({ user, id, signOut }) {
     if (!layer) {
       data.custom = data.custom || {}
       data.custom[newData.id] = newData
-      setState({ ...state, data, force: true, saved: false })
+      setState({ ...state, data, force: true })
+      setChangedProps([...changedProps, 'data'])
     }
     else {
       addData(typeof newData == 'string' ? defaultData : newData, layer, id)
@@ -111,7 +128,8 @@ function Main({ user, id, signOut }) {
 
   function setBookmark(newBookmark) {
     if (readOnly) return
-    setState({ ...state, bookmark: newBookmark, saved: false, force: true })
+    setState({ ...state, bookmark: newBookmark, force: true })
+    setChangedProps([...changedProps, 'bookmark'])
   }
 
   function setLayers(newLayers, force = false) {
@@ -119,15 +137,17 @@ function Main({ user, id, signOut }) {
     setState({
       ...state,
       layers: newLayers,
-      saved: false,
+
       force,
       bookmark: undefined,
     })
+    setChangedProps([...changedProps, 'layers'])
   }
 
   function setMpSpacing(mpSpacing) {
     if (readOnly) return
-    setState({ ...state, mpSpacing, saved: false, force: true })
+    setState({ ...state, mpSpacing, force: true })
+    setChangedProps([...changedProps, 'mpSpacing'])
   }
 
   function setTitle(layer, title) {
@@ -136,9 +156,10 @@ function Main({ user, id, signOut }) {
     setState({
       ...state,
       titles,
-      saved: false,
+
       force: true
     })
+    setChangedProps([...changedProps, 'titles'])
   }
 
   function setShow(showId, newData) {
@@ -150,7 +171,7 @@ function Main({ user, id, signOut }) {
       setState({
         ...state,
         data,
-        saved: false,
+
         force: true
       })
     }
@@ -159,10 +180,11 @@ function Main({ user, id, signOut }) {
       setState({
         ...state,
         data,
-        saved: false,
+
         force: true
       })
     }
+    setChangedProps([...changedProps, 'data'])
   }
 
   function setMovie(movieId, newData) {
@@ -170,9 +192,10 @@ function Main({ user, id, signOut }) {
     setState({
       ...state,
       data,
-      saved: false,
+
       force: true
     })
+    setChangedProps([...changedProps, 'data'])
   }
 
   const scheduleData = generateSchedule(
@@ -213,6 +236,7 @@ function Main({ user, id, signOut }) {
           onClick={() => {
             if (readOnly) return
             setState(example)
+            setChangedProps(Object.keys(example))
           }}
         >
           Load Example
@@ -243,7 +267,6 @@ function Main({ user, id, signOut }) {
                 />
               ))}
             </SortableContext>
-
             <button onClick={() => setLayers([...layers, []])}>
               New Layer
             </button>

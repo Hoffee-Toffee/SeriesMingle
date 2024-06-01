@@ -4,6 +4,7 @@ import {
   getDocs,
   doc,
   addDoc,
+  updateDoc,
   setDoc,
 } from '../firebase.ts'
 import { Router } from 'express'
@@ -22,7 +23,10 @@ router.get('/:user', async (req, res) => {
   querySnapshot.forEach((doc) => {
     const data = doc.data()
     if (data.user === user) {
-      projectData = JSON.parse(data.state)
+      projectData = {
+        ...data,
+        state: data.state ? JSON.parse(data.state) : undefined,
+      }
     }
   })
 
@@ -37,6 +41,11 @@ router.get('/:user', async (req, res) => {
 // Set project
 router.post('/', async (req, res) => {
   const projectData = await req.body
+  const props = projectData.props
+  const toUpdate = props.reduce(
+    (obj, prop) => ({ ...obj, [prop]: projectData[prop] }),
+    {},
+  )
 
   // Check if the user property is provided in the request body
   if (!projectData || !projectData.user) {
@@ -53,6 +62,7 @@ router.post('/', async (req, res) => {
     const data = doc.data()
     if (data.user === projectData.user) {
       existingProjectId = doc.id
+      return
     }
   })
 
@@ -60,7 +70,11 @@ router.post('/', async (req, res) => {
     // If a project exists, update it; otherwise, create a new project
     if (existingProjectId) {
       const projectRef = doc(firestore, 'projects', existingProjectId)
-      await setDoc(projectRef, projectData)
+      if (projectData.state) {
+        await setDoc(projectRef, { ...projectData, state: null })
+      } else {
+        await updateDoc(projectRef, toUpdate)
+      }
       res.send('Project updated successfully')
     } else {
       const newProjectRef = await addDoc(

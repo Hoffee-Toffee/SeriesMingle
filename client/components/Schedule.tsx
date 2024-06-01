@@ -6,8 +6,6 @@ export default function Schedule({ scheduleData }) {
   let showing = !bookmark
   let seenSpan = 0
 
-  console.log(schedule)
-
   schedule = schedule.map((entry) => {
     const show = (showing =
       showing || (bookmark && `${entry.type}-${entry.id}` == bookmark))
@@ -67,7 +65,6 @@ export default function Schedule({ scheduleData }) {
       true,
     )
   }
-  console.log(colors)
   return (
     <>
       <fieldset id="key">
@@ -80,7 +77,7 @@ export default function Schedule({ scheduleData }) {
               key={color.indices[0]}
               style={{ backgroundColor: `hwb(${color.color} 0% 25%)` }}
             >
-              <span className={`setTitle${color.isShow ? " showTitle" : ""}`} contentEditable
+              <span className={`setTitle${color.isShow ? " showTitle" : ""}`} contentEditable suppressContentEditableWarning={true}
                 onBlur={(e) => {
                   let newText = null
                   if (!e.target.innerText.trim()) {

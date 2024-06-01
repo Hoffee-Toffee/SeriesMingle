@@ -6,6 +6,7 @@ import {
   doc,
   addDoc,
   setDoc,
+  updateDoc,
 } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 
@@ -23,4 +24,4 @@ const app = initializeApp(firebaseConfig)
 const firestore = getFirestore(app)
 const auth = getAuth(app)
 
-export { firestore, auth, collection, getDocs, doc, addDoc, setDoc }
+export { firestore, auth, collection, getDocs, doc, addDoc, setDoc, updateDoc }
