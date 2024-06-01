@@ -9,7 +9,7 @@ export default function fetchProject(user: string): Promise<object | null> {
   return request.get(`${rootUrl}/${user}`).then((res) => {
     return {
       ...res.body,
-      ...res.body.state,
+      ...(res.body.state || {}),
       state: res.body.state ? true : undefined,
       layers: res.body.state
         ? res.body.state.layers
