@@ -120,7 +120,7 @@ function Entry({
               <button
                 onClick={() => {
                   const selected =
-                    entry.find((option) => option.selected) || entry[0]
+                    entry.find((option) => option.selected) || entry[1]
                   getMedia(selected.media_type, selected.id)
                 }}
               >
@@ -130,7 +130,7 @@ function Entry({
           )}
           <button
             onClick={() => {
-              entries[id] = ''
+              entries[id] = entry[0]
               setEntries([...entries])
             }}
           >
