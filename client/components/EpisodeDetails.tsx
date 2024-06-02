@@ -3,6 +3,8 @@ export default function EpisodeDetails(props) {
 
   const minHeight = 30
 
+  const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (entry.type == 'episode' ? entry.id : colors.custom[entry.set].indices.findIndex(e => e == i))}`
+
   return (
     <div
       className={[
@@ -22,7 +24,7 @@ export default function EpisodeDetails(props) {
         marginTop: `calc(var(--scale) * ${Math.max(0, minHeight - (entry.runtime || entry.average_run_time)) + 30}px / 2)`,
         marginBottom: `calc(var(--scale) * ${Math.max(0, minHeight - (entry.runtime || entry.average_run_time)) + 30}px / 2)`
       }}
-      id={bookmark == `${entry.type}-${entry.id}` ? 'bookmark' : undefined}
+      id={bookmark == posId ? 'bookmark' : undefined}
     >
       <div
         className={['episode-detail', i % 2 && 'odd'].filter(Boolean).join(' ')}
@@ -40,16 +42,15 @@ export default function EpisodeDetails(props) {
         >
           <label htmlFor={`bookmark-${i}`}>
             <i
-              className={`fa-${bookmark == `${entry.type}-${entry.id}` ? 'solid' : 'regular'} fa-bookmark`}
+              className={`fa-${bookmark == posId ? 'solid' : 'regular'} fa-bookmark`}
             />
           </label>
           <input
             type="checkbox"
             id={`bookmark-${i}`}
-            checked={bookmark == `${entry.type}-${entry.id}`}
+            checked={bookmark == posId}
             onChange={() => {
-              const newVal = `${entry.type}-${entry.id}`
-              setBookmark(newVal == bookmark ? null : newVal)
+              setBookmark(bookmark == posId ? null : posId)
             }}
           />
           {entry.show_id ? (

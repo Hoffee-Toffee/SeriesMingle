@@ -7,6 +7,8 @@ const rootUrl = (base == '/' ? '' : base) + '/api/v1/projects'
 
 export default function fetchProject(user: string): Promise<object | null> {
   return request.get(`${rootUrl}/${user}`).then((res) => {
+    if (!res.body) return null
+
     return {
       ...res.body,
       ...(res.body.state || {}),
