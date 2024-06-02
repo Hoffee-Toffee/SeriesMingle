@@ -6,7 +6,7 @@ export default function Schedule({ scheduleData }) {
   let showing = !bookmark
   let seenSpan = 0
 
-  schedule = schedule.map((entry) => {
+  schedule = schedule.map((entry, i) => {
     const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (entry.type == 'episode' ? entry.id : colors.custom[entry.set].indices.findIndex(e => e == i))}`
 
     const show = (showing =
