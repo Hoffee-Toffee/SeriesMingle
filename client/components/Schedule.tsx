@@ -7,8 +7,10 @@ export default function Schedule({ scheduleData }) {
   let seenSpan = 0
 
   schedule = schedule.map((entry) => {
+    const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (entry.type == 'episode' ? entry.id : colors.custom[entry.set].indices.findIndex(e => e == i))}`
+
     const show = (showing =
-      showing || (bookmark && `${entry.type}-${entry.id}` == bookmark))
+      showing || (bookmark && posId == bookmark))
     const span = entry.runtime || entry.average_run_time
     const type = entry.show_id ? 'tv' : entry.type
     const index = entry.show_id || (entry.type == 'movie' ? entry.layer : entry.set)
