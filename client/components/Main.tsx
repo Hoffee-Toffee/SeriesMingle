@@ -113,7 +113,8 @@ function Main({ user, id, signOut }) {
       id: data.custom ? Object.keys(data.custom).length + 1 : 1,
       runtime: 30,
       repeat: 1,
-      term: "Session"
+      offset: 0,
+      term: "Part"
     }
     if (!layer) {
       data.custom = data.custom || {}

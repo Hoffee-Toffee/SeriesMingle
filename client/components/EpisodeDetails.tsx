@@ -61,7 +61,7 @@ export default function EpisodeDetails(props) {
             {colors.movie[entry.layer].userTitle} ({colors.movie[entry.layer].indices.findIndex(e => e == i) + 1} of {colors.movie[entry.layer].indices.length})
           </span>
           }
-          <span className="title">{entry.type == 'custom' ? `${entry.title}${colors.custom[entry.set].indices.length > 1 ? ` (${entry.term} ${colors.custom[entry.set].indices.findIndex(e => e == i) + 1})` : ''}` : entry.title}</span>
+          <span className="title">{entry.type == 'custom' ? `${entry.title}${(colors.custom[entry.set].indices.length > 1 || (entry.offset && entry.offset > 0)) ? ` (${entry.term} ${colors.custom[entry.set].indices.findIndex(e => e == i) + 1 + (entry.offset || 0)})` : ''}` : entry.title}</span>
           {entry.type !== 'custom' && <span className="spoiler">
             {entry.overview || 'No Description Available'}
           </span>}

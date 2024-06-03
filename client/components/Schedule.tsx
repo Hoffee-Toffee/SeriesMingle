@@ -27,6 +27,7 @@ export default function Schedule({ scheduleData }) {
     }
     return {
       ...entry,
+      posIndex: i,
       show
     }
   })
@@ -44,20 +45,24 @@ export default function Schedule({ scheduleData }) {
     seenProgressKeys.forEach((id) => {
       const entry = seenProgress[id]
       if (entry.type == 'movie') layers[entry.layer][entry.layer_id] = undefined
-      else {
-        // Must be an episode, it's the last seen episode, so we need to find the next episode to start from
+      else if (entry.type == 'episode') {
+        // Must be an episode, it's the last seen episode/entry, so we need to find the next episode to start from
         const show = data.tv[entry.show_id]
-        // Get the next episode in that season, if existing, or the first of the next season, if existing, or you must have finished the show so remove it
-        const episodes = show.seasons.flatMap((season) => {
-          const num = season.season
-          return season.episodes.map((ep) => ({ ...ep, season: num }))
+        // Get the next episode in that season, if existing, or the first of the next season, if existing, but only up until the 'end' season
+        const episodes = show.seasons.flatMap((season, num) => {
+          return season.episodes.map((ep, i) => ({ ...ep, pos: `${num + 1}:${i + 1}` }))
         })
         const nextEpisode =
-          episodes[episodes.findIndex((episode) => episode.id == entry.id) + 1]
+          episodes.find(episode => episode.id == entry.id).pos !== layers[entry.layer][entry.layer_id].end && episodes[episodes.findIndex((episode) => episode.id == entry.id) + 1]
 
         if (nextEpisode)
-          layers[entry.layer][entry.layer_id].start =
-            `${nextEpisode.season}:${nextEpisode.episode}`
+          layers[entry.layer][entry.layer_id].start = nextEpisode.pos
+        else layers[entry.layer][entry.layer_id] = undefined
+      }
+      else {
+        // Must be a custom entry, this will be handled shortly
+        const newRepeat = entry.repeat - colors.custom[entry.id].indices.findIndex((e) => e == entry.posIndex) - 1
+        if (newRepeat) setCustom({ ...entry, repeat: newRepeat, offset: entry.repeat - newRepeat + (entry.offset || 0) })
         else layers[entry.layer][entry.layer_id] = undefined
       }
     })

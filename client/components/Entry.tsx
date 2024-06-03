@@ -237,9 +237,29 @@ function Entry({
                     className="value"
                     type="number"
                     min="1"
-                    value={value || entryData.repeat}
-                    onChange={(e) => setValue(e.target.value)}
-                    onBlur={() => setCustom({ ...entryData, repeat: parseInt(value || entryData.repeat) })}
+                    value={value == "" ? null : Math.max(parseInt(value), 1) || entryData.repeat}
+                    onChange={(e) => setValue(e.target.value || "")}
+                    onBlur={() => {
+                      setCustom({ ...entryData, repeat: parseInt(value == "" ? 1 : value || entryData.repeat) })
+                      setValue(value == "" ? 1 : value)
+                    }}
+                  />
+                ),
+              },
+              {
+                title: 'Offset',
+                content: (
+                  <input
+                    className="value"
+                    type="number"
+                    min="0"
+                    value={value == "" ? null : Math.max(parseInt(value), 0) || entryData.offset}
+                    onChange={(e) => setValue(e.target.value || "")}
+                    onBlur={() => {
+                      setCustom({ ...entryData, offset: parseInt(value == "" ? 0 : value || entryData.offset) })
+                      setValue(value == "" ? 0 : value)
+                    }
+                    }
                   />
                 ),
               },
@@ -249,7 +269,7 @@ function Entry({
                   <input
                     className="value"
                     type="text"
-                    value={value || entryData.term}
+                    value={value == null ? entryData.term : value}
                     onChange={(e) => setValue(e.target.value)}
                     onBlur={() => setCustom({ ...entryData, term: value || entryData.term })}
                   />
@@ -261,9 +281,12 @@ function Entry({
                     className="value"
                     type="number"
                     min="1"
-                    value={value || entryData.runtime}
+                    value={value == "" ? null : Math.max(parseInt(value), 1) || entryData.runtime}
                     onChange={(e) => setValue(e.target.value)}
-                    onBlur={() => setCustom({ ...entryData, runtime: parseInt(value || entryData.runtime) })}
+                    onBlur={() => {
+                      setCustom({ ...entryData, runtime: parseInt(value || entryData.runtime) })
+                      setValue(value == "" ? 1 : value)
+                    }}
                   />
                 ),
               },
