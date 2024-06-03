@@ -1,10 +1,21 @@
 import EpisodeDetails from './EpisodeDetails.tsx'
+import { useEffect } from 'react';
 
-export default function Schedule({ scheduleData }) {
+export default function Schedule({ scheduleData, user }) {
   let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitle, setShow, setCustom } = scheduleData
 
   let showing = !bookmark
   let seenSpan = 0
+
+  useEffect(scrollToBookmark, [user]);
+
+  function scrollToBookmark() {
+    document.getElementById('bookmark') && document.getElementById('timelineContainer').scroll({
+      top: document.getElementById('bookmark').offsetTop - 5,
+      left: 0,
+      behavior: 'smooth',
+    })
+  }
 
   schedule = schedule.map((entry, i) => {
     const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (entry.type == 'episode' ? entry.id : colors.custom[entry.set].indices.findIndex(e => e == i))}`
@@ -119,7 +130,7 @@ export default function Schedule({ scheduleData }) {
       </fieldset>
       {bookmark && (
         <>
-          <a href="#bookmark">Jump to Progress ({Math.round(seenPercentage * 100) / 100}% watched)</a>
+          <button onClick={scrollToBookmark}>Jump to Progress ({Math.round(seenPercentage * 100) / 100}% watched)</button>
           <button onClick={removeWatched}>Remove Watched</button>
         </>
       )}

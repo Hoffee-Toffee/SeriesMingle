@@ -297,6 +297,7 @@ function Main({ user, id, signOut }) {
       </fieldset>
       {scheduleData.schedule.length > 0 && <Schedule
         scheduleData={scheduleData}
+        user={user}
       />}
     </div>)}</>)
 
