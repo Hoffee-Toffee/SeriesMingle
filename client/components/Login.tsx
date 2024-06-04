@@ -30,6 +30,8 @@ export default function LogIn({ setUser }) {
       return setError("Passwords don't match.")
     }
 
+    setError('')
+
     if (creatingEmail) {
       createUserWithEmailAndPassword(getAuth(), email, password)
         .then((user) => {
@@ -53,6 +55,7 @@ export default function LogIn({ setUser }) {
               break
             default:
               setError('An unknown error has occurred, please try again.')
+              console.log(error.code)
           }
         })
     } else {
@@ -63,22 +66,18 @@ export default function LogIn({ setUser }) {
         .catch((error) => {
           console.error(error)
           switch (error.code) {
-            case 'auth/email-already-exists':
-              setError('Email already in use.')
-              break
             case 'auth/invalid-email':
               setError('Invalid email.')
               break
             case 'auth/missing-password':
-            case 'auth/invalid-password':
               setError('Invalid password.')
               break
-            case 'auth/invalid-login-credentials':
+            case 'auth/invalid-credential':
               setError('Email or password is incorrect.')
               break
             default:
               setError('An unknown error has occurred, please try again.')
-              break
+              console.log(error.code)
           }
         })
     }
@@ -106,51 +105,68 @@ export default function LogIn({ setUser }) {
         <span>Series</span>
         <span>Mingle</span>
       </h1>
-      <h2>{creatingEmail ? 'Sign Up' : 'Sign In'}</h2>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        placeholder="Email"
-        ref={emailRef}
-      />
-      <input
-        type="password"
-        id="password"
-        name="password"
-        placeholder="Password"
-        maxLength={30}
-        ref={passwordRef}
-      />
-      {creatingEmail && (
+      <fieldset id="login-form">
+        <legend>
+          <h2>{creatingEmail ? 'Create Account' : 'Sign In'}</h2>
+        </legend>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Email"
+          ref={emailRef}
+          onChange={() => {
+            setError('')
+          }}
+        />
         <input
           type="password"
           id="password"
           name="password"
-          placeholder="Confirm password"
+          placeholder="Password"
           maxLength={30}
-          ref={confirmPasswordRef}
+          ref={passwordRef}
+          onChange={() => {
+            setError('')
+          }}
         />
-      )}
-      <button onClick={onSubmit} id="submit" type="submit" value="Submit">
-        <h3>Sign {creatingEmail ? 'Up' : 'In'}</h3>
-      </button>
-      {!creatingEmail && (
-        <>
-          <button className="google-sign-in" onClick={SignInWithGoogle}>
-            <img
-              src="https://www.gstatic.com/firebasejs/ui/2.0.0//images/auth/google.svg"
-              alt="Google logo"
-            />
-            <span>Sign in with Google</span>
-          </button>
-        </>
-      )}
-      {error ? <p className="error-message">{error}</p> : <br />}
+        {creatingEmail && (
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Confirm password"
+            maxLength={30}
+            ref={confirmPasswordRef}
+            onChange={() => {
+              setError('')
+            }}
+          />
+        )}
+        {error ? <p className="error-message">{error}</p> : <></>}
+        <button onClick={onSubmit} id="submit" type="submit" value="Submit">
+          <h3>{creatingEmail ? "Create Account" : "Sign In"}</h3>
+        </button>
+        <div className="separator">
+          <hr className="line" />
+          <span className="text">or</span>
+          <hr className="line" />
+        </div>
+        <button className="google-sign-in" onClick={SignInWithGoogle}>
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0//images/auth/google.svg"
+            alt="Google logo"
+          />
+          <span>Continue with Google</span>
+        </button>
+      </fieldset>
       <span>
-        {creatingEmail ? 'Already have an account?' : "Don't have an account?"}
-        <a href="#" onClick={() => setCreatingEmail(!creatingEmail)}>
-          Sign {creatingEmail ? 'In' : 'Up'}
+        {`${creatingEmail ? 'Already' : "Don't"} have an account?`}
+        <a href="#" onClick={() => {
+          setCreatingEmail(!creatingEmail)
+          setError('')
+        }}>
+          {creatingEmail ? 'Sign In' : 'Create Account'}
         </a>
       </span>
     </div>

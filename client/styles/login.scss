@@ -6,13 +6,23 @@
   height: 100dvh;
   margin: -8px;
   background-color: #0a2553;
+  
+  #login-form {
+      border: #0095fa 2px solid;
+      color: white;
+      background-color: #1f3b6e;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
   span {
     color: white;
   }
 
   #logo {
-    height: min(20vw, 20vh);
+    height: min(15vw, 15vh);
     max-height: 200px;
     margin-bottom: 10px;
   }
@@ -30,6 +40,15 @@
     color: #30bfb3;
   }
 
+  legend {
+    background: #0a2553;
+    line-height: 0;
+    padding: inherit;
+    text-align: center;
+    border: solid #2c5aa0 2px;
+    margin-bottom: 10px;
+  }
+
   h2 {
     color: white;
     margin-bottom: 1rem;
@@ -37,17 +56,37 @@
 
   input {
     padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: 1px solid #2c5aa0;
+    border: 2px solid #2c5aa0;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
     border-radius: 5px;
     width: 300px;
     color: #fff;
-    background-color: #1f3b6e;
+    background-color: #0a2553;
+  }
+
+  input:not(:first-of-type) {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  input:not(:last-of-type) {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  input:first-of-type {
+    border-top-width: 2px;
+  }
+
+  input:last-of-type {
+    border-bottom-width: 2px;
+    margin-bottom: 10px;
   }
 
   button {
     padding: 0 1rem;
-    background-color: #ff4500;
+    background-color: #8B0000;
     color: white;
     border: none;
     border-radius: 5px;
@@ -56,24 +95,49 @@
   }
 
   button:hover {
-    background-color: #ff6347;
+    background-color: #CB2600;
   }
+
+  .separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 10px 0;
+  }
+  
+  .separator .line {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 0 10px;
+    flex: 1;
+    width: Min(50vw - 50px, 150px);
+  }
+  
+  .separator .text {
+    padding: 0 10px;
+    color: #ff0;
+  }  
 
   .google-sign-in {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #1f3b6e;
+    background-color: #0a2553;
     border: 1px solid #2c5aa0;
     border-radius: 5px;
     padding: 0.5rem 1rem;
-    margin-top: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
   }
 
-  .google-sign-in:hover {
-    background-color: #29467d;
+  .google-sign-in, input {
+    transition: background-color 0.3s ease;
+  }
+  :is(.google-sign-in, input):is(:hover, :focus) {
+    background-color: #000;
+  }
+
+  input:focus {
+    z-index: 1;
   }
 
   .google-sign-in img {
@@ -83,20 +147,24 @@
   }
 
   .error-message {
-    color: #ff4500;
-    margin-top: 1rem;
+    color: #ff8f00;
+    margin: 0;
+    margin-bottom: 10px;
     font-style: italic;
+  }
+
+  > span {
+    margin-top: 25px;
   }
 
   a {
     color: #ff0;
     text-decoration: none;
-    margin-top: 1rem;
-    margin-left: 4px;
+    margin-left: 10px;
     font-weight: bold;
   }
 
   a:hover {
-    text-decoration: underline;
+    color: #00f2ea;
   }
 }
