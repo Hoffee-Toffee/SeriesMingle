@@ -2,10 +2,13 @@ import EpisodeDetails from './EpisodeDetails.tsx'
 import { useEffect } from 'react';
 
 export default function Schedule({ scheduleData, user }) {
-  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitle, setShow, setCustom } = scheduleData
+  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitle, setShow, setCustom, streak, goal } = scheduleData
 
   let showing = !bookmark
   let seenSpan = 0
+  let lastStreak = null
+  const streakEnds = []
+  const streakLengths = []
 
   useEffect(scrollToBookmark, [user]);
 
@@ -17,8 +20,8 @@ export default function Schedule({ scheduleData, user }) {
     })
   }
 
-  schedule = schedule.map((entry, i) => {
-    const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (entry.type == 'episode' ? entry.id : colors.custom[entry.set].indices.findIndex(e => e == i))}`
+  schedule = schedule.flatMap((entry, i) => {
+    const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (['episode', 'multiple'].includes(entry.type) ? entry.id : colors.custom[entry.set].indices.findIndex(e => e == i))}`
 
     const show = (showing =
       showing || (bookmark && posId == bookmark))
@@ -36,6 +39,17 @@ export default function Schedule({ scheduleData, user }) {
       seenSpan += span
       colors[type][index].watched += span
     }
+
+    if (streak) {
+      if (lastStreak == null) lastStreak = `${entry.mid}-${entry.layerId}`
+      streakLengths[streakEnds.length] = (streakLengths[streakEnds.length] || 0) + span
+
+      if (lastStreak !== `${entry.mid}-${entry.layerId}`) {
+        lastStreak = `${entry.mid}-${entry.layerId}`
+        streakEnds.push(i - 1)
+      }
+    }
+
     return {
       ...entry,
       posIndex: i,
@@ -43,6 +57,18 @@ export default function Schedule({ scheduleData, user }) {
     }
   })
 
+  // get the length of each section
+  const sessionLength = totalSpan / ((streakLengths.length) / goal)
+
+  const sessionEnds = []
+
+  if (goal) streakLengths.reduce((total, streak, i) => {
+    const newTotal = total + streak
+    if (Math.round(newTotal / sessionLength) > sessionEnds.length) sessionEnds.push(streakEnds[i])
+    return newTotal
+  }, 0)
+
+  console.log(sessionEnds.length)
   const seenPercentage = seenSpan / totalSpan * 100
 
   function removeWatched() {
@@ -137,7 +163,7 @@ export default function Schedule({ scheduleData, user }) {
       <div id="timelineContainer">
         <div id="scheduleVisualization">
           {schedule.map((entry, i) =>
-            entry.episodes ? (
+            <>{entry.episodes ? (
               <div className="multiple" key={i}>
                 {entry.episodes.map((episode, j) => (
                   <EpisodeDetails
@@ -150,7 +176,8 @@ export default function Schedule({ scheduleData, user }) {
               </div>
             ) : (
               <EpisodeDetails entry={entry} key={i} i={i} {...scheduleData} />
-            ),
+            )}{streakEnds.includes(i) ? <span className={sessionEnds.includes(i) ? "sessionBound" : "streakBound"} /> : null}
+            </>
           )}
         </div>
       </div>

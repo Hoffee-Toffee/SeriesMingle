@@ -29,7 +29,9 @@ function Main({ user, id, signOut }) {
     data: { tv: {}, movie: {}, custom: {} },
     bookmark: null,
     force: false,
-    titles: []
+    titles: [],
+    streak: 0,
+    goal: 0
   }
   // Layers as a state
   const [state, setState] = useState(initialState)
@@ -45,22 +47,22 @@ function Main({ user, id, signOut }) {
   useEffect(() => {
     const onBeforeUnload = (e) => {
       if (!saved) {
-        e.preventDefault();
-        e.returnValue = "";
+        e.preventDefault()
+        e.returnValue = ''
       }
-    };
-    window.addEventListener("beforeunload", onBeforeUnload);
+    }
+    window.addEventListener('beforeunload', onBeforeUnload)
     return () => {
-      window.removeEventListener("beforeunload", onBeforeUnload);
-    };
-  }, [saved]);
+      window.removeEventListener('beforeunload', onBeforeUnload)
+    }
+  }, [saved])
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 10,
       },
-    })
+    }),
   )
 
   useEffect(() => {
@@ -74,7 +76,10 @@ function Main({ user, id, signOut }) {
     fetchProjectData()
   }, [uid, id])
 
-  const { layers, mpSpacing, data, bookmark, titles } = { ...initialState, ...state }
+  const { layers, mpSpacing, data, bookmark, titles, streak, goal } = {
+    ...initialState,
+    ...state,
+  }
 
   const shown = tempLayers || layers
 
@@ -83,7 +88,9 @@ function Main({ user, id, signOut }) {
       console.log('force rerender')
       // Compare the new state with the old state
       setSaved(false)
-      setProject({ ...state, force: false }, uid, changedProps).then(_ => setSaved(true))
+      setProject({ ...state, force: false }, uid, changedProps).then((_) =>
+        setSaved(true),
+      )
       setChangedProps([])
       setState({
         mpSpacing,
@@ -91,10 +98,25 @@ function Main({ user, id, signOut }) {
         data,
         bookmark,
         force: false,
-        titles
+        titles,
+        streak,
+        goal,
       })
     }
-  }, [bookmark, data, layers, mpSpacing, readOnly, state, state.force, uid, titles, changedProps])
+  }, [
+    bookmark,
+    data,
+    layers,
+    mpSpacing,
+    readOnly,
+    state,
+    state.force,
+    uid,
+    titles,
+    changedProps,
+    streak,
+    goal
+  ])
 
   function addData(entry, layerId: number, entryId: number) {
     if (readOnly) return
@@ -108,21 +130,20 @@ function Main({ user, id, signOut }) {
   function setCustom(newData = null, layer = null, id = null) {
     if (readOnly) return
     const defaultData = {
-      title: newData || "Custom Set",
-      type: "custom",
+      title: newData || 'Custom Set',
+      type: 'custom',
       id: data.custom ? Object.keys(data.custom).length + 1 : 1,
       runtime: 30,
       repeat: 1,
       offset: 0,
-      term: "Part"
+      term: 'Part',
     }
     if (!layer) {
       data.custom = data.custom || {}
       data.custom[newData.id] = newData
       setState({ ...state, data, force: true })
       setChangedProps([...changedProps, 'data'])
-    }
-    else {
+    } else {
       addData(typeof newData == 'string' ? defaultData : newData, layer, id)
     }
   }
@@ -151,6 +172,18 @@ function Main({ user, id, signOut }) {
     setChangedProps([...changedProps, 'mpSpacing'])
   }
 
+  function setStreak(streak) {
+    if (readOnly) return
+    setState({ ...state, streak, force: true })
+    setChangedProps([...changedProps, 'streak'])
+  }
+
+  function setGoal(goal) {
+    if (readOnly) return
+    setState({ ...state, goal, force: true })
+    setChangedProps([...changedProps, 'goal'])
+  }
+
   function setTitle(layer, title) {
     if (readOnly) return
     titles[layer] = title
@@ -158,7 +191,7 @@ function Main({ user, id, signOut }) {
       ...state,
       titles,
 
-      force: true
+      force: true,
     })
     setChangedProps([...changedProps, 'titles'])
   }
@@ -173,16 +206,15 @@ function Main({ user, id, signOut }) {
         ...state,
         data,
 
-        force: true
+        force: true,
       })
-    }
-    else {
+    } else {
       data.tv[showId] = newData
       setState({
         ...state,
         data,
 
-        force: true
+        force: true,
       })
     }
     setChangedProps([...changedProps, 'data'])
@@ -194,7 +226,7 @@ function Main({ user, id, signOut }) {
       ...state,
       data,
 
-      force: true
+      force: true,
     })
     setChangedProps([...changedProps, 'data'])
   }
@@ -209,120 +241,207 @@ function Main({ user, id, signOut }) {
     titles,
     setTitle,
     setShow,
-    setCustom
+    setCustom,
+    streak,
+    goal
   )
 
-  return (<>
-    <div id="loading-projects" className={isLoaded ? 'loaded' : 'loading'}>
-      <div className="lds-ripple">
-        <div></div>
-        <div></div>
+  return (
+    <>
+      <div id="loading-projects" className={isLoaded ? 'loaded' : 'loading'}>
+        <div className="lds-ripple">
+          <div></div>
+          <div></div>
+        </div>
+        <span className="scanline"></span>
       </div>
-      <span className="scanline"></span>
-    </div>
-    {isLoaded && (<div id="main" className={loadAnimation}>
-      {readOnly &&
-        <span style={{ color: 'white', display: 'block', textAlign: 'center' }}>
-          READ-ONLY
-        </span>
-      }
-      {user && <button onClick={signOut}>Sign Out</button>}
-      {user && scheduleData.schedule.length > 0 && <button onClick={() => navigator.share({
-        title: 'My Watching Schedule',
-        text: 'Check out my watching schedule on SeriesMingle!',
-        url: `${window.location.origin}${window.location.pathname}?id=${uid}`
-      })}>Share Schedule</button>}
-      {scheduleData.schedule.length == 0 &&
-        <button
-          onClick={() => {
-            if (readOnly) return
-            setState(example)
-            setChangedProps(Object.keys(example))
-          }}
-        >
-          Load Example
-        </button>}
-      <fieldset id="layerContainer">
-        <legend>Layers</legend>
-        {bookmark ? (
-          <span>Layer editing locked while bookmark exists.</span>
-        ) : (
-          <DndContext
-            sensors={sensors}
-            onDragStart={onDragStart}
-            onDragEnd={onDragEnd}
-            onDragOver={onDragOver}
-          >
-            <SortableContext items={shown.flatMap((layer, li) => layer.map((_, ei) => ({ id: `${li}-${ei}` })))}>
-              {shown.map((entries, index) => (
-                <Layer
-                  key={index}
-                  id={index}
-                  entries={entries}
-                  layers={shown}
-                  setLayers={setLayers}
-                  data={data}
-                  addData={addData}
-                  outlinePos={outlinePos}
-                  setCustom={setCustom}
-                />
-              ))}
-            </SortableContext>
-            <button onClick={() => setLayers([...layers, []])}>
-              New Layer
+      {isLoaded && (
+        <div id="main" className={loadAnimation}>
+          {readOnly && (
+            <span
+              style={{ color: 'white', display: 'block', textAlign: 'center' }}
+            >
+              READ-ONLY
+            </span>
+          )}
+          {user && <button onClick={signOut}>Sign Out</button>}
+          {user && scheduleData.schedule.length > 0 && (
+            <button
+              onClick={() =>
+                navigator.share({
+                  title: 'My Watching Schedule',
+                  text: 'Check out my watching schedule on SeriesMingle!',
+                  url: `${window.location.origin}${window.location.pathname}?id=${uid}`,
+                })
+              }
+            >
+              Share Schedule
             </button>
-            <DragOverlay dropAnimation={null}>
-              {activeEntry && <Entry entry={activeEntry} data={data} className="overlay" />}
-            </DragOverlay>
-          </DndContext>
-        )}
-      </fieldset>
-      <fieldset id="mp" onChange={(e) => setMpSpacing(e.target.value)}>
-        <legend>Space Multi-Parters...</legend>
-        {bookmark ? (
-          <span>Spacing adjustment locked while bookmark exists.</span>
-        ) : (
-          ['Normally', 'Closer', 'Consecutively'].map((option, i) => (
-            <div key={i}>
-              <input
-                type="radio"
-                name={`mp-opt-${i}`}
-                value={option.toLowerCase().slice(0, 6)}
-                checked={mpSpacing === option.toLowerCase().slice(0, 6)}
-              />
-              <label htmlFor={`mp-opt-${i}`}>{option}</label>
-            </div>
-          ))
-        )}
-      </fieldset>
-      {scheduleData.schedule.length > 0 && <Schedule
-        scheduleData={scheduleData}
-        user={user}
-      />}
-    </div>)}</>)
+          )}
+          {scheduleData.schedule.length == 0 && (
+            <button
+              onClick={() => {
+                if (readOnly) return
+                setState(example)
+                setChangedProps(Object.keys(example))
+              }}
+            >
+              Load Example
+            </button>
+          )}
+          <fieldset id="layerContainer">
+            <legend>Layers</legend>
+            {bookmark ? (
+              <span>Layer editing locked while bookmark exists.</span>
+            ) : (
+              <DndContext
+                sensors={sensors}
+                onDragStart={onDragStart}
+                onDragEnd={onDragEnd}
+                onDragOver={onDragOver}
+              >
+                <SortableContext
+                  items={shown.flatMap((layer, li) =>
+                    layer.map((_, ei) => ({ id: `${li}-${ei}` })),
+                  )}
+                >
+                  {shown.map((entries, index) => (
+                    <Layer
+                      key={index}
+                      id={index}
+                      entries={entries}
+                      layers={shown}
+                      setLayers={setLayers}
+                      data={data}
+                      addData={addData}
+                      outlinePos={outlinePos}
+                      setCustom={setCustom}
+                    />
+                  ))}
+                </SortableContext>
+                <button onClick={() => setLayers([...layers, []])}>
+                  New Layer
+                </button>
+                <DragOverlay dropAnimation={null}>
+                  {activeEntry && (
+                    <Entry
+                      entry={activeEntry}
+                      data={data}
+                      className="overlay"
+                    />
+                  )}
+                </DragOverlay>
+              </DndContext>
+            )}
+          </fieldset>
+          {/* Collapsible set (summary and details) */}
+          <fieldset id='settings'>
+            <details>
+              <summary>
+                <legend>
+                  Schedule Settings
+                </legend>
+              </summary>
+              <fieldset id="mp" onChange={(e) => setMpSpacing(e.target.value)}>
+                <legend>Space Multi-Parters...</legend>
+                {bookmark ? (
+                  <span>Spacing adjustment locked while bookmark exists.</span>
+                ) : (
+                  ['Normally', 'Closer', 'Consecutively'].map((option, i) => (
+                    <div key={i}>
+                      <input
+                        type="radio"
+                        name={`mp-opt-${i}`}
+                        value={option.toLowerCase().slice(0, 6)}
+                        checked={mpSpacing === option.toLowerCase().slice(0, 6)}
+                      />
+                      <label htmlFor={`mp-opt-${i}`}>{option}</label>
+                    </div>
+                  ))
+                )}
+              </fieldset>
+              <fieldset id="streak">
+                <legend>Average Streak Duration (hours)</legend>
+                {bookmark ? (
+                  <span>Streak adjustment locked while bookmark exists.</span>
+                ) : (
+                  <input
+                    type="number"
+                    min="0"
+                    max="25"
+                    step="0.25"
+                    value={streak}
+                    onChange={(e) => setStreak(Math.max(parseFloat(e.target.value), 0))}
+                  />
+                )}
+              </fieldset>
+              {streak !== 0 ? (
+                <fieldset id="goal">
+                  <legend>Average # of Streaks per Watch Session</legend>
+                  {bookmark ? (
+                    <span>Streak adjustment locked while bookmark exists.</span>
+                  ) : (
+                    <>
+                      <input
+                        type="number"
+                        min="0"
+                        max="25"
+                        step="1"
+                        value={goal}
+                        onChange={(e) => setGoal(Math.max(parseInt(e.target.value), 0))}
+                      />
+                      {goal ? <>
+                        <br />
+                        <span>Making ~{Math.round([...new Set(scheduleData.schedule.map(e => e.mid))].length / goal) + 1} watch sessions</span>
+                        <br />
+                        <span>Each with an average length of {Math.round((scheduleData.totalSpan / ([...new Set(scheduleData.schedule.map(e => e.mid))].length / goal) + 1) / 6) / 10} hours</span>
+                      </> : null}
+                    </>
+                  )}
+                </fieldset>
+              ) : (
+                null
+              )}
+            </details></fieldset>
+          {scheduleData.schedule.length > 0 && (
+            <Schedule scheduleData={scheduleData} user={user} />
+          )}
+        </div>
+      )}
+    </>
+  )
 
   function onDragStart(event: DragStartEvent) {
     console.log('drag start')
     setTempLayers(null)
-    setActiveEntry({ ...event.active, ...event.active.data.current.entry });
+    setActiveEntry({ ...event.active, ...event.active.data.current.entry })
   }
 
   function onDragEnd(event) {
     console.log('drag end')
-    setActiveEntry(null);
+    setActiveEntry(null)
     setOutlinePos(null)
-    if (JSON.stringify(tempLayers) !== JSON.stringify(layers)) setLayers(tempLayers, true)
+    if (JSON.stringify(tempLayers) !== JSON.stringify(layers))
+      setLayers(tempLayers, true)
     setTempLayers(null)
   }
 
   function onDragOver(event: DragOverEvent) {
     console.log('drag over')
-    const { active, over } = event;
-    if (!over) return;
+    const { active, over } = event
+    if (!over) return
 
-    if (outlinePos === `${over.id.split('-')[0]}-${over.id.split('-')[1]}`) return;
+    if (outlinePos === `${over.id.split('-')[0]}-${over.id.split('-')[1]}`)
+      return
 
-    setTempLayers(moveEntry(active.id.split('-')[0], active.id.split('-')[1], over.id.split('-')[0], over.id.split('-')[1]))
+    setTempLayers(
+      moveEntry(
+        active.id.split('-')[0],
+        active.id.split('-')[1],
+        over.id.split('-')[0],
+        over.id.split('-')[1],
+      ),
+    )
   }
 
   function moveEntry(oldLayer, oldIndex, newLayer, newIndex) {
@@ -330,8 +449,14 @@ function Main({ user, id, signOut }) {
     const entry = layers[oldLayer][oldIndex]
 
     clone[oldLayer].splice(oldIndex, 1)
-    clone[newLayer].splice(Math.min(clone[newLayer].length - 1, newIndex), 0, entry)
-    setOutlinePos(`${newLayer}-${Math.min(clone[newLayer].length - 2, newIndex)}`)
+    clone[newLayer].splice(
+      Math.min(clone[newLayer].length - 1, newIndex),
+      0,
+      entry,
+    )
+    setOutlinePos(
+      `${newLayer}-${Math.min(clone[newLayer].length - 2, newIndex)}`,
+    )
     return clone
   }
 }

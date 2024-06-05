@@ -13,6 +13,8 @@ export function generateSchedule(
   setTitle,
   setShow,
   setCustom,
+  streak,
+  goal,
 ) {
   // Loop over each layer, ignoring the final entry in each
   const schedule = layers.map((entries) => {
@@ -233,6 +235,24 @@ export function generateSchedule(
         }
       })
     })
+    .map((layer) => layer.flatMap((entry) => entry))
+    .map((layer, i) => {
+      if (!streak) return layer
+
+      const layerSpan = layerSpans[i]
+      const streakLength = Math.round(streak * layerSpan * 60) / layerSpan
+
+      return layer.map((entry) => {
+        let mid = entry.mid
+        mid /= totalSpan / layerSpan
+        mid = Math.ceil(mid / streakLength) * streakLength
+        mid /= layerSpan / totalSpan
+        return {
+          ...entry,
+          mid,
+        }
+      })
+    })
     .flat(2)
     .sort((a, b) => {
       if (a.mid == b.mid) return a.layer - b.layer
@@ -330,5 +350,7 @@ export function generateSchedule(
     setTitle,
     setShow,
     setCustom,
+    streak,
+    goal,
   }
 }

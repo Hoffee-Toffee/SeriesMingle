@@ -60,6 +60,7 @@ html {
   }
   .options > *,
   .new input,
+  fieldset input[type='number'],
   .layer > button,
   .overlay {
     border: orangered 2px solid;
@@ -84,29 +85,16 @@ html {
   .pick {
     padding-left: 0.3em !important;
   }
-  // .new,
-  // .new * {
-  //   white-space: nowrap;
-  //   place-self: center;
-  //   white-space: nowrap;
-  //   place-self: center;
-  //   transition:
-  //     opacity var(--transition-time);
-  // }
-  // .new:not(:hover),
-  // .new:not(:hover) * {
-  //   // width: 0;
-  //   // padding-left: 0 !important;
-  //   // padding-right: 0 !important;
-  // }
-  // .new:not(:hover) {
-  //   opacity: 0;
-  // }
-  .new input {
+  .new input,
+  fieldset input[type='number'] {
     margin: 0.25em;
     color: orangered;
     background-color: white;
     margin-left: calc(0.25em - 10px);
+  }
+  fieldset input[type='number'] {
+    width: 100px;
+    margin-left: 0px;
   }
   .new input::placeholder {
     color: #888;
@@ -317,6 +305,44 @@ html {
     flex-wrap: wrap;
     gap: 6px;
   }
+  span:is(.streakBound, .sessionBound) {
+    display: block;
+    border-top: var(--bg-col) dashed 2px;
+    width: calc(100% - 8px);
+    margin-left: 4px;
+  }
+  span.sessionBound {
+    outline: var(--bg-col) solid 4px;
+  }
+  #settings {
+    margin-top: 20px;
+
+    summary {
+      list-style-position: outside;
+      margin-top: -20px;
+      margin-left: 20px;
+    }
+
+    summary::marker {
+      background-color: var(--bg-col);
+      padding-left: 30px;
+    }
+
+    summary > legend {
+      width: fit-content;
+      padding-left: 20px;
+      margin-left: -25px;
+    }
+    fieldset {
+      background-color: var(--bg-col);
+      padding: 0.5em;
+      margin: 0.5em 0.1em;
+
+      legend {
+        background-color: #1f3b6e;
+      }
+    }
+  }
   .part.episode-marker {
     border-style: dashed;
   }
@@ -517,6 +543,12 @@ html {
     .episode-detail {
       width: calc(100% - 10px) !important;
       z-index: 1;
+    }
+    span:is(.streakBound, .sessionBound) {
+      position: absolute;
+      margin-left: 0px;
+      border-color: white;
+      outline-color: white;
     }
   }
 }
