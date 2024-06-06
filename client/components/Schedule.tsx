@@ -68,7 +68,7 @@ export default function Schedule({ scheduleData, user }) {
     return newTotal
   }, 0)
 
-  console.log(sessionEnds.length)
+  // console.log(sessionEnds.length)
   const seenPercentage = seenSpan / totalSpan * 100
 
   function removeWatched() {
@@ -176,7 +176,7 @@ export default function Schedule({ scheduleData, user }) {
               </div>
             ) : (
               <EpisodeDetails entry={entry} key={i} i={i} {...scheduleData} />
-            )}{streakEnds.includes(i) ? <span className={sessionEnds.includes(i) ? "sessionBound" : "streakBound"} /> : null}
+            )}{streakEnds.includes(i) ? <span className={[sessionEnds.includes(i) ? "sessionBound" : "streakBound", entry.show ? '' : 'fade'].join(' ')} /> : null}
             </>
           )}
         </div>

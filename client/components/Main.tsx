@@ -18,6 +18,7 @@ import example from '../files/example.json'
 import fetchProject from '../apis/fetchProject.ts'
 import setProject from '../apis/setProject.ts'
 import Entry from './Entry.tsx'
+import HelpIcon from './HelpIcon.tsx'
 
 function Main({ user, id, signOut }) {
   const uid = user?.uid
@@ -85,7 +86,7 @@ function Main({ user, id, signOut }) {
 
   useEffect(() => {
     if (state.force && !readOnly) {
-      console.log('force rerender')
+      // console.log('force rerender')
       // Compare the new state with the old state
       setSaved(false)
       setProject({ ...state, force: false }, uid, changedProps).then((_) =>
@@ -156,14 +157,25 @@ function Main({ user, id, signOut }) {
 
   function setLayers(newLayers, force = false) {
     if (readOnly) return
+    // If newLayers has less layers and sublayers than the old set, ensure all unreferenced data is removed to save space
+    const newProps = [...changedProps, 'layers']
+    const newData = { ...initialState.data }
+    const updateData = layers.flat().length > newLayers.flat().length
+    if (updateData) {
+      // Transfer all referenced data from 'data' to 'newData', removing all that is not referenced
+      newLayers.forEach(layer => layer.forEach((entry, i) => {
+        if (layer.length - 1 !== i) newData[entry.ref[0]][entry.ref[1]] = data[entry.ref[0]][entry.ref[1]]
+      }))
+      newProps.push('data')
+    }
     setState({
       ...state,
       layers: newLayers,
-
+      data: updateData ? newData : data,
       force,
       bookmark: undefined,
     })
-    setChangedProps([...changedProps, 'layers'])
+    setChangedProps(newProps)
   }
 
   function setMpSpacing(mpSpacing) {
@@ -343,7 +355,11 @@ function Main({ user, id, signOut }) {
                 </legend>
               </summary>
               <fieldset id="mp" onChange={(e) => setMpSpacing(e.target.value)}>
-                <legend>Space Multi-Parters...</legend>
+                <legend>Space Multi-Parters
+                  <HelpIcon info={
+                    'Adjust how episode parts and arcs are spaced'
+                  } />
+                </legend>
                 {bookmark ? (
                   <span>Spacing adjustment locked while bookmark exists.</span>
                 ) : (
@@ -359,9 +375,22 @@ function Main({ user, id, signOut }) {
                     </div>
                   ))
                 )}
+                <span>
+                  {
+                    ({
+                      normal: "Normal",
+                      closer: "Less",
+                      consec: "No"
+                    }[mpSpacing]) + " spacing between episode parts and arcs"
+                  }
+                </span>
               </fieldset>
               <fieldset id="streak">
-                <legend>Average Streak Duration (hours)</legend>
+                <legend>Average Streak Duration (hours)
+                  <HelpIcon info={
+                    "Set a streak duration of how much content from each layer you want to watch in a row"
+                  } />
+                </legend>
                 {bookmark ? (
                   <span>Streak adjustment locked while bookmark exists.</span>
                 ) : (

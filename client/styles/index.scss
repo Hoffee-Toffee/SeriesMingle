@@ -314,6 +314,9 @@ html {
   span.sessionBound {
     outline: var(--bg-col) solid 4px;
   }
+  span:is(.streakBound, .sessionBound).fade {
+    opacity: 0.25;
+  }
   #settings {
     margin-top: 20px;
 
