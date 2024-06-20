@@ -58,17 +58,15 @@ export default function Schedule({ scheduleData, user }) {
   })
 
   // get the length of each section
-  const sessionLength = totalSpan / ((streakLengths.length) / goal)
-
+  const sessionLength = totalSpan / Math.round(Math.max(streakLengths.length / goal, 1))
   const sessionEnds = []
 
   if (goal) streakLengths.reduce((total, streak, i) => {
     const newTotal = total + streak
-    if (Math.round(newTotal / sessionLength) > sessionEnds.length) sessionEnds.push(streakEnds[i])
+    if (newTotal / sessionLength > (sessionEnds.length + 1)) sessionEnds.push(streakEnds[i])
     return newTotal
   }, 0)
 
-  // console.log(sessionEnds.length)
   const seenPercentage = seenSpan / totalSpan * 100
 
   function removeWatched() {

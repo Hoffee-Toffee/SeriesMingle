@@ -363,7 +363,7 @@ function Main({ user, id, signOut }) {
                 {bookmark ? (
                   <span>Spacing adjustment locked while bookmark exists.</span>
                 ) : (
-                  ['Normally', 'Closer', 'Consecutively'].map((option, i) => (
+                  <>{['Normally', 'Closer', 'Consecutively'].map((option, i) => (
                     <div key={i}>
                       <input
                         type="radio"
@@ -373,17 +373,18 @@ function Main({ user, id, signOut }) {
                       />
                       <label htmlFor={`mp-opt-${i}`}>{option}</label>
                     </div>
-                  ))
+                  ))}
+                    <br />
+                    <span>
+                      {
+                        ({
+                          normal: "Normal",
+                          closer: "Less",
+                          consec: "No"
+                        }[mpSpacing]) + " spacing between episode parts and arcs"
+                      }
+                    </span></>
                 )}
-                <span>
-                  {
-                    ({
-                      normal: "Normal",
-                      closer: "Less",
-                      consec: "No"
-                    }[mpSpacing]) + " spacing between episode parts and arcs"
-                  }
-                </span>
               </fieldset>
               <fieldset id="streak">
                 <legend>Average Streak Duration (hours)
@@ -421,6 +422,7 @@ function Main({ user, id, signOut }) {
                       />
                       {goal ? <>
                         <br />
+                        <br />
                         <span>Making ~{Math.round([...new Set(scheduleData.schedule.map(e => e.mid))].length / goal) + 1} watch sessions</span>
                         <br />
                         <span>Each with an average length of {Math.round((scheduleData.totalSpan / ([...new Set(scheduleData.schedule.map(e => e.mid))].length / goal) + 1) / 6) / 10} hours</span>
@@ -431,12 +433,15 @@ function Main({ user, id, signOut }) {
               ) : (
                 null
               )}
-            </details></fieldset>
-          {scheduleData.schedule.length > 0 && (
-            <Schedule scheduleData={scheduleData} user={user} />
-          )}
-        </div>
-      )}
+            </details></fieldset >
+          {
+            scheduleData.schedule.length > 0 && (
+              <Schedule scheduleData={scheduleData} user={user} />
+            )
+          }
+        </div >
+      )
+      }
     </>
   )
 
