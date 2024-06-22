@@ -15,6 +15,8 @@ export function generateSchedule(
   setCustom,
   streak,
   goal,
+  showStreaks,
+  groupStreaks,
 ) {
   // Loop over each layer, ignoring the final entry in each
   const schedule = layers.map((entries) => {
@@ -352,5 +354,7 @@ export function generateSchedule(
     setCustom,
     streak,
     goal,
+    showStreaks,
+    groupStreaks,
   }
 }

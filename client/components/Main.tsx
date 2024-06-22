@@ -32,7 +32,9 @@ function Main({ user, id, signOut }) {
     force: false,
     titles: [],
     streak: 0,
-    goal: 0
+    goal: 0,
+    showStreaks: true,
+    groupStreaks: false
   }
   // Layers as a state
   const [state, setState] = useState(initialState)
@@ -77,7 +79,7 @@ function Main({ user, id, signOut }) {
     fetchProjectData()
   }, [uid, id])
 
-  const { layers, mpSpacing, data, bookmark, titles, streak, goal } = {
+  const { layers, mpSpacing, data, bookmark, titles, streak, goal, showStreaks, groupStreaks } = {
     ...initialState,
     ...state,
   }
@@ -102,6 +104,8 @@ function Main({ user, id, signOut }) {
         titles,
         streak,
         goal,
+        showStreaks,
+        groupStreaks,
       })
     }
   }, [
@@ -116,7 +120,9 @@ function Main({ user, id, signOut }) {
     titles,
     changedProps,
     streak,
-    goal
+    goal,
+    showStreaks,
+    groupStreaks,
   ])
 
   function addData(entry, layerId: number, entryId: number) {
@@ -196,6 +202,18 @@ function Main({ user, id, signOut }) {
     setChangedProps([...changedProps, 'goal'])
   }
 
+  function setShowStreaks(showStreaks) {
+    if (readOnly) return
+    setState({ ...state, showStreaks, force: true })
+    setChangedProps([...changedProps, 'showStreaks'])
+  }
+
+  function setGroupStreaks(groupStreaks) {
+    if (readOnly) return
+    setState({ ...state, groupStreaks, force: true })
+    setChangedProps([...changedProps, 'groupStreaks'])
+  }
+
   function setTitle(layer, title) {
     if (readOnly) return
     titles[layer] = title
@@ -255,7 +273,9 @@ function Main({ user, id, signOut }) {
     setShow,
     setCustom,
     streak,
-    goal
+    goal,
+    showStreaks,
+    groupStreaks
   )
 
   return (
@@ -405,34 +425,74 @@ function Main({ user, id, signOut }) {
                   />
                 )}
               </fieldset>
-              {streak !== 0 ? (
-                <fieldset id="goal">
-                  <legend>Average # of Streaks per Watch Session</legend>
+              <fieldset id="goal">
+                <legend>Average {streak !== 0 ? "# of Streaks per" : "duration of each"} Watch Session</legend>
+                {bookmark ? (
+                  <span>Streak adjustment locked while bookmark exists.</span>
+                ) : (
+                  <>
+                    <input
+                      type="number"
+                      min="0"
+                      max="25"
+                      step="1"
+                      value={goal}
+                      onChange={(e) => setGoal(Math.max(parseInt(e.target.value), 0))}
+                    />
+                    {goal !== 0 ? streak !== 0 ? <>
+                      <br />
+                      <br />
+                      <span>Making ~{Math.round([...new Set(scheduleData.schedule.map(e => e.mid))].length / goal) + 1} watch sessions</span>
+                      <br />
+                      <span>Each with an average length of {Math.round((scheduleData.totalSpan / ([...new Set(scheduleData.schedule.map(e => e.mid))].length / goal) + 1) / 6) / 10} hours</span>
+                    </> : <>
+                      <br />
+                      <br />
+                      <span>Making ~{Math.round(scheduleData.totalSpan / 60 / goal) + 1} watch sessions</span>
+                    </>
+                      : null}
+                  </>
+                )}
+              </fieldset>
+              {streak !== 0 || goal !== 0 ? (
+                <fieldset id="sessionOptions">
+                  <legend>Watch Session Options
+                    <HelpIcon info={
+                      "Control how watch sessions are shown and sorted."
+                    } />
+                  </legend>
                   {bookmark ? (
-                    <span>Streak adjustment locked while bookmark exists.</span>
+                    <span>Watch session options locked while bookmark exists.</span>
                   ) : (
                     <>
-                      <input
-                        type="number"
-                        min="0"
-                        max="25"
-                        step="1"
-                        value={goal}
-                        onChange={(e) => setGoal(Math.max(parseInt(e.target.value), 0))}
-                      />
-                      {goal ? <>
-                        <br />
-                        <br />
-                        <span>Making ~{Math.round([...new Set(scheduleData.schedule.map(e => e.mid))].length / goal) + 1} watch sessions</span>
-                        <br />
-                        <span>Each with an average length of {Math.round((scheduleData.totalSpan / ([...new Set(scheduleData.schedule.map(e => e.mid))].length / goal) + 1) / 6) / 10} hours</span>
-                      </> : null}
+                      <fieldset id="showStreaks">
+                        <legend>Show Streaks
+                          <HelpIcon info={
+                            "Toggle showing streak indicators on the schedule while watch sessions are active"
+                          } />
+                        </legend>
+                        <input
+                          type="checkbox"
+                          checked={showStreaks}
+                          onChange={(e) => setShowStreaks(e.target.checked)}
+                        />
+                      </fieldset>
+                      <fieldset id="groupStreaks">
+                        <legend>Group Streaks
+                          <HelpIcon info={
+                            "Toggle grouping same-source streaks within watch sessions"
+                          } />
+                        </legend>
+                        <input
+                          type="checkbox"
+                          checked={groupStreaks}
+                          onChange={(e) => setGroupStreaks(e.target.checked)}
+                        />
+                      </fieldset>
                     </>
                   )}
                 </fieldset>
-              ) : (
-                null
-              )}
+              ) : null}
             </details></fieldset >
           {
             scheduleData.schedule.length > 0 && (

@@ -2,12 +2,12 @@ import EpisodeDetails from './EpisodeDetails.tsx'
 import { useEffect } from 'react';
 
 export default function Schedule({ scheduleData, user }) {
-  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitle, setShow, setCustom, streak, goal } = scheduleData
+  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitle, setShow, setCustom, streak, goal, showStreaks, groupStreaks } = scheduleData
 
   let showing = !bookmark
   let seenSpan = 0
   let lastStreak = null
-  const streakEnds = []
+  let streakEnds = []
   const streakLengths = []
 
   useEffect(scrollToBookmark, [user]);
@@ -58,14 +58,65 @@ export default function Schedule({ scheduleData, user }) {
   })
 
   // get the length of each section
-  const sessionLength = totalSpan / Math.round(Math.max(streakLengths.length / goal, 1))
+  const sessionLength = streak !== 0 ? totalSpan / Math.round(Math.max(streakLengths.length / goal, 1)) : totalSpan / (goal * 60)
   const sessionEnds = []
 
-  if (goal) streakLengths.reduce((total, streak, i) => {
-    const newTotal = total + streak
-    if (newTotal / sessionLength > (sessionEnds.length + 1)) sessionEnds.push(streakEnds[i])
+  if (goal !== 0) (streak !== 0 ? streakLengths : schedule).reduce((total, element, i) => {
+    const newTotal = total + (streak !== 0 ? element : (element.runtime || element.average_run_time))
+    const target = sessionLength * (sessionEnds.length + 1)
+
+    // We will start by checking if total is closer to totalPassed + 1 than newTotal is
+    // Only will check when newTotal is greater than target
+    if (Math.abs(target - total) < Math.abs(target - newTotal)) {
+      sessionEnds.push(streak !== 0 ? streakEnds[i - 1] : i - 1)
+      if (streak == 0) streakEnds.push(i - 1)
+    }
+
     return newTotal
   }, 0)
+
+  if (streak !== 0 && groupStreaks && goal !== 0) {
+    // Group same-source streaks within watch sessions
+    // AKA for every session, loop over each streak, averaging out the midpoints of all streak entries of the same layer_id
+
+    const sessions = [[]]
+
+    schedule.forEach((entry, i) => {
+      // Add to the end of the last session in the array
+      sessions[sessions.length - 1].push({ i, mid: entry.mid, layer: entry.layer })
+
+      // If the end of a session, then add an empty array for the next session
+      if (sessionEnds.includes(i)) sessions.push([])
+    })
+
+    sessions.forEach((session) => {
+      // Group all entries by layers
+      const groups = session.reduce((groups, entry) => {
+        const layer = entry.layer
+        if (!groups[layer]) groups[layer] = []
+        groups[layer].push(entry)
+        return groups
+      }, [])
+
+      // For each group, calculate the average midpoint of all entries
+      groups.forEach((group) => {
+        console.log(group)
+        const averageMid = group.reduce((sum, entry) => sum + entry.mid, 0) / group.length
+        group.forEach((entry) => {
+          schedule[entry.i].mid = averageMid
+        })
+      })
+    })
+
+    const oldSchedule = [...schedule]
+    schedule.sort((a, b) => a.mid - b.mid)
+
+    // Fix streakEnds to match the new sorted schedule
+    streakEnds = streakEnds.map((end) => schedule.findIndex((entry) => entry.posIndex == end))
+  }
+
+  console.log(streakEnds)
+  console.log(sessionEnds)
 
   const seenPercentage = seenSpan / totalSpan * 100
 
@@ -107,6 +158,7 @@ export default function Schedule({ scheduleData, user }) {
       true,
     )
   }
+
   return (
     <>
       <fieldset id="key">
@@ -174,7 +226,8 @@ export default function Schedule({ scheduleData, user }) {
               </div>
             ) : (
               <EpisodeDetails entry={entry} key={i} i={i} {...scheduleData} />
-            )}{streakEnds.includes(i) ? <span className={[sessionEnds.includes(i) ? "sessionBound" : "streakBound", entry.show ? '' : 'fade'].join(' ')} /> : null}
+              // Show if in the list, but not if 'showStreaks' is false while 'goal' is not 0
+            )}{streakEnds.includes(i) && !(!showStreaks && goal !== 0 && !sessionEnds.includes(i)) ? <span className={[sessionEnds.includes(i) ? "sessionBound" : "streakBound", entry.show ? '' : 'fade'].join(' ')} /> : null}
             </>
           )}
         </div>
