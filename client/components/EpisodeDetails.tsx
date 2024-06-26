@@ -28,7 +28,7 @@ export default function EpisodeDetails(props) {
         .join(' ')}
       style={{
         height: `calc(var(--scale) * ${Math.max(10, entry.runtime || entry.average_run_time)}px)`,
-        marginLeft: `${entry.layer * 28 + 3}px`,
+        marginLeft: `${entry.layer * 30 + 4}px`,
         backgroundColor: `hwb(${entry.show_id ? colors.tv[entry.show_id].color : entry.type == 'movie' ? colors.movie[entry.layer].color : colors.custom[entry.set].color} 0% 25%)`,
         marginTop: `calc(var(--scale) * ${Math.max(0, minHeight - (entry.runtime || entry.average_run_time)) + 30}px / 2)`,
         marginBottom: `calc(var(--scale) * ${Math.max(0, minHeight - (entry.runtime || entry.average_run_time)) + 30}px / 2)`,
@@ -40,7 +40,7 @@ export default function EpisodeDetails(props) {
         style={{
           minHeight: `${Math.max(minHeight, entry.runtime || entry.average_run_time) + 4}px`,
           maxHeight: `${Math.max(minHeight, entry.runtime || entry.average_run_time) + (schedule[i + 1] && Math.max(minHeight, schedule[i + 1].runtime || schedule[i + 1].average_run_time)) + 20}px`,
-          width: `calc(50% * var(--scale) - ${numberOfLayers} * var(--layer-size) * var(--scale) - var(--offset))`,
+          width: `calc(50% * var(--scale) - ${numberOfLayers} * var(--layer-size) * var(--scale) - 3px)`,
         }}
       >
         <div
