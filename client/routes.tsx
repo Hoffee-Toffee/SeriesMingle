@@ -8,5 +8,6 @@ export default createRoutesFromElements(
       <Route index element={<Project />} />
       <Route path="ping" element={<p>Pong!</p>} />
     </Route>
+    <Route path="/ping" element={<p>Pongy!</p>} />
   </>,
 )

@@ -25,6 +25,7 @@ export default function App() {
         }
       </Helmet>
       <Outlet />
+      {/* Try without outlet */}
     </>
   )
 }
