@@ -2,8 +2,9 @@ import { createRoot, hydrateRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import routes from './routes';
 
+
 const router = createBrowserRouter(routes, {
-  basename: '/projects/SeriesMingle'
+  basename: import.meta.url.search('/projects/SeriesMingle') == -1 ? '' : '/projects/SeriesMingle'
 });
 
 const rootElement = document.getElementById('app');
