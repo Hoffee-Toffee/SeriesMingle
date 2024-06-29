@@ -7,15 +7,22 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth'
-import favicon from '../files/favicon.ico'
 
-export default function LogIn({ setUser }) {
+import favicon from '../files/favicon.ico'
+import { useContext } from 'react';
+import { LoadingContext, UserContext } from './App.tsx';
+
+export default function LogIn() {
+  const { setUser } = useContext(UserContext)
   const [error, setError] = useState('')
 
   const [creatingEmail, setCreatingEmail] = useState(false)
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
   const confirmPasswordRef = useRef<HTMLInputElement>(null)
+
+  const { isPageLoaded, setIsPageLoaded } = useContext(LoadingContext)
+  if (!isPageLoaded) setIsPageLoaded(true)
 
   function onSubmit(e) {
     e.preventDefault()
