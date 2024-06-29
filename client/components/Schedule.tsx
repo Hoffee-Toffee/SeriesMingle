@@ -2,7 +2,7 @@ import EpisodeDetails from './EpisodeDetails.tsx'
 import { useEffect } from 'react';
 
 export default function Schedule({ scheduleData, user }) {
-  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitle, setShow, setCustom, streak, goal, showStreaks, groupStreaks } = scheduleData
+  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitles, setShow, setCustom, streak, goal, showStreaks, groupStreaks } = scheduleData
 
   let showing = !bookmark
   let seenSpan = 0
@@ -189,7 +189,7 @@ export default function Schedule({ scheduleData, user }) {
                     setShow(color.show, newText)
                   }
                   else if (color.type == 'movie') {
-                    setTitle(color.layer, newText)
+                    setTitles(color.layer, newText)
                   }
                   else {
                     setCustom({ ...data.custom[color.layer], title: newText })

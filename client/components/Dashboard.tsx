@@ -38,7 +38,7 @@ export default function Dashboard() {
       {isPageLoaded && <><div id='projects-list'>{userProjects.length ? userProjects.map(
         (project) => <Link to={`/project/${project.id}`} key={project.id}>
           <div className="project-container">
-            <h2>{project.name || 'Untitled Schedule'}</h2>
+            <h2>{project.title || 'Untitled Schedule'}</h2>
             <p>{project.description || 'No Description'}</p>
           </div>
         </Link>

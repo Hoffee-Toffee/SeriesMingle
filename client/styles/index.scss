@@ -508,6 +508,33 @@ html {
   .episode-detail ::-webkit-scrollbar-thumb {
     outline-color: #234;
   }
+
+  #project-details {
+    color: white;
+    text-align-last: center;
+    text-align: -webkit-center;
+  }
+  
+  .setTitle {
+    width: fit-content;
+    padding: 5px 10px;
+    margin: 0;
+  }
+  
+  .setDescription {
+    background: #1f3b6e;
+    color: white;
+    max-width: calc(100vw - 2em);
+    width: fit-content;
+    display: block;
+    border: 2px solid #0095fa;
+    padding: 5px 10px;
+    margin-top: 10px;
+
+    br {
+      display: none;
+    }
+  }
 }
 @media screen and (max-width: 800px) {
   #main {
@@ -606,6 +633,14 @@ html {
     opacity: 0;
   }
 }
+@keyframes lds-fade {
+  0% {
+    opacity: 0;
+  }
+  50%, 100% {
+    opacity: 1;
+  }
+}
 
 .loading,
 .loaded {
@@ -614,6 +649,11 @@ html {
   position: absolute;
   left: calc(50vw - 50px);
   top: calc(50dvh - 50px);
+}
+
+.loading {
+  opacity: 1;
+  animation: fadein 2s;
 }
 
 .loaded {

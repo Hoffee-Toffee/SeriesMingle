@@ -2572,5 +2572,7 @@
     }
   },
   "saved": false,
-  "force": false
+  "force": false,
+  "title": "Example Schedule",
+  "description": "House, with Breaking Bad / El Camino / Better Call Saul"
 }
