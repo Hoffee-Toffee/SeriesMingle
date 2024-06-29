@@ -15,7 +15,9 @@ export default function fetchProject(user: string): Promise<object | null> {
       state: res.body.state ? true : undefined,
       layers: res.body.state
         ? res.body.state.layers
-        : Object.values(res.body.layers).map((layer, i) => layer[i]),
+        : res.body.layers
+          ? Object.values(res.body.layers).map((layer, i) => layer[i])
+          : [[]],
     }
   })
 }

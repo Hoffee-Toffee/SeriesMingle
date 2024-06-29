@@ -12,28 +12,56 @@ const router = Router()
 
 // Get and set project routes
 
-// Get project
-router.get('/:user', async (req, res) => {
+// Get all user projects
+router.get('/user/:user', async (req, res) => {
   const user = req.params.user
-  // Get the project document where the 'user' property matches the provided user ID
+  // Get the project documents where the 'user' property matches the provided user ID
   const projectQuery = collection(firestore, 'projects')
   const querySnapshot = await getDocs(projectQuery)
 
-  let projectData
+  const projectArr = []
   querySnapshot.forEach((doc) => {
     const data = doc.data()
     if (data.user === user) {
+      projectArr.push({
+        id: doc.id,
+        ...data,
+        state: data.state ? JSON.parse(data.state) : undefined,
+      })
+    }
+  })
+
+  res.send(projectArr)
+})
+
+// Create project
+router.post('/create', async (req, res) => {
+  const data = await req.body
+  const userId = data.user
+
+  const newProjectRef = await addDoc(collection(firestore, 'projects'), {
+    user: userId,
+  })
+  res.send(newProjectRef.id)
+})
+
+// Get project
+router.get('/:id', async (req, res) => {
+  const id = req.params.id
+  // Get the project document where the ID matches the one provided
+  const projectQuery = collection(firestore, 'projects')
+  const querySnapshot = await getDocs(projectQuery)
+
+  let projectData = null
+  querySnapshot.forEach((doc) => {
+    const data = doc.data()
+    if (doc.id === id) {
       projectData = {
         ...data,
         state: data.state ? JSON.parse(data.state) : undefined,
       }
     }
   })
-
-  // Check if the project exists
-  if (!projectData) {
-    return res.send(null)
-  }
 
   res.send(projectData)
 })
@@ -47,42 +75,19 @@ router.post('/', async (req, res) => {
     {},
   )
 
-  // Check if the user property is provided in the request body
-  if (!projectData || !projectData.user) {
+  // Check if the id is provided in the request body
+  if (!projectData || !projectData.id) {
     return res.status(400)
   }
 
-  const projectQuery = collection(firestore, 'projects')
-  const querySnapshot = await getDocs(projectQuery)
-
-  let existingProjectId
-
-  // Check if a project already exists for the user
-  querySnapshot.forEach((doc) => {
-    const data = doc.data()
-    if (data.user === projectData.user) {
-      existingProjectId = doc.id
-      return
-    }
-  })
-
   try {
-    // If a project exists, update it; otherwise, create a new project
-    if (existingProjectId) {
-      const projectRef = doc(firestore, 'projects', existingProjectId)
-      if (projectData.state) {
-        await setDoc(projectRef, { ...projectData, state: null })
-      } else {
-        await updateDoc(projectRef, toUpdate)
-      }
-      res.send('Project updated successfully')
+    const projectRef = doc(firestore, 'projects', projectData.id)
+    if (projectData.state) {
+      await setDoc(projectRef, { ...projectData, state: null })
     } else {
-      const newProjectRef = await addDoc(
-        collection(firestore, 'projects'),
-        projectData,
-      )
-      res.send('Project created successfully with ID: ' + newProjectRef.id)
+      await updateDoc(projectRef, toUpdate)
     }
+    res.send('Project updated successfully')
   } catch (error) {
     console.error('Error setting document: ', error)
     res.status(500).send('Error setting project data')
