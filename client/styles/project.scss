@@ -35,7 +35,7 @@ html {
   background: var(--bg-col);
 }
 
-#main {
+#project {
   .layer {
     display: flex;
     justify-content: space-between;
@@ -513,31 +513,31 @@ html {
     color: white;
     text-align-last: center;
     text-align: -webkit-center;
-  }
-  
-  .setTitle {
-    width: fit-content;
-    padding: 5px 10px;
-    margin: 0;
-  }
-  
-  .setDescription {
-    background: #1f3b6e;
-    color: white;
-    max-width: calc(100vw - 2em);
-    width: fit-content;
-    display: block;
-    border: 2px solid #0095fa;
-    padding: 5px 10px;
-    margin-top: 10px;
 
-    br {
-      display: none;
+    .setTitle {
+      width: fit-content;
+      padding: 5px 10px;
+      margin: 0;
+    }
+
+    .setDescription {
+      background: #1f3b6e;
+      color: white;
+      max-width: calc(100vw - 2em);
+      width: fit-content;
+      display: block;
+      border: 2px solid #0095fa;
+      padding: 5px 10px;
+      margin-top: 10px;
+
+      br {
+        display: none;
+      }
     }
   }
 }
 @media screen and (max-width: 800px) {
-  #main {
+  #project {
     .episode-detail,
     .episode-detail.odd {
       left: unset;
@@ -559,7 +559,7 @@ html {
   }
 }
 @media screen and (max-width: 500px) {
-  #main {
+  #project {
     #scheduleVisualization {
       width: 0;
       margin-left: 5px;
@@ -637,7 +637,8 @@ html {
   0% {
     opacity: 0;
   }
-  50%, 100% {
+  50%,
+  100% {
     opacity: 1;
   }
 }

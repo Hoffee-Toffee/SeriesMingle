@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { UserContext, LoadingContext } from './App.tsx'
+import '../styles/project.scss'
 import {
   DndContext,
   DragOverEvent,
@@ -18,8 +19,6 @@ import fetchProject from '../apis/fetchProject.ts'
 import setProject from '../apis/setProject.ts'
 import Entry from './Entry.tsx'
 import HelpIcon from './HelpIcon.tsx'
-import { auth } from '../../server/firebase.ts'
-import { signOut } from 'firebase/auth'
 import { Link, useParams } from 'react-router-dom'
 
 export default function Project() {
@@ -310,7 +309,7 @@ export default function Project() {
   return (
     <>
       {isPageLoaded && (hasAccess ? (
-        <div id="main" className='fadein'>
+        <div className='fadein'>
           <Link to="../dashboard">
             <i className="fas fa-arrow-left"></i> Back to Dashboard
           </Link>

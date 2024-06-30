@@ -40,7 +40,7 @@ export default function EpisodeDetails(props) {
         style={{
           minHeight: `${Math.max(minHeight, entry.runtime || entry.average_run_time) + 4}px`,
           maxHeight: `${Math.max(minHeight, entry.runtime || entry.average_run_time) + (schedule[i + 1] && Math.max(minHeight, schedule[i + 1].runtime || schedule[i + 1].average_run_time)) + 20}px`,
-          width: `calc(50% * var(--scale) - ${numberOfLayers} * var(--layer-size) * var(--scale) - 3px)`,
+          width: `calc(50% * var(--scale) - ${numberOfLayers} * var(--layer-size) * var(--scale) - 5px)`,
         }}
       >
         <div

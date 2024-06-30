@@ -42,7 +42,7 @@ router.post('/create', async (req, res) => {
   const newProjectRef = await addDoc(collection(firestore, 'projects'), {
     user: userId,
   })
-  res.send(newProjectRef.id)
+  res.send({ id: newProjectRef.id })
 })
 
 // Get project

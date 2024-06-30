@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet'
 import favicon from '../files/favicon.ico'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation, useOutlet } from 'react-router-dom'
 import { createContext, useEffect, useState } from 'react'
 
 import { auth } from '../../server/firebase.ts'
@@ -36,6 +36,9 @@ export default function App() {
     }
   }, [location])
 
+  // Log the outlet component element name
+  const page = useOutlet()?.props.children.props.routeContext.matches.at(-1).pathname.split('/')[1] || 'home'
+
   return (
     <>
       <Helmet>
@@ -47,7 +50,7 @@ export default function App() {
           property="og:image"
           content={favicon}
         />
-        {id &&
+        {page == 'project' &&
           <meta
             property="og:description"
             content="Check out my TV and movie schedule on SeriesMingle!"
@@ -65,7 +68,9 @@ export default function App() {
       {isAuthLoaded &&
         <UserContext.Provider value={{ user, setUser }}>
           <LoadingContext.Provider value={{ isPageLoaded, setIsPageLoaded }}>
-            <Outlet />
+            <div id={page}>
+              <Outlet />
+            </div>
           </LoadingContext.Provider>
         </UserContext.Provider>}
     </>

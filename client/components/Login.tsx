@@ -106,7 +106,7 @@ export default function LogIn() {
   }
 
   return (
-    <div id="login">
+    <>
       <img src={favicon} alt="Series Mingle logo" id="logo" />
       <h1>
         <span>Series</span>
@@ -176,6 +176,6 @@ export default function LogIn() {
           {creatingEmail ? 'Sign In' : 'Create Account'}
         </a>
       </span>
-    </div>
+    </>
   )
 }

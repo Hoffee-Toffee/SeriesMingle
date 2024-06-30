@@ -1,0 +1,83 @@
+#dashboard {
+  h1 {
+    color: white;
+    text-align: center;
+    margin-top: 0;
+  }
+  button,
+  a {
+    transition: var(--transition-time);
+    outline: solid transparent 2px;
+    border-radius: 0.3em;
+    z-index: 1;
+    position: relative;
+    color: #d7e300;
+    border: orangered 2px solid;
+    background-color: #8b0000;
+    padding: 0.3em;
+    margin: 0.25em;
+    cursor: pointer;
+    font-size: smaller;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  button:hover,
+  a:hover {
+    color: #fff;
+    border: orange 2px solid;
+    background-color: #ff4500;
+  }
+
+  .projects-list {
+    gap: 0.75em;
+    display: flex;
+    margin: 0.25em;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+
+    > a {
+      margin: 0;
+      min-width: 200px;
+    }
+
+    > h2 {
+      color: white;
+      text-align: center;
+      background-color: var(--bg-col);
+      padding: 0 0.5em;
+      width: max-content;
+      margin: 0 100%;
+      white-space: nowrap;
+    }
+
+    > h2::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 5px;
+      background-color: #0095fa;
+      margin: 0.5em 0;
+      position: absolute;
+      top: 5px;
+      left: 0;
+      z-index: -1;
+    }
+
+    > p {
+      color: white;
+    }
+
+    #create-new {
+      width: max-content;
+      margin: 0 100%;
+      white-space: nowrap;    }
+  }
+
+  .project-container {
+    text-align: center;
+    margin: 5px 10px;
+  }
+
+}
