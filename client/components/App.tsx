@@ -37,7 +37,7 @@ export default function App() {
   }, [location])
 
   // Log the outlet component element name
-  const page = useOutlet()?.props.children.props.routeContext.matches.at(-1).pathname.split('/')[1] || 'home'
+  const page = useOutlet()?.props.children.props.routeContext.matches.at(-1).pathname.split('/')[1] || 'dashboard'
 
   return (
     <>

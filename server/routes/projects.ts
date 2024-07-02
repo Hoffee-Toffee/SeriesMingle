@@ -2,10 +2,12 @@ import {
   firestore,
   collection,
   getDocs,
+  getDoc,
   doc,
   addDoc,
   updateDoc,
   setDoc,
+  deleteDoc,
 } from '../firebase.ts'
 import { Router } from 'express'
 const router = Router()
@@ -49,19 +51,18 @@ router.post('/create', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const id = req.params.id
   // Get the project document where the ID matches the one provided
-  const projectQuery = collection(firestore, 'projects')
-  const querySnapshot = await getDocs(projectQuery)
+  const projectRef = doc(firestore, 'projects', id)
+  const querySnapshot = await getDoc(projectRef)
 
   let projectData = null
-  querySnapshot.forEach((doc) => {
-    const data = doc.data()
-    if (doc.id === id) {
-      projectData = {
-        ...data,
-        state: data.state ? JSON.parse(data.state) : undefined,
-      }
+
+  if (querySnapshot.exists()) {
+    const data = querySnapshot.data()
+    projectData = {
+      ...data,
+      state: data.state ? JSON.parse(data.state) : undefined,
     }
-  })
+  }
 
   res.send(projectData)
 })
@@ -91,6 +92,56 @@ router.post('/', async (req, res) => {
   } catch (error) {
     console.error('Error setting document: ', error)
     res.status(500).send('Error setting project data')
+  }
+})
+
+// Delete project
+router.get('/delete/:id', async (req, res) => {
+  const id = req.params.id
+
+  // Check if the id is provided in the request body
+  if (!id) {
+    return res.status(400)
+  }
+
+  try {
+    const projectRef = doc(firestore, 'projects', id)
+    await deleteDoc(projectRef)
+    res.send('Project deleted successfully')
+  } catch (error) {
+    console.error('Error deleting document: ', error)
+    res.status(500).send('Error deleting project data')
+  }
+})
+
+// Clone project
+router.post('/clone', async (req, res) => {
+  const data = await req.body
+  const id = data.id
+
+  // Check if the id is provided in the request body
+  if (!id) {
+    return res.status(400)
+  }
+
+  try {
+    const projectRef = doc(firestore, 'projects', id)
+    const projectSnapshot = await getDoc(projectRef)
+
+    if (projectSnapshot.exists()) {
+      const projectData = projectSnapshot.data()
+      const newProjectRef = await addDoc(collection(firestore, 'projects'), {
+        ...projectData,
+        title: `Clone of '${projectData.title || 'Untitled Schedule'}'`,
+        user: data.user,
+      })
+      res.send({ id: newProjectRef.id })
+    } else {
+      res.status(404).send('Project does not exist')
+    }
+  } catch (error) {
+    console.error('Error cloning document: ', error)
+    res.status(500).send('Error cloning project data')
   }
 })
 

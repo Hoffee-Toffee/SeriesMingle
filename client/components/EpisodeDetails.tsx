@@ -46,7 +46,7 @@ export default function EpisodeDetails(props) {
         <div
           style={{
             minHeight: `${Math.max(minHeight, entry.runtime || entry.average_run_time) - 12}px`,
-            maxHeight: `calc(var(--scale) * ${Math.max(minHeight, entry.runtime || entry.average_run_time) - 2}px + var(--height-mult) * ${(schedule[i + 1] ? Math.max(minHeight, schedule[i + 1].runtime || schedule[i + 1].average_run_time) : 40) - 2}px)`,
+            maxHeight: `calc(var(--scale) * ${Math.max(minHeight, entry.runtime || entry.average_run_time) - 5}px + var(--height-mult) * ${(schedule[i + 1] ? Math.max(minHeight, schedule[i + 1].runtime || schedule[i + 1].average_run_time) : 40) - 2}px)`,
           }}
         >
           <label htmlFor={`bookmark-${i}`}>

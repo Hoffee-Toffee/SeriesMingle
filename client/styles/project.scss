@@ -368,6 +368,7 @@ html {
     border: 2px solid black;
     transition: var(--transition-time);
     scroll-margin-top: 5px;
+    scroll-margin-right: 2px;
   }
   .episode-marker.fade:not(:hover) {
     opacity: 0.25;
@@ -477,13 +478,15 @@ html {
   }
   .episode-detail .spoiler {
     opacity: 0;
-    line-height: 0%;
+    line-height: 0;
     transition:
       opacity var(--transition-time),
       line-height var(--transition-time) var(--transition-time),
       margin-top var(--transition-time) var(--transition-time);
     overflow-y: auto;
     scrollbar-gutter: stable;
+    font-size: 95%;
+    padding-right: 5px;
   }
   .episode-marker:hover div * :not(.title, .spoiler, label, i) {
     opacity: 0;
@@ -496,7 +499,7 @@ html {
   .episode-marker:hover .episode-detail .spoiler {
     margin-top: 5px;
     opacity: 1;
-    line-height: 125%;
+    line-height: 1.5;
     transition:
       opacity var(--transition-time) var(--transition-time),
       line-height var(--transition-time),
