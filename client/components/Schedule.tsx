@@ -115,9 +115,6 @@ export default function Schedule({ scheduleData, user }) {
     streakEnds = streakEnds.map((end) => schedule.findIndex((entry) => entry.posIndex == end))
   }
 
-  console.log(streakEnds)
-  console.log(sessionEnds)
-
   const seenPercentage = seenSpan / totalSpan * 100
 
   function removeWatched() {
@@ -128,6 +125,7 @@ export default function Schedule({ scheduleData, user }) {
     })
 
     const seenProgressKeys = Object.keys(seenProgress)
+
     seenProgressKeys.forEach((id) => {
       const entry = seenProgress[id]
       if (entry.type == 'movie') layers[entry.layer][entry.layer_id] = undefined

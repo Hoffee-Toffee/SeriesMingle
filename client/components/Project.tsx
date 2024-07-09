@@ -186,16 +186,18 @@ export default function Project() {
     if (updateData) {
       // Transfer all referenced data from 'data' to 'newData', removing all that is not referenced
       newLayers.forEach(layer => layer.forEach((entry, i) => {
-        if (layer.length - 1 !== i) newData[entry.ref[0]][entry.ref[1]] = data[entry.ref[0]][entry.ref[1]]
+        if (entry.ref) newData[entry.ref[0]][entry.ref[1]] = data[entry.ref[0]][entry.ref[1]]
       }))
       newProps.push('data')
     }
+    newProps.push('bookmark')
+
     setState({
       ...state,
       layers: newLayers,
       data: updateData ? newData : data,
       force,
-      bookmark: undefined,
+      bookmark: null,
     })
     setChangedProps(newProps)
   }
