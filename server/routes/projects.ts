@@ -24,6 +24,7 @@ router.get('/user/:user', async (req, res) => {
   const projectArr = []
   querySnapshot.forEach((doc) => {
     const data = doc.data()
+
     if (data.user === user) {
       projectArr.push({
         id: doc.id,
@@ -43,6 +44,7 @@ router.post('/create', async (req, res) => {
 
   const newProjectRef = await addDoc(collection(firestore, 'projects'), {
     user: userId,
+    lastModified: new Date().getTime(),
   })
   res.send({ id: newProjectRef.id })
 })
@@ -73,7 +75,9 @@ router.post('/', async (req, res) => {
   const props = projectData.props
   const toUpdate = props.reduce(
     (obj, prop) => ({ ...obj, [prop]: projectData[prop] }),
-    {},
+    {
+      lastModified: new Date().getTime(),
+    },
   )
 
   // Check if the id is provided in the request body
@@ -84,7 +88,11 @@ router.post('/', async (req, res) => {
   try {
     const projectRef = doc(firestore, 'projects', projectData.id)
     if (projectData.state) {
-      await setDoc(projectRef, { ...projectData, state: null })
+      await setDoc(projectRef, {
+        ...projectData,
+        state: null,
+        lastModified: new Date().getTime(),
+      })
     } else {
       await updateDoc(projectRef, toUpdate)
     }

@@ -46,8 +46,7 @@ export default function Dashboard() {
     const fetchProjectData = async () => {
       const projects = await fetchUserProjects(user.uid)
       setIsPageLoaded(true)
-      console.log(projects)
-      setUserProjects(projects)
+      setUserProjects(projects.sort((a, b) => (b.lastModified || 0) - (a.lastModified || 0)))
     }
 
     fetchProjectData()

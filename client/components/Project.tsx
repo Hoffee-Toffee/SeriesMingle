@@ -41,7 +41,7 @@ export default function Project() {
     showStreaks: true,
     groupStreaks: false,
     title: 'Untitled Schedule',
-    description: 'No Description',
+    description: 'No Description'
   }
   // Layers as a state
   const [state, setState] = useState(initialState)
@@ -118,7 +118,7 @@ export default function Project() {
         showStreaks,
         groupStreaks,
         title,
-        description,
+        description
       })
     }
   }, [
