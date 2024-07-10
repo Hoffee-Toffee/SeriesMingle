@@ -21,7 +21,7 @@ export default createRoutesFromElements(
       <Route path="dashboard" element={<ProtectedRoute>
         <Dashboard />
       </ProtectedRoute>} />
-      <Route path="project/:id" element={<ProtectedRoute>
+      <Route path="project/:id" element={<ProtectedRoute includeRedirect={true}>
         <Project />
       </ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
