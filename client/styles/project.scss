@@ -428,14 +428,20 @@ html {
     background: black;
     display: flex;
     height: calc(100% - 16px);
-    width: calc(100% - 16px);
-    margin: 2px;
+    width: calc(100% - 18px);
+    margin: 3px;
     border: 6px solid black;
     font-size: smaller;
     flex-direction: column;
   }
+
+  .episode-detail,
+  #key span {
+    box-shadow: inset rgb(0 0 0 / 33%) 0em 0em 0px 1px;
+  }
+
   .part .episode-detail div {
-    outline: 2px dashed black;
+    outline: 3px dashed black;
   }
   .episode-detail.odd {
     left: unset;

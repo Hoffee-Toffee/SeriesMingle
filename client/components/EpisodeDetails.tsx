@@ -39,7 +39,7 @@ export default function EpisodeDetails(props) {
         className={['episode-detail', i % 2 && 'odd'].filter(Boolean).join(' ')}
         style={{
           minHeight: `${Math.max(minHeight, entry.runtime || entry.average_run_time) + 4}px`,
-          maxHeight: `${Math.max(minHeight, entry.runtime || entry.average_run_time) + (schedule[i + 1] && Math.max(minHeight, schedule[i + 1].runtime || schedule[i + 1].average_run_time)) + 20}px`,
+          maxHeight: `${Math.max(minHeight, entry.runtime || entry.average_run_time) + (schedule[i + 1] && Math.max(minHeight, schedule[i + 1].runtime || schedule[i + 1].average_run_time)) + 22}px`,
           width: `calc(50% * var(--scale) - ${numberOfLayers} * var(--layer-size) * var(--scale) - 5px)`,
         }}
       >
