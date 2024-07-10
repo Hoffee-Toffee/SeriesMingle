@@ -198,7 +198,7 @@ function Entry({
                   {entryData.seasons
                     .slice(
                       entry.start
-                        ? parseInt(entry.start.split(':')[0] - 1)
+                        ? entryData.seasons.findIndex(s => s.season >= parseInt(entry.start.split(':')[0] - 1))
                         : 0,
                     )
                     .map((season) => (
@@ -208,8 +208,8 @@ function Entry({
                       >
                         {season.episodes
                           .slice(
-                            entry.start
-                              ? parseInt(entry.start.split(':')[1] - 1)
+                            entry.start && entry.start.split(':')[0] == season.season
+                              ? season.episodes.findIndex(e => e.episode >= parseInt(entry.start.split(':')[1] - 1))
                               : 0,
                           )
                           .map((episode) => (

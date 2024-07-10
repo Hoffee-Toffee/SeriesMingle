@@ -47,11 +47,14 @@ export function generateSchedule(
           ...entry,
           seasons: undefined,
           episodes: entry.seasons
-            .flatMap((season, i) =>
+            .flatMap((season) =>
               season.episodes.map((episode, num) => {
-                if (!inRange && entryRef.start !== `${i + 1}:${num + 1}`)
+                if (
+                  !inRange &&
+                  entryRef.start !== `${season.season}:${episode.episode}`
+                )
                   return undefined
-                inRange = entryRef.end !== `${i + 1}:${num + 1}`
+                inRange = entryRef.end !== `${season.season}:${episode.episode}`
                 return {
                   ...episode,
                   average_run_time:

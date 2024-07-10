@@ -133,8 +133,8 @@ export default function Schedule({ scheduleData, user }) {
         // Must be an episode, it's the last seen episode/entry, so we need to find the next episode to start from
         const show = data.tv[entry.show_id]
         // Get the next episode in that season, if existing, or the first of the next season, if existing, but only up until the 'end' season
-        const episodes = show.seasons.flatMap((season, num) => {
-          return season.episodes.map((ep, i) => ({ ...ep, pos: `${num + 1}:${i + 1}` }))
+        const episodes = show.seasons.flatMap((season) => {
+          return season.episodes.map((ep) => ({ ...ep, pos: `${season.season}:${ep.episode}` }))
         })
         const nextEpisode =
           episodes.find(episode => episode.id == entry.id).pos !== layers[entry.layer][entry.layer_id].end && episodes[episodes.findIndex((episode) => episode.id == entry.id) + 1]
