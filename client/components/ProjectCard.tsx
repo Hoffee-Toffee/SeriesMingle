@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 
-export default function ProjectCard({ project }) {
+export default function ProjectCard({ project, owner }) {
   const contextMenu = document.getElementById('contextMenu')
   const deletePopup = document.getElementById('deletePopup')
 
@@ -52,10 +52,13 @@ export default function ProjectCard({ project }) {
           onMouseEnter={(e) => {
             positionContextMenu(e.target)
             contextMenu.classList.add("show")
+            contextMenu.setAttribute("data-isOwner", owner)
+            document.querySelector("#leavePopup > div > p > span").innerHTML = project.title || 'Untitled Schedule'
             document.querySelector("#deletePopup > div > p > span").innerHTML = project.title || 'Untitled Schedule'
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(_) => {
             contextMenu.classList.remove("show")
+            contextMenu.removeAttribute("data-isOwner")
           }}
         >
         </i>

@@ -321,7 +321,7 @@ export default function Project() {
                 navigator.share({
                   title: 'My Watching Schedule',
                   text: 'Check out my watching schedule on SeriesMingle!',
-                  url: `${window.location.origin}${window.location.pathname}?id=${uid}`,
+                  url: `${window.location.origin}${window.location.pathname}`,
                 })
               }
             >

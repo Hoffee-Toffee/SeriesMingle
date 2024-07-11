@@ -132,7 +132,15 @@
     pointer-events: all;
   }
 
-  #deletePopup {
+  #contextMenu[data-isOwner=false] #deleteProjectButton {
+    display: none;
+  }
+
+  #contextMenu[data-isOwner=true] #leaveProjectButton {
+      display: none;
+  }
+
+  #deletePopup, #leavePopup {
     position: absolute;
     z-index: 2;
     width: 100vw;
@@ -145,13 +153,13 @@
     backdrop-filter: brightness(0.25) blur(10px) grayscale(1);
 }
 
-  #deletePopup.show {
+  #deletePopup.show, #leavePopup.show {
     opacity: 1;
     pointer-events: all;
     transition: opacity var(--transition-time);
   }
 
-  #deletePopup div {
+  #deletePopup div, #leavePopup div {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -167,19 +175,18 @@
     border: 2px solid #0095fa;
 }
 
-  #deletePopup p {
+  #deletePopup p, #leavePopup p {
     font-size: small;
     width: 100%;
     text-align: center;
   }
 
-  #deletePopup span {
+  #deletePopup span, #leavePopup span {
     color: yellow;
   }
 
-  #deletePopup button {
+  #deletePopup button, #leavePopup button {
     padding: 5px 15px;
     margin: 0;
   }
-
 }
