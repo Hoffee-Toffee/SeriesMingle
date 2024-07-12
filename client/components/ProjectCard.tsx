@@ -58,7 +58,6 @@ export default function ProjectCard({ project, owner }) {
           }}
           onMouseLeave={(_) => {
             contextMenu.classList.remove("show")
-            contextMenu.removeAttribute("data-isOwner")
           }}
         >
         </i>

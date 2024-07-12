@@ -90,7 +90,7 @@ export function generateSchedule(
   )
   const totalSpan = layerSpans.reduce((running, layer) => running + layer, 0)
 
-  const processed = schedule
+  let processed = schedule
     .map((layer, i) => {
       // For each layer we simply subtract it's combined runtime by the whole total (to get the blank times for that layer)
       // Then we divide that gap by that layer's total runtime to get the ratio of content to gap
@@ -340,12 +340,55 @@ export function generateSchedule(
       colors[set.type][set.isShow ? set.show : set.layer] = { ...set, color }
     })
 
+  let showing = !bookmark
+  let seenSpan = 0
+  let lastStreak = null
+
+  processed = processed.flatMap((entry, i) => {
+    const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (['episode', 'multiple'].includes(entry.type) ? entry.id : colors.custom[entry.set].indices.findIndex((e) => e == i))}`
+
+    const show = (showing = showing || (bookmark && posId == bookmark))
+    const span = entry.runtime || entry.average_run_time
+    const type = entry.show_id ? 'tv' : entry.type
+    const index =
+      entry.show_id || (entry.type == 'movie' ? entry.layer : entry.set)
+
+    if (!colors[type][index].span) {
+      colors[type][index].span = 0
+      colors[type][index].watched = 0
+    }
+    colors[type][index].span += span
+
+    if (!showing) {
+      seenSpan += span
+      colors[type][index].watched += span
+    }
+
+    if (streak) {
+      if (lastStreak == null) lastStreak = `${entry.mid}-${entry.layerId}`
+      streakLengths[streakEnds.length] =
+        (streakLengths[streakEnds.length] || 0) + span
+
+      if (lastStreak !== `${entry.mid}-${entry.layerId}`) {
+        lastStreak = `${entry.mid}-${entry.layerId}`
+        streakEnds.push(i - 1)
+      }
+    }
+
+    return {
+      ...entry,
+      posIndex: i,
+      show,
+    }
+  })
+
   return {
     schedule: processed,
     colors,
     numberOfLayers: layers.filter((layer) =>
       layer.some((entry) => typeof entry === 'object' && !Array.isArray(entry)),
     ).length,
+    seenSpan,
     totalSpan,
     bookmark,
     setBookmark,

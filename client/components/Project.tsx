@@ -291,6 +291,47 @@ export default function Project() {
     setChangedProps([...changedProps, 'description'])
   }
 
+
+  function removeWatched() {
+    const seenProgress = {}
+    scheduleData.schedule.toReversed().forEach((entry) => {
+      const id = `${entry.layer}-${entry.layer_id}-${entry.type}-${entry.show_id || entry.id}`
+      if (!entry.show && !seenProgress[id]) seenProgress[id] = entry
+    })
+
+    const seenProgressKeys = Object.keys(seenProgress)
+
+    seenProgressKeys.forEach((id) => {
+      const entry = seenProgress[id]
+      if (entry.type == 'movie') layers[entry.layer][entry.layer_id] = undefined
+      else if (entry.type == 'episode') {
+        // Must be an episode, it's the last seen episode/entry, so we need to find the next episode to start from
+        const show = data.tv[entry.show_id]
+        // Get the next episode in that season, if existing, or the first of the next season, if existing, but only up until the 'end' season
+        const episodes = show.seasons.flatMap((season) => {
+          return season.episodes.map((ep) => ({ ...ep, pos: `${season.season}:${ep.episode}` }))
+        })
+        const nextEpisode =
+          episodes.find(episode => episode.id == entry.id).pos !== layers[entry.layer][entry.layer_id].end && episodes[episodes.findIndex((episode) => episode.id == entry.id) + 1]
+
+        if (nextEpisode)
+          layers[entry.layer][entry.layer_id].start = nextEpisode.pos
+        else layers[entry.layer][entry.layer_id] = undefined
+      }
+      else {
+        // Must be a custom entry, this will be handled shortly
+        const newRepeat = entry.repeat - scheduleData.colors.custom[entry.id].indices.findIndex((e) => e == entry.posIndex) - 1
+        if (newRepeat) setCustom({ ...entry, repeat: newRepeat, offset: entry.repeat - newRepeat + (entry.offset || 0) })
+        else layers[entry.layer][entry.layer_id] = undefined
+      }
+    })
+
+    setLayers(
+      layers.map((layer) => layer.filter(Boolean)),
+      true,
+    )
+  }
+
   const scheduleData = generateSchedule(
     layers,
     mpSpacing,
@@ -312,6 +353,16 @@ export default function Project() {
     <>
       {isPageLoaded && (hasAccess ? (
         <div className='fadein'>
+          <div id='removeWatchedPopup'>
+            <div>
+              <p>Are you sure you want to remove all watched content?</p>
+              <button onClick={() => {
+                removeWatched();
+                document.getElementById('removeWatchedPopup').classList.remove('show');
+              }}>Yes</button>
+              <button onClick={() => document.getElementById('removeWatchedPopup').classList.remove('show')}>No</button>
+            </div>
+          </div>
           <Link to="../dashboard">
             <i className="fas fa-arrow-left"></i> Back to Dashboard
           </Link>

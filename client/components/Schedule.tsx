@@ -2,11 +2,8 @@ import EpisodeDetails from './EpisodeDetails.tsx'
 import { useEffect } from 'react';
 
 export default function Schedule({ scheduleData, user }) {
-  let { schedule, colors, bookmark, data, layers, setLayers, totalSpan, setTitles, setShow, setCustom, streak, goal, showStreaks, groupStreaks } = scheduleData
+  const { schedule, colors, bookmark, data, layers, setLayers, seenSpan, totalSpan, setTitles, setShow, setCustom, streak, goal, showStreaks, groupStreaks } = scheduleData
 
-  let showing = !bookmark
-  let seenSpan = 0
-  let lastStreak = null
   let streakEnds = []
   const streakLengths = []
 
@@ -19,43 +16,6 @@ export default function Schedule({ scheduleData, user }) {
       behavior: 'smooth',
     })
   }
-
-  schedule = schedule.flatMap((entry, i) => {
-    const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (['episode', 'multiple'].includes(entry.type) ? entry.id : colors.custom[entry.set].indices.findIndex(e => e == i))}`
-
-    const show = (showing =
-      showing || (bookmark && posId == bookmark))
-    const span = entry.runtime || entry.average_run_time
-    const type = entry.show_id ? 'tv' : entry.type
-    const index = entry.show_id || (entry.type == 'movie' ? entry.layer : entry.set)
-
-    if (!colors[type][index].span) {
-      colors[type][index].span = 0
-      colors[type][index].watched = 0
-    }
-    colors[type][index].span += span
-
-    if (!showing) {
-      seenSpan += span
-      colors[type][index].watched += span
-    }
-
-    if (streak) {
-      if (lastStreak == null) lastStreak = `${entry.mid}-${entry.layerId}`
-      streakLengths[streakEnds.length] = (streakLengths[streakEnds.length] || 0) + span
-
-      if (lastStreak !== `${entry.mid}-${entry.layerId}`) {
-        lastStreak = `${entry.mid}-${entry.layerId}`
-        streakEnds.push(i - 1)
-      }
-    }
-
-    return {
-      ...entry,
-      posIndex: i,
-      show
-    }
-  })
 
   // get the length of each section
   const sessionLength = streak !== 0 ? totalSpan / Math.round(Math.max(streakLengths.length / goal, 1)) : totalSpan / (goal * 60)
@@ -117,46 +77,6 @@ export default function Schedule({ scheduleData, user }) {
 
   const seenPercentage = seenSpan / totalSpan * 100
 
-  function removeWatched() {
-    const seenProgress = {}
-    schedule.toReversed().forEach((entry) => {
-      const id = `${entry.layer}-${entry.layer_id}-${entry.type}-${entry.show_id || entry.id}`
-      if (!entry.show && !seenProgress[id]) seenProgress[id] = entry
-    })
-
-    const seenProgressKeys = Object.keys(seenProgress)
-
-    seenProgressKeys.forEach((id) => {
-      const entry = seenProgress[id]
-      if (entry.type == 'movie') layers[entry.layer][entry.layer_id] = undefined
-      else if (entry.type == 'episode') {
-        // Must be an episode, it's the last seen episode/entry, so we need to find the next episode to start from
-        const show = data.tv[entry.show_id]
-        // Get the next episode in that season, if existing, or the first of the next season, if existing, but only up until the 'end' season
-        const episodes = show.seasons.flatMap((season) => {
-          return season.episodes.map((ep) => ({ ...ep, pos: `${season.season}:${ep.episode}` }))
-        })
-        const nextEpisode =
-          episodes.find(episode => episode.id == entry.id).pos !== layers[entry.layer][entry.layer_id].end && episodes[episodes.findIndex((episode) => episode.id == entry.id) + 1]
-
-        if (nextEpisode)
-          layers[entry.layer][entry.layer_id].start = nextEpisode.pos
-        else layers[entry.layer][entry.layer_id] = undefined
-      }
-      else {
-        // Must be a custom entry, this will be handled shortly
-        const newRepeat = entry.repeat - colors.custom[entry.id].indices.findIndex((e) => e == entry.posIndex) - 1
-        if (newRepeat) setCustom({ ...entry, repeat: newRepeat, offset: entry.repeat - newRepeat + (entry.offset || 0) })
-        else layers[entry.layer][entry.layer_id] = undefined
-      }
-    })
-
-    setLayers(
-      layers.map((layer) => layer.filter(Boolean)),
-      true,
-    )
-  }
-
   return (
     <>
       <fieldset id="key">
@@ -205,7 +125,7 @@ export default function Schedule({ scheduleData, user }) {
       {bookmark && (
         <>
           <button onClick={scrollToBookmark}>Jump to Progress ({Math.round(seenPercentage * 100) / 100}% watched)</button>
-          <button onClick={removeWatched}>Remove Watched</button>
+          <button onClick={() => document.getElementById('removeWatchedPopup').classList.add("show")}>Remove Watched</button>
         </>
       )}
       <div id="timelineContainer">

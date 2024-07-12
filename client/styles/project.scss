@@ -544,6 +544,56 @@ html {
       }
     }
   }
+
+  #removeWatchedPopup {
+    position: fixed;
+    z-index: 2;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--transition-time);
+    backdrop-filter: brightness(0.25) blur(10px) grayscale(1);
+}
+
+  #removeWatchedPopup.show {
+    opacity: 1;
+    pointer-events: all;
+    transition: opacity var(--transition-time);
+  }
+
+  #removeWatchedPopup div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg-col);
+    color: white;
+    padding: 1em;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    border: 2px solid #0095fa;
+}
+
+  #removeWatchedPopup p {
+    font-size: small;
+    width: 100%;
+    text-align: center;
+  }
+
+  #removeWatchedPopup span {
+    color: yellow;
+  }
+
+  #removeWatchedPopup button {
+    padding: 5px 15px;
+    margin: 0;
+  }
 }
 @media screen and (max-width: 800px) {
   #project {
