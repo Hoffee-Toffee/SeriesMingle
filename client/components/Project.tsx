@@ -15,19 +15,21 @@ import Layer from './Layer.tsx'
 import { generateSchedule } from '../functions/generateSchedule.ts'
 import Schedule from './Schedule.tsx'
 import example from '../files/example.json'
-import fetchProject from '../apis/fetchProject.ts'
 import setProject from '../apis/setProject.ts'
 import Entry from './Entry.tsx'
 import HelpIcon from './HelpIcon.tsx'
 import { Link, useParams } from 'react-router-dom'
+import { collection } from '../../server/firebase.ts'
+import { doc, getFirestore, onSnapshot, query, where } from 'firebase/firestore'
 
 export default function Project() {
-  const { user, setUser } = useContext(UserContext)
+  const { user } = useContext(UserContext)
   const { isPageLoaded, setIsPageLoaded } = useContext(LoadingContext)
   const [readOnly, setReadOnly] = useState(true)
 
   const id = useParams().id
   const uid = user?.uid
+  const db = getFirestore();
 
   const initialState = {
     layers: [[]],
@@ -75,20 +77,34 @@ export default function Project() {
   )
 
   useEffect(() => {
-    const fetchProjectData = async () => {
-      const fromCloud = await fetchProject(id)
-      setIsPageLoaded(true)
-      if (fromCloud) {
-        setState(fromCloud)
-        if (fromCloud.user === uid) {
-          setReadOnly(false)
-        }
+    // Create listener for document in the projects collection with the given id
+    const projectRef = doc(db, 'projects', id)
+    const projectListener = onSnapshot(projectRef, (doc) => {
+      let project = doc.data()
+      project = {
+        ...project,
+        ...(project.state || {}),
+        state: project.state ? true : undefined,
+        layers: project.state
+          ? project.state.layers
+          : project.layers
+            ? Object.values(project.layers).map((layer, i) => layer[i])
+            : [[]],
+      }
+
+      if (project.user == uid) {
+        setReadOnly(false)
         setHasAccess(true)
       }
-    }
+      setState(project)
+      setIsPageLoaded(true)
+    })
 
-    fetchProjectData()
-  }, [uid, id, setIsPageLoaded])
+    return () => {
+      projectListener();
+    };
+  }, [id, uid, db, setIsPageLoaded]);
+
 
   const { layers, mpSpacing, data, bookmark, titles, streak, goal, showStreaks, groupStreaks, title, description } = {
     ...initialState,

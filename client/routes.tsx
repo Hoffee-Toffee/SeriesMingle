@@ -11,10 +11,10 @@ import ProtectedRoute from './components/ProtectedRoute.tsx'
 export default createRoutesFromElements(
   <>
     <Route path="/" element={<App />}>
-      {/* <Route index element={<Home />} /> */}
-      <Route index element={<ProtectedRoute>
+      <Route index element={<Home />} />
+      {/* <Route index element={<ProtectedRoute>
         <Dashboard />
-      </ProtectedRoute>} />
+      </ProtectedRoute>} /> */}
       <Route path="login" element={<ProtectedRoute ifLoggedIn={false} redirectTo="/dashboard">
         <Login />
       </ProtectedRoute>} />
