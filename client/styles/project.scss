@@ -189,8 +189,8 @@ html {
   .layer > button:hover,
   .options div > :is(button, :is(select, input.value)):hover,
   .options div > :is(button, :is(select, input.value)):focus,
-  .options div span > :hover,
-  .options div span > :focus {
+  .options div span > :hover:is(.setting-label, .value, select),
+  .options div span > :focus:is(.setting-label, .value, select) {
     color: #00f2ea;
     background: #00000040;
     border: none;
@@ -416,6 +416,9 @@ html {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     border-top: hidden;
+  }
+  .episode-marker.barrier {
+    background: repeating-linear-gradient(45deg, black 0px, black 3px, transparent 3px, transparent 7px);
   }
   .episode-detail {
     position: absolute;

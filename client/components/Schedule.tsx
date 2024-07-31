@@ -60,7 +60,6 @@ export default function Schedule({ scheduleData, user }) {
 
       // For each group, calculate the average midpoint of all entries
       groups.forEach((group) => {
-        console.log(group)
         const averageMid = group.reduce((sum, entry) => sum + entry.mid, 0) / group.length
         group.forEach((entry) => {
           schedule[entry.i].mid = averageMid

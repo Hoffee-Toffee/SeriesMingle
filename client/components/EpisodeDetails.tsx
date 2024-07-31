@@ -12,6 +12,26 @@ export default function EpisodeDetails(props) {
 
   const minHeight = 30
 
+  if (entry.barrier !== undefined) return (
+    <div
+      className={[
+        'episode-marker',
+        'barrier',
+        !entry.show && 'fade',
+        entry.layer % 2 && 'odd',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      style={{
+        height: `calc(var(--scale) * 10px)`,
+        marginLeft: `${entry.layer * 30 + 4}px`,
+        marginTop: `calc(var(--scale) * 10px / 2)`,
+        marginBottom: `calc(var(--scale) * 10px / 2)`,
+      }}
+    >
+    </div>
+  )
+
   const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (entry.type == 'episode' ? entry.id : colors.custom[entry.set].indices.findIndex((e) => e == i))}`
 
   return (

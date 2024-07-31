@@ -92,7 +92,7 @@ export default function Project() {
             : [[]],
       }
 
-      if (project.user == uid) {
+      if (project.user == uid || (project.permissions && project.permissions[uid] >= 1)) {
         setReadOnly(false)
         setHasAccess(true)
       }
@@ -167,6 +167,27 @@ export default function Project() {
   }
 
   function setCustom(newData = null, layer = null, id = null) {
+    if (readOnly) return
+    const defaultData = {
+      title: newData || 'Custom Set',
+      type: 'custom',
+      id: data.custom ? Object.keys(data.custom).length + 1 : 1,
+      runtime: 30,
+      repeat: 1,
+      offset: 0,
+      term: 'Part',
+    }
+    if (!layer) {
+      data.custom = data.custom || {}
+      data.custom[newData.id] = newData
+      setState({ ...state, data, force: true })
+      setChangedProps([...changedProps, 'data'])
+    } else {
+      addData(typeof newData == 'string' ? defaultData : newData, layer, id)
+    }
+  }
+
+  function setBarrier(layer = null, id = null) {
     if (readOnly) return
     const defaultData = {
       title: newData || 'Custom Set',

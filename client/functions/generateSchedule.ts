@@ -25,6 +25,8 @@ export function generateSchedule(
       .map((entryRef, i) => {
         if (i === entries.length - 1) return undefined
 
+        // Return those where entryRef.barrier is defined
+        if (entryRef.barrier !== undefined) return entryRef
         const entry = data[entryRef.ref[0]][entryRef.ref[1]]
 
         // If a movie, simply return it
@@ -78,13 +80,15 @@ export function generateSchedule(
     layer.reduce(
       (running, entry) =>
         running +
-        (entry.type !== 'tv'
-          ? (entry.runtime || entry.average_run_time) * (entry.repeat || 1)
-          : entry.episodes.reduce(
-              (running, episode) =>
-                running + (episode.runtime || episode.average_run_time),
-              0,
-            )),
+        (entry.barrier !== undefined
+          ? 0
+          : entry.type !== 'tv'
+            ? (entry.runtime || entry.average_run_time) * (entry.repeat || 1)
+            : entry.episodes.reduce(
+                (running, episode) =>
+                  running + (episode.runtime || episode.average_run_time),
+                0,
+              )),
       0,
     ),
   )
@@ -107,7 +111,7 @@ export function generateSchedule(
 
       layer
         .map((entry, layer_id) =>
-          entry.type !== 'movie'
+          entry.barrier === undefined && entry.type !== 'movie'
             ? entry[entry.type == 'tv' ? 'episodes' : 'entries'].map(
                 (episode) => ({
                   ...episode,
@@ -121,10 +125,11 @@ export function generateSchedule(
         .flat()
         .concat({ check: true })
         .forEach((entry) => {
-          if (entry.type == 'custom') {
-            condensed.push(entry)
-            return
-          } else if (entry.title) {
+          if (
+            [undefined, null].includes(entry.barrier) &&
+            entry.type !== 'custom' &&
+            entry.title
+          ) {
             // Check if the title is in a multiple episode set
             const [full, title, part] =
               entry.title.match(/^(.*) \((\d+)\)$/) || []
@@ -190,7 +195,12 @@ export function generateSchedule(
 
       return condensed.map((entry) => {
         // If normal and near...
-        if (entry.type == 'multiple' && mpSpacing == 'closer') {
+        if (entry.barrier !== undefined) {
+          return {
+            ...entry,
+            mid: start,
+          }
+        } else if (entry.type == 'multiple' && mpSpacing == 'closer') {
           // Ratio of content to gap
           // Needs to be maintained
           const area =
@@ -241,6 +251,42 @@ export function generateSchedule(
       })
     })
     .map((layer) => layer.flatMap((entry) => entry))
+    .map((layer) => {
+      let nextBarrier = layer.find(
+        (entry) => ![undefined, null].includes(entry.barrier),
+      )
+
+      if (!nextBarrier) return layer
+
+      // o = original, t = target
+      let oStart = 0
+      let oEnd = nextBarrier.mid
+      let tStart = 0
+      let tEnd = totalSpan / (100 / nextBarrier.barrier)
+
+      return layer.map((entry, i) => {
+        const mid =
+          ((entry.mid - oStart) / (oEnd - oStart)) * (tEnd - tStart) + tStart
+
+        if (![undefined, null].includes(entry.barrier)) {
+          nextBarrier = layer
+            .slice(i + 1)
+            .find((entry) => ![undefined, null].includes(entry.barrier)) || {
+            mid: totalSpan,
+            barrier: 100,
+          }
+          oStart = entry.mid
+          oEnd = nextBarrier.mid
+          tStart = totalSpan / (100 / entry.barrier)
+          tEnd = totalSpan / (100 / nextBarrier.barrier)
+        }
+
+        return {
+          ...entry,
+          mid,
+        }
+      })
+    })
     .map((layer, i) => {
       if (!streak) return layer
 
@@ -271,6 +317,8 @@ export function generateSchedule(
   }
 
   processed.forEach((entry, index) => {
+    // If a barrier, ignore
+    if (entry.barrier !== undefined) return
     // Each show and custom entry gets a unique color
     if (entry.show_id && !sets.tv[entry.show_id]) {
       sets.tv[entry.show_id] = {
@@ -345,6 +393,13 @@ export function generateSchedule(
   let lastStreak = null
 
   processed = processed.flatMap((entry, i) => {
+    if (entry.barrier !== undefined)
+      return {
+        ...entry,
+        posIndex: i,
+        show: showing,
+      }
+
     const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (['episode', 'multiple'].includes(entry.type) ? entry.id : colors.custom[entry.set].indices.findIndex((e) => e == i))}`
 
     const show = (showing = showing || (bookmark && posId == bookmark))

@@ -51,6 +51,11 @@ function Entry({
     }
   }
 
+  function addBarrier(entryId: number) {
+    entries[entryId] = { barrier: null }
+    setEntries([...entries], true)
+  }
+
   const { setNodeRef, attributes, listeners, isDragging } = useSortable({
     id: `${layer}-${id}`,
     data: {
@@ -78,6 +83,9 @@ function Entry({
           <button onClick={handleSearch}>Search</button>
           <button onClick={() => setCustom(entry, layer, id)}>
             Create Custom
+          </button>
+          <button onClick={() => addBarrier(id)}>
+            Add Barrier
           </button>
         </div>
       )
@@ -140,196 +148,236 @@ function Entry({
       )
       break
     case 'object':
-      entryData = data[entry.ref[0]][entry.ref[1]]
+      if (entry.ref) {
+        entryData = data[entry.ref[0]][entry.ref[1]]
 
-      settings =
-        entryData.type == 'tv'
-          ? [
-            {
-              title: 'Start',
-              content: (
-                <select
-                  onChange={(e) => {
-                    entries[id] = { ...entries[id], start: e.target.value }
-                    setEntries([...entries], true)
-                  }}
-                >
-                  {(entry.end
-                    ? entryData.seasons.slice(
-                      0,
-                      parseInt(entry.end.split(':')[0]),
-                    )
-                    : entryData.seasons
-                  ).map((season) => (
-                    <optgroup
-                      label={`Season ${season.season}`}
-                      key={season.season}
-                    >
-                      {(entry.end
-                        ? season.episodes.slice(
-                          0,
-                          parseInt(entry.end.split(':')[1]),
-                        )
-                        : season.episodes
-                      ).map((episode) => (
-                        <option
-                          key={episode.episode}
-                          value={season.season + ':' + episode.episode}
-                          selected={
-                            `${season.season}:${episode.episode}` ==
-                            entry.start
-                          }
-                        >{`S${season.season}E${episode.episode}: ${episode.title}`}</option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
-              ),
-            },
-            {
-              title: 'End',
-              content: (
-                <select
-                  onChange={(e) => {
-                    entries[id] = { ...entries[id], end: e.target.value }
-                    setEntries([...entries], true)
-                  }}
-                >
-                  {entryData.seasons
-                    .slice(
-                      entry.start
-                        ? entryData.seasons.findIndex(s => s.season >= parseInt(entry.start.split(':')[0] - 1))
-                        : 0,
-                    )
-                    .map((season) => (
+        settings =
+          entryData.type == 'tv'
+            ? [
+              {
+                title: 'Start',
+                content: (
+                  <select
+                    onChange={(e) => {
+                      entries[id] = { ...entries[id], start: e.target.value }
+                      setEntries([...entries], true)
+                    }}
+                  >
+                    {(entry.end
+                      ? entryData.seasons.slice(
+                        0,
+                        parseInt(entry.end.split(':')[0]),
+                      )
+                      : entryData.seasons
+                    ).map((season) => (
                       <optgroup
                         label={`Season ${season.season}`}
                         key={season.season}
                       >
-                        {season.episodes
-                          .slice(
-                            entry.start && entry.start.split(':')[0] == season.season
-                              ? season.episodes.findIndex(e => e.episode >= parseInt(entry.start.split(':')[1] - 1))
-                              : 0,
+                        {(entry.end
+                          ? season.episodes.slice(
+                            0,
+                            parseInt(entry.end.split(':')[1]),
                           )
-                          .map((episode) => (
-                            <option
-                              key={episode.episode}
-                              value={season.season + ':' + episode.episode}
-                              selected={
-                                `${season.season}:${episode.episode}` ==
-                                (entry.end || `${entryData.seasons.at(-1).season}:${entryData.seasons.at(-1).episodes.at(-1).episode}`)
-                              }
-                            >{`S${season.season}E${episode.episode}: ${episode.title}`}</option>
-                          ))}
+                          : season.episodes
+                        ).map((episode) => (
+                          <option
+                            key={episode.episode}
+                            value={season.season + ':' + episode.episode}
+                            selected={
+                              `${season.season}:${episode.episode}` ==
+                              entry.start
+                            }
+                          >{`S${season.season}E${episode.episode}: ${episode.title}`}</option>
+                        ))}
                       </optgroup>
                     ))}
-                </select>
-              ),
-            },
-          ]
-          : entryData.type == 'custom'
-            ? [
-              {
-                title: 'Repeat',
-                content: (
-                  <input
-                    className="value"
-                    type="number"
-                    min="1"
-                    value={value == "" ? null : Math.max(parseInt(value), 1) || entryData.repeat}
-                    onChange={(e) => setValue(e.target.value || "")}
-                    onBlur={() => {
-                      setCustom({ ...entryData, repeat: parseInt(value == "" ? 1 : value || entryData.repeat) })
-                      setValue(value == "" ? 1 : value)
-                    }}
-                  />
+                  </select>
                 ),
               },
               {
-                title: 'Offset',
+                title: 'End',
                 content: (
-                  <input
-                    className="value"
-                    type="number"
-                    min="0"
-                    value={value == "" ? null : Math.max(parseInt(value), 0) || entryData.offset}
-                    onChange={(e) => setValue(e.target.value || "")}
-                    onBlur={() => {
-                      setCustom({ ...entryData, offset: parseInt(value == "" ? 0 : value || entryData.offset) })
-                      setValue(value == "" ? 0 : value)
-                    }
-                    }
-                  />
-                ),
-              },
-              {
-                title: 'Term',
-                content: (
-                  <input
-                    className="value"
-                    type="text"
-                    value={value == null ? entryData.term : value}
-                    onChange={(e) => setValue(e.target.value)}
-                    onBlur={() => setCustom({ ...entryData, term: value || entryData.term })}
-                  />
-                ),
-              }, {
-                title: 'Duration (mins)',
-                content: (
-                  <input
-                    className="value"
-                    type="number"
-                    min="1"
-                    value={value == "" ? null : Math.max(parseInt(value), 1) || entryData.runtime}
-                    onChange={(e) => setValue(e.target.value)}
-                    onBlur={() => {
-                      setCustom({ ...entryData, runtime: parseInt(value || entryData.runtime) })
-                      setValue(value == "" ? 1 : value)
+                  <select
+                    onChange={(e) => {
+                      entries[id] = { ...entries[id], end: e.target.value }
+                      setEntries([...entries], true)
                     }}
-                  />
+                  >
+                    {entryData.seasons
+                      .slice(
+                        entry.start
+                          ? entryData.seasons.findIndex(s => s.season >= parseInt(entry.start.split(':')[0] - 1))
+                          : 0,
+                      )
+                      .map((season) => (
+                        <optgroup
+                          label={`Season ${season.season}`}
+                          key={season.season}
+                        >
+                          {season.episodes
+                            .slice(
+                              entry.start && entry.start.split(':')[0] == season.season
+                                ? season.episodes.findIndex(e => e.episode >= parseInt(entry.start.split(':')[1] - 1))
+                                : 0,
+                            )
+                            .map((episode) => (
+                              <option
+                                key={episode.episode}
+                                value={season.season + ':' + episode.episode}
+                                selected={
+                                  `${season.season}:${episode.episode}` ==
+                                  (entry.end || `${entryData.seasons.at(-1).season}:${entryData.seasons.at(-1).episodes.at(-1).episode}`)
+                                }
+                              >{`S${season.season}E${episode.episode}: ${episode.title}`}</option>
+                            ))}
+                        </optgroup>
+                      ))}
+                  </select>
                 ),
               },
             ]
-            : null
+            : entryData.type == 'custom'
+              ? [
+                {
+                  title: 'Repeat',
+                  content: (
+                    <input
+                      className="value"
+                      type="number"
+                      min="1"
+                      value={value == "" ? null : Math.max(parseInt(value), 1) || entryData.repeat}
+                      onChange={(e) => setValue(e.target.value || "")}
+                      onBlur={() => {
+                        setCustom({ ...entryData, repeat: parseInt(value == "" ? 1 : value || entryData.repeat) })
+                        setValue(value == "" ? 1 : value)
+                      }}
+                    />
+                  ),
+                },
+                {
+                  title: 'Offset',
+                  content: (
+                    <input
+                      className="value"
+                      type="number"
+                      min="0"
+                      value={value == "" ? null : Math.max(parseInt(value), 0) || entryData.offset}
+                      onChange={(e) => setValue(e.target.value || "")}
+                      onBlur={() => {
+                        setCustom({ ...entryData, offset: parseInt(value == "" ? 0 : value || entryData.offset) })
+                        setValue(value == "" ? 0 : value)
+                      }
+                      }
+                    />
+                  ),
+                },
+                {
+                  title: 'Term',
+                  content: (
+                    <input
+                      className="value"
+                      type="text"
+                      value={value == null ? entryData.term : value}
+                      onChange={(e) => setValue(e.target.value)}
+                      onBlur={() => setCustom({ ...entryData, term: value || entryData.term })}
+                    />
+                  ),
+                }, {
+                  title: 'Duration (mins)',
+                  content: (
+                    <input
+                      className="value"
+                      type="number"
+                      min="1"
+                      value={value == "" ? null : Math.max(parseInt(value), 1) || entryData.runtime}
+                      onChange={(e) => setValue(e.target.value)}
+                      onBlur={() => {
+                        setCustom({ ...entryData, runtime: parseInt(value || entryData.runtime) })
+                        setValue(value == "" ? 1 : value)
+                      }}
+                    />
+                  ),
+                },
+              ]
+              : null
 
-      options = (
-        <div ref={setNodeRef} className={className}>
-          <i
-            className="handle fa-solid fa-grip-vertical"
-            {...attributes}
-            {...listeners}
-          />
-          {entryData.type !== 'movie' && (
-            <span className="setting">
-              <label
-                onClick={() => {
-                  setSetting((setting + 1) % settings.length)
-                  setValue(null)
-                }}
-              >
-                <i className="fa-solid fa-sort"></i>
-                {settings[setting].title}:
-              </label>
-              {settings[setting].content}
+        options = (
+          <div ref={setNodeRef} className={className}>
+            <i
+              className="handle fa-solid fa-grip-vertical"
+              {...attributes}
+              {...listeners}
+            />
+            {entryData.type !== 'movie' && (
+              <span className="setting">
+                <label className="setting-label"
+                  onClick={() => {
+                    setSetting((setting + 1) % settings.length)
+                    setValue(null)
+                  }}
+                >
+                  <i className="fa-solid fa-sort"></i>
+                  {settings[setting].title}:
+                </label>
+                {settings[setting].content}
+              </span>
+            )}
+            <span
+              className="option"
+              tmdb-id={entryData.id}
+              tmdb-type={entryData.type}
+            >
+              {`${entryData.title}${![undefined, ''].includes(entryData.year) ? ` (${entryData.year})` : ''}`}
             </span>
-          )}
-          <span
-            className="option"
-            tmdb-id={entryData.id}
-            tmdb-type={entryData.type}
-          >
-            {`${entryData.title}${![undefined, ''].includes(entryData.year) ? ` (${entryData.year})` : ''}`}
-          </span>
-          <button
-            onClick={() => {
-              setEntries([...entries.filter((_, i) => i !== id)], true)
-            }}
-          >
-            x
-          </button>
-        </div>
-      )
+            <button
+              onClick={() => {
+                setEntries([...entries.filter((_, i) => i !== id)], true)
+              }}
+            >
+              x
+            </button>
+          </div>
+        )
+      }
+      else {
+        // Barrier
+        options = (
+          <div ref={setNodeRef} className="barrier">
+            <i
+              className="handle fa-solid fa-grip-vertical"
+              {...attributes}
+              {...listeners}
+            />
+            <span className="setting">
+              <label>
+                Position (Percentage):
+              </label>
+              <input
+                className="value"
+                type="number"
+                min="0"
+                max="100"
+                value={value == "" ? null : (value || entry.barrier)}
+                onChange={(e) => setValue(Math.max(0, Math.min(100, parseFloat(e.target.value))) || "")}
+                onBlur={() => {
+                  entries[id] = { barrier: value == "" ? null : value }
+                  setEntries([...entries], true)
+                  setValue(value == "" ? null : value)
+                }}
+              />
+            </span>
+            <span className="option">Barrier</span>
+            <button
+              onClick={() => {
+                setEntries([...entries.filter((_, i) => i !== id)], true)
+              }}
+            >
+              x
+            </button>
+          </div>
+        )
+      }
   }
 
   return { ...options }
