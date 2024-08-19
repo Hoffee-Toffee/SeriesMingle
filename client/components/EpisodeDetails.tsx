@@ -54,6 +54,7 @@ export default function EpisodeDetails(props) {
         marginBottom: `calc(var(--scale) * ${Math.max(0, minHeight - (entry.runtime || entry.average_run_time)) + 30}px / 2)`,
       }}
       id={bookmark == posId ? 'bookmark' : undefined}
+      data-id={entry.show_id ? `tv/${entry.show_id}/${entry.season}/${entry.episode}` : entry.type == 'movie' ? `movie/${entry.id}` : null}
     >
       <div
         className={['episode-detail', i % 2 && 'odd'].filter(Boolean).join(' ')}
