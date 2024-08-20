@@ -25,7 +25,8 @@
     "base": "/"
   },
   "reactSnap": {
-    "source": "./dist"
+    "source": "./dist",
+    "puppeteerArgs": ["--enable-logging", "--v=1", "--no-sandbox", "--disable-setuid-sandbox"]
   },
   "eslintConfig": {
     "extends": "@devacademy/eslint-config/react",
@@ -60,6 +61,7 @@
     "@types/express": "^4.17.14",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@types/react-helmet": "^6.1.11",
     "@types/superagent": "^4.1.18",
     "@types/supertest": "^2.0.12",
     "@vitejs/plugin-react": "^4.0.4",
