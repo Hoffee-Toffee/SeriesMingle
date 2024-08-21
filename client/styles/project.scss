@@ -159,7 +159,7 @@ html {
     touch-action: none;
   }
   button,
-  a {
+  a:not(.title) {
     color: #d7e300;
     border: orangered 2px solid;
     background-color: darkred;
@@ -171,7 +171,7 @@ html {
     display: inline-block;
   }
   button,
-  a,
+  a:not(.title),
   select {
     transition: var(--transition-time);
     outline: solid transparent 2px;
@@ -181,7 +181,7 @@ html {
   }
   button:hover,
   .options button:hover,
-  a:hover {
+  a:not(.title):hover {
     color: white;
     border: orange 2px solid;
     background-color: orangered;
@@ -455,6 +455,7 @@ html {
     color: #d7e300;
     padding: 2px;
     margin: -2px;
+    text-decoration: none;
   }
   .episode-detail * {
     transition: var(--transition-time);
