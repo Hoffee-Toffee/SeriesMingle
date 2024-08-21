@@ -6,8 +6,6 @@ import { createContext, useEffect, useState } from 'react'
 import { auth } from '../../server/firebase.ts'
 
 export default function App() {
-  const url = new URL(window.location.href)
-  const id = url.searchParams.get('id')
   const location = useLocation().key
 
   const [user, setUser] = useState(auth.currentUser)
@@ -25,7 +23,7 @@ export default function App() {
     return auth.onAuthStateChanged((user) => {
       setUser(user || null)
       setIsAuthLoaded(true)
-      if (!showLoading) clearTimeout(loader)
+      if (!showLoading && typeof loader == "number") clearTimeout(loader)
     })
   }, [loader, showLoading])
 

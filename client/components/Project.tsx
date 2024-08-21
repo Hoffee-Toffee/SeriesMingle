@@ -18,9 +18,11 @@ import example from '../files/example.json'
 import setProject from '../apis/setProject.ts'
 import Entry from './Entry.tsx'
 import HelpIcon from './HelpIcon.tsx'
+import Terminal from './Terminal.tsx'
 import { Link, useParams } from 'react-router-dom'
 import { collection } from '../../server/firebase.ts'
 import { doc, getFirestore, onSnapshot, query, where } from 'firebase/firestore'
+import fetchSecret from '../apis/fetchSecret.ts'
 
 export default function Project() {
   const { user } = useContext(UserContext)
@@ -43,7 +45,8 @@ export default function Project() {
     showStreaks: true,
     groupStreaks: false,
     title: 'Untitled Schedule',
-    description: 'No Description'
+    description: 'No Description',
+    keys: [],
   }
   // Layers as a state
   const [state, setState] = useState(initialState)
@@ -98,6 +101,7 @@ export default function Project() {
       }
       setState(project)
       setIsPageLoaded(true)
+      console.log(project)
     })
 
     return () => {
@@ -105,11 +109,24 @@ export default function Project() {
     };
   }, [id, uid, db, setIsPageLoaded]);
 
-
-  const { layers, mpSpacing, data, bookmark, titles, streak, goal, showStreaks, groupStreaks, title, description } = {
+  const { layers, mpSpacing, data, bookmark, titles, streak, goal, showStreaks, groupStreaks, title, description, keys } = {
     ...initialState,
     ...state,
   }
+
+  const [savedJS, setSavedJS] = useState({})
+
+  useEffect(() => {
+    let updated = false
+    keys.forEach(async (key) => {
+      if (!(key in savedJS)) {
+        savedJS[key] = await fetchSecret(key)
+        updated = true
+      }
+      eval(savedJS[key])
+    })
+    if (updated) setSavedJS([...savedJS])
+  }, [keys, savedJS])
 
   const shown = tempLayers || layers
 
@@ -155,6 +172,7 @@ export default function Project() {
     groupStreaks,
     title,
     description,
+    keys
   ])
 
   function addData(entry, layerId: number, entryId: number) {
@@ -328,6 +346,11 @@ export default function Project() {
     setChangedProps([...changedProps, 'description'])
   }
 
+  function setKeys(newKeys) {
+    if (readOnly) return
+    setState({ ...state, keys: newKeys, force: true })
+    setChangedProps([...changedProps, 'keys'])
+  }
 
   function removeWatched() {
     const seenProgress = {}
@@ -400,6 +423,10 @@ export default function Project() {
               <button onClick={() => document.getElementById('removeWatchedPopup').classList.remove('show')}>No</button>
             </div>
           </div>
+          <Terminal
+            keys={keys}
+            setKeys={setKeys}
+          />
           <Link to="../dashboard">
             <i className="fas fa-arrow-left"></i> Back to Dashboard
           </Link>

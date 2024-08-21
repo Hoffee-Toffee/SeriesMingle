@@ -11,6 +11,7 @@ dotenv.config()
 
 import tmdbRoutes from './routes/tmdb.ts'
 import projectRoutes from './routes/projects.ts'
+import decrypt from './eastereggs/decrypt.ts'
 
 const server = express()
 
@@ -19,6 +20,9 @@ server.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
 server.use('/api/v1', tmdbRoutes)
 server.use('/api/v1/projects', projectRoutes)
+server.get('/api/v1/secret', (req, res) => {
+  res.send(decrypt(req.query.passphrase))
+})
 
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))
