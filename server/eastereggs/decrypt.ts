@@ -1,9 +1,15 @@
 import cryptoPKG from 'crypto'
 import fs from 'fs'
+import * as Path from 'node:path'
+import { fileURLToPath } from 'url'
+
+// Get the directory name of the current module file
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = Path.dirname(__filename)
 
 export default function decrypt(passphrase = 'test123') {
   // Must try it on all txt files in the directory, and return the one that works
-  const encodedFiles = fs.readdirSync('server/eastereggs')
+  const encodedFiles = fs.readdirSync(Path.resolve(__dirname))
   for (const file of encodedFiles) {
     if (file.endsWith('.txt')) {
       try {
@@ -17,7 +23,7 @@ export default function decrypt(passphrase = 'test123') {
 }
 
 function decryptFile(componentName = 'test', passphrase = 'test123') {
-  const encodedFile = `server/eastereggs/${componentName}.txt`
+  const encodedFile = Path.resolve(__dirname, `${componentName}.txt`)
 
   const encrypted = fs.readFileSync(encodedFile, 'utf8')
   const decipher = cryptoPKG.createDecipher('aes-256-ctr', passphrase)
