@@ -24,6 +24,7 @@ export default function decrypt(passphrase = 'test123') {
 
 function decryptFile(componentName = 'test', passphrase = 'test123') {
   const encodedFile = Path.resolve(__dirname, `${componentName}.txt`)
+  console.log(encodedFile)
 
   const encrypted = fs.readFileSync(encodedFile, 'utf8')
   const decipher = cryptoPKG.createDecipher('aes-256-ctr', passphrase)
