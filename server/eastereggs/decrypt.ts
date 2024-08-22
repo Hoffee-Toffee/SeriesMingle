@@ -2,10 +2,11 @@ import cryptoPKG from 'crypto'
 import fs from 'fs'
 import * as Path from 'node:path'
 import { fileURLToPath } from 'url'
+import { join } from 'node:path' // Add this line to import the 'join' function
 
 // Get the directory name of the current module file
 const __filename = fileURLToPath(import.meta.url)
-const __dirname = Path.dirname(__filename)
+const __dirname = Path.dirname(join(__filename, '..'))
 
 export default function decrypt(passphrase = 'test123') {
   // Must try it on all txt files in the directory, and return the one that works
