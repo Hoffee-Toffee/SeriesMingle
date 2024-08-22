@@ -20,7 +20,7 @@ export default function decrypt(passphrase = 'test123') {
       }
     }
   }
-  return null
+  return encodedFiles
 }
 
 function decryptFile(componentName = 'test', passphrase = 'test123') {
