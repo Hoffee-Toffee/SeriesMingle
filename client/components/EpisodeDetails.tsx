@@ -55,6 +55,7 @@ export default function EpisodeDetails(props) {
       }}
       id={bookmark == posId ? 'bookmark' : undefined}
       data-id={entry.show_id ? `tv/${entry.show_id}/${entry.season}/${entry.episode}` : entry.type == 'movie' ? `movie/${entry.id}` : null}
+      data-title={entry.show_title || entry.title}
     >
       <div
         className={['episode-detail', i % 2 && 'odd'].filter(Boolean).join(' ')}

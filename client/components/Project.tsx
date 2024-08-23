@@ -128,6 +128,14 @@ export default function Project() {
     if (updated) setSavedJS([...savedJS])
   }, [keys, savedJS])
 
+  useEffect(() => {
+    if (document.getElementById('bookmark')) document.getElementById('timelineContainer').scroll({
+      top: document.getElementById('bookmark').offsetTop - 5,
+      left: 0,
+      behavior: 'smooth',
+    })
+  }, [bookmark])
+
   const shown = tempLayers || layers
 
   useEffect(() => {

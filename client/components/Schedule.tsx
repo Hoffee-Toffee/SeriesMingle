@@ -7,7 +7,7 @@ export default function Schedule({ scheduleData, user }) {
   let streakEnds = []
   const streakLengths = []
 
-  useEffect(scrollToBookmark, [user]);
+  // useEffect(scrollToBookmark, [user]);
 
   function scrollToBookmark() {
     document.getElementById('bookmark') && document.getElementById('timelineContainer').scroll({
@@ -75,6 +75,8 @@ export default function Schedule({ scheduleData, user }) {
   }
 
   const seenPercentage = seenSpan / totalSpan * 100
+
+  console.log(`You have watched ${seenPercentage}% of your schedule.\nOr ${seenSpan} minutes out of ${totalSpan} minutes, with ${totalSpan - seenSpan} minutes remaining.`)
 
   return (
     <>
