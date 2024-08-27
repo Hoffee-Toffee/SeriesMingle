@@ -4,6 +4,7 @@ import Example from './Example.tsx'
 
 import favicon from '../files/favicon.ico'
 import '../styles/home.scss'
+import { Link } from 'react-router-dom'
 
 export default function Home() {
   const { isPageLoaded, setIsPageLoaded } = useContext(LoadingContext)
@@ -33,17 +34,17 @@ export default function Home() {
           <a href="#about">About</a>
           <a href="#upcoming-features">Upcoming Features</a>
           {user ?
-            <a href="/dashboard">Dashboard</a> :
-            <a href="/login">Login or Register</a>
+            <Link to="/dashboard">Dashboard</Link> :
+            <Link to="/login">Login or Register</Link>
           }
         </nav>
       </section>
       <span id="overlay">
-        <a href={user ? "/dashboard" : "/login"} className="button">
+        <Link to={user ? "/dashboard" : "/login"} className="button">
           <h3>
             {user ? "Go to Dashboard" : "Get Started"}
           </h3>
-        </a>
+        </Link>
         <span className="scroll-indicator">
           <i className="fa fa-chevron-down" aria-hidden="true" />
         </span>
@@ -112,11 +113,11 @@ export default function Home() {
         <div className="content">
           <h2>Get started with SeriesMingle today!</h2>
           <span id="overlay">
-            <a href={user ? "/dashboard" : "/login"} className="button">
+            <Link to={user ? "/dashboard" : "/login"} className="button">
               <h3>
                 {user ? "Go to Dashboard" : "Get Started"}
               </h3>
-            </a>
+            </Link>
           </span>
         </div>
       </div>
