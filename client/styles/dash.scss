@@ -1,4 +1,6 @@
 #dashboard {
+  margin: 0.5em;
+  
   h1 {
     color: white;
     text-align: center;
@@ -80,12 +82,12 @@
     text-align: center;
     margin: 5px 10px;
   }
-
+  
   .project-container i {
     padding: 5px 10px;
     position: relative;
   }
-
+  
   #contextMenu {
     opacity: 0;
     transition: all var(--transition-time);
@@ -103,7 +105,7 @@
     gap: 8px;
     pointer-events: none;
   }
-
+  
   #contextMenu button {
     padding: 5px 15px;
     margin: 0;
@@ -115,29 +117,29 @@
     border-radius: 0;
     width: 100%;
   }
-
+  
   #contextMenu button:hover {
     color: #0095fa;
     background: #00000055;
     transition: var(--transition-time);
   }
-
+  
   #contextMenu.show,
   #contextMenu:hover {
     opacity: 1;
     transition:
-      all var(--transition-time),
-      left 1ms,
-      top 1ms;
+    all var(--transition-time),
+    left 1ms,
+    top 1ms;
     pointer-events: all;
   }
-
+  
   #contextMenu[data-isOwner=false] #deleteProjectButton {
     display: none;
   }
-
+  
   #contextMenu[data-isOwner=true] #leaveProjectButton {
-      display: none;
+    display: none;
   }
 
   #deletePopup, #leavePopup {

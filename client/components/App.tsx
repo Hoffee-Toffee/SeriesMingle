@@ -2,8 +2,9 @@ import { Helmet } from 'react-helmet'
 import favicon from '../files/favicon.ico'
 import { Outlet, useLocation, useOutlet } from 'react-router-dom'
 import { createContext, useEffect, useState } from 'react'
-
+import useScroll from '../functions/scroll.ts'
 import { auth } from '../../server/firebase.ts'
+import '../styles/app.scss'
 
 export default function App() {
   const location = useLocation().key
@@ -35,7 +36,10 @@ export default function App() {
   }, [location])
 
   // Log the outlet component element name
-  const page = useOutlet()?.props.children.props.routeContext.matches.at(-1).pathname.split('/')[1] || 'dashboard'
+  const page = useOutlet()?.props.children.props.routeContext.matches.at(-1).pathname.split('/')[1] || 'home'
+
+  // Scroll logic
+  useScroll(isPageLoaded)
 
   return (
     <>

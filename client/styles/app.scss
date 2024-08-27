@@ -1,0 +1,46 @@
+:root {
+  --even-stripe-col: rgb(150 150 110);
+  --odd-stripe-col: rgb(110 110 150);
+  --bg-col: #0a2553;
+  --scale: 1;
+  --layer-size: 16px;
+  --height-mult: 1;
+  --transition-time: 0.3s;
+}
+
+@import url(https://db.onlinewebfonts.com/c/ed8b4476ce0cbdba6869859c2fd4ee44?family=Screener+W01+Regular);
+@import url(https://db.onlinewebfonts.com/c/43366a6208b6906d46c7ef4b4c4eba0f?family=Aber+Mono);
+@import url(https://db.onlinewebfonts.com/c/e36d832babb06da18be3bfd2adfddbd9?family=MagdaClean-Black);
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track-piece {
+  background-color: #012;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #0095fa;
+  outline: 3px solid #012;
+  outline-offset: -3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #00f2ea;
+}
+
+* {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+html {
+  background: var(--bg-col);
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}

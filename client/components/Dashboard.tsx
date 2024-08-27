@@ -12,11 +12,15 @@ import leaveProject from '../apis/leaveProject.ts';
 import { getFirestore, collection, query, where, onSnapshot } from 'firebase/firestore';
 
 export default function Dashboard() {
-  const { user } = useContext(UserContext);
+  const { user } = useContext(UserContext) as {
+    user: {
+      uid: string,
+    }
+  };
 
-  const { isPageLoaded, setIsPageLoaded } = useContext(LoadingContext);
-  const [ownedProjects, setOwnedProjects] = useState([]);
-  const [joinedProjects, setJoinedProjects] = useState([]);
+  const { isPageLoaded, setIsPageLoaded } = useContext(LoadingContext) as { isPageLoaded: boolean, setIsPageLoaded: React.Dispatch<React.SetStateAction<boolean>> };
+  const [ownedProjects, setOwnedProjects] = useState<{ id: string, lastModified?: number }[]>([]);
+  const [joinedProjects, setJoinedProjects] = useState<{ id: string, lastModified?: number }[]>([]);
 
   const navigate = useNavigate();
   const db = getFirestore();
@@ -30,12 +34,12 @@ export default function Dashboard() {
 
   async function deleteProjectAndRemove(projectId: string) {
     await deleteProject(projectId);
-    setOwnedProjects(ownedProjects.filter((p) => p.id !== projectId));
+    setOwnedProjects(ownedProjects.filter((p: { id: string }) => p.id !== projectId));
   }
 
   async function leaveProjectAndRemove(projectId: string) {
     await leaveProject(projectId, user.uid);
-    setJoinedProjects(joinedProjects.filter((p) => p.id !== projectId));
+    setJoinedProjects(joinedProjects.filter((p: { id: string }) => p.id !== projectId));
   }
 
   useEffect(() => {
@@ -43,7 +47,7 @@ export default function Dashboard() {
     const joinedProjectsQuery = query(collection(db, 'projects'), where(`permissions.${user.uid}`, '>=', 1));
 
     const ownedProjectsListener = onSnapshot(ownedProjectsQuery, (querySnapshot) => {
-      const projectsArray = [];
+      const projectsArray: { id: string, lastModified?: number }[] = []
       querySnapshot.forEach((doc) => {
         projectsArray.push({ ...doc.data(), id: doc.id });
       });
@@ -51,7 +55,7 @@ export default function Dashboard() {
     });
 
     const joinedProjectsListener = onSnapshot(joinedProjectsQuery, (querySnapshot) => {
-      const projectsArray = [];
+      const projectsArray: { id: string, lastModified?: number }[] = []
       querySnapshot.forEach((doc) => {
         projectsArray.push({ ...doc.data(), id: doc.id });
       });
@@ -71,8 +75,8 @@ export default function Dashboard() {
       <button onClick={() => signOut(auth)}>Sign Out</button>
       <h1>Dashboard</h1>
       <div id='contextMenu'>
-        <button id="deleteProjectButton" onClick={() => document.getElementById('deletePopup').classList.add('show')}>Delete Project</button>
-        <button id="leaveProjectButton" onClick={() => document.getElementById('leavePopup').classList.add('show')}>Leave Project</button>
+        <button id="deleteProjectButton" onClick={() => document.getElementById('deletePopup')?.classList.add('show')}>Delete Project</button>
+        <button id="leaveProjectButton" onClick={() => document.getElementById('leavePopup')?.classList.add('show')}>Leave Project</button>
         <button onClick={(e) => createProjectAndOpen(e.target.parentElement.getAttribute('data-id'))}>Clone Project</button>
       </div>
       <div id='deletePopup'>
