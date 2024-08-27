@@ -80,7 +80,7 @@ const useScroll = (isPageLoaded) => {
         }
       })
     }
-    const scheduleInterval = setInterval(scheduleScroll, 25)
+    const scheduleInterval = setInterval(scheduleScroll, 50)
 
     document.getElementById('app').style.overflowX = 'hidden'
 
