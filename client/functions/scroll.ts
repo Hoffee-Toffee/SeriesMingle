@@ -21,6 +21,17 @@ const useScroll = (isPageLoaded) => {
     // Timeline Container should constantly scroll downwards, resetting at the top when it reaches the bottom
     const scheduleScroll = () => {
       scheduleContainers.forEach((scheduleContainer, i) => {
+        // Return if the element has overflown its container
+        const top =
+          scheduleContainer.parentElement.parentElement.parentElement.getBoundingClientRect()
+            .top
+        // from range scrollingBody.clientHeight / 1.2 to
+        if (
+          top >= Math.floor(scrollingBody.clientHeight / 1.2) ||
+          top <= Math.ceil(scrollingBody.clientHeight / -1.2)
+        )
+          return
+
         const highlightID = `${scheduleContainer.getAttribute('data-id')}-highlighted`
         // Use the current time and height of the container to determine the scroll position (in pixels)
         scheduleContainer.scrollTop =
