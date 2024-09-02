@@ -51,6 +51,7 @@
   a {
     color: #bfbf30;
     text-decoration: none;
+    align-self: center;
   }
 
   a:hover {
@@ -184,7 +185,7 @@
     ~ div {
       z-index: 2;
       height: 100dvh;
-      
+
       .bg {
         top: calc(200dvh / 5);
         left: 50%;
@@ -365,19 +366,20 @@
       right: -50%;
       background: #1f3b6e;
       width: 50%;
-      padding: 0.75em;
+      padding-left: 0.75em;
       padding-top: 75px;
       padding-right: 1.5em;
+      padding-bottom: 2em;
       margin-right: -2.5em;
       transition: 0.25s ease-out;
       align-items: flex-end;
       border-bottom-left-radius: 1em;
       outline: 2px solid #0095fa;
       opacity: 0;
-    }
-
-    nav a {
-      text-wrap: nowrap;
+      a {
+        text-wrap: nowrap;
+        align-self: flex-end;
+      }
     }
 
     #nav-toggle:checked + * + nav {
