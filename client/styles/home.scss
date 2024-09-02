@@ -1,3 +1,26 @@
+@keyframes scroll-indicator {
+  0% {
+    transform: translate(-50%, -75%);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -75%);
+  }
+
+  50% {
+    transform: translate(-50%, 75%);
+    opacity: 1;
+  }
+
+  85%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 75%);
+  }
+}
+
 #home {
   height: 100dvh;
   width: calc(100% + 10px);
@@ -17,13 +40,13 @@
     background: #1f3b6e;
     justify-content: space-between;
     z-index: 3;
-  }
 
-  section > header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1em;
+    > header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1em;
+    }
   }
 
   span {
@@ -38,14 +61,14 @@
   h1 {
     font-size: 1.5rem;
     align-self: center;
-  }
 
-  h1 span:first-child {
-    color: #bfbf30;
-  }
+    span:first-child {
+      color: #bfbf30;
+    }
 
-  h1 span:last-child {
-    color: #30bfb3;
+    span:last-child {
+      color: #30bfb3;
+    }
   }
 
   a {
@@ -125,29 +148,6 @@
         font-size: 1.5em;
         color: #bfbf30;
         animation: scroll-indicator 5s infinite ease-in-out;
-      }
-    }
-
-    @keyframes scroll-indicator {
-      0% {
-        transform: translate(-50%, -75%);
-        opacity: 0;
-      }
-
-      15% {
-        opacity: 1;
-        transform: translate(-50%, -75%);
-      }
-
-      50% {
-        transform: translate(-50%, 75%);
-        opacity: 1;
-      }
-
-      85%,
-      100% {
-        opacity: 0;
-        transform: translate(-50%, 75%);
       }
     }
   }
@@ -233,6 +233,7 @@
     border: 2px solid var(--bg-col);
     border-left: none;
     border-right: none;
+    border-color: #1f3b6e;
 
     #timelineContainer {
       text-align: left;
@@ -272,9 +273,6 @@
       opacity: 0.25;
     }
   }
-  .bg {
-    border-color: #1f3b6e;
-  }
 
   > div:nth-of-type(2) {
     #timelineContainer {
@@ -286,11 +284,10 @@
         opacity: 0.25;
       }
     }
-  }
 
-  // All after number 2
-  > div:nth-of-type(2) ~ div .episode-marker {
-    opacity: 0.25;
+    ~ div .episode-marker {
+      opacity: 0.25;
+    }
   }
 }
 
@@ -376,30 +373,35 @@
       border-bottom-left-radius: 1em;
       outline: 2px solid #0095fa;
       opacity: 0;
+
       a {
         text-wrap: nowrap;
         align-self: flex-end;
       }
     }
 
-    #nav-toggle:checked + * + nav {
-      right: 0;
-      margin-right: 0;
-      outline: 2px solid #0095fa;
-      opacity: 1;
-    }
+    #nav-toggle:checked {
+      + * + nav {
+        right: 0;
+        margin-right: 0;
+        outline: 2px solid #0095fa;
+        opacity: 1;
+      }
 
-    #nav-toggle:checked + #nav-toggle-label span:nth-child(1) {
-      transform: rotate(45deg);
-    }
+      + #nav-toggle-label {
+        span:nth-child(1) {
+          transform: rotate(45deg);
+        }
 
-    #nav-toggle:checked + #nav-toggle-label span:nth-child(2) {
-      opacity: 0;
-      margin: -75%;
-    }
+        span:nth-child(2) {
+          opacity: 0;
+          margin: -75%;
+        }
 
-    #nav-toggle:checked + #nav-toggle-label span:nth-child(3) {
-      transform: rotate(-45deg);
+        span:nth-child(3) {
+          transform: rotate(-45deg);
+        }
+      }
     }
 
     > div div h2 {

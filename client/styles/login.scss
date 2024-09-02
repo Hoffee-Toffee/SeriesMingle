@@ -5,11 +5,11 @@
   justify-content: center;
   height: 100dvh;
   background-color: #0a2553;
-  
+
   #login-form {
-      border: #0095fa 2px solid;
-      color: white;
-      background-color: #1f3b6e;
+    border: #0095fa 2px solid;
+    color: white;
+    background-color: #1f3b6e;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -29,14 +29,14 @@
   h1 {
     font-size: 2rem;
     margin-bottom: 1rem;
-  }
 
-  h1 span:first-child {
-    color: #bfbf30;
-  }
-
-  h1 span:last-child {
-    color: #30bfb3;
+    span:first-child {
+      color: #bfbf30;
+    }
+  
+    span:last-child {
+      color: #30bfb3;
+    }
   }
 
   legend {
@@ -85,7 +85,7 @@
 
   button {
     padding: 0 1rem;
-    background-color: #8B0000;
+    background-color: #8b0000;
     color: white;
     border: none;
     border-radius: 5px;
@@ -94,7 +94,7 @@
   }
 
   button:hover {
-    background-color: #CB2600;
+    background-color: #cb2600;
   }
 
   .separator {
@@ -102,20 +102,20 @@
     align-items: center;
     text-align: center;
     margin: 10px 0;
+    
+    .line {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 0 10px;
+      flex: 1;
+      width: Min(50vw - 50px, 150px);
+    }
+    
+    .text {
+      padding: 0 10px;
+      color: #ff0;
+    }
   }
-  
-  .separator .line {
-    border: none;
-    border-top: 1px solid #ccc;
-    margin: 0 10px;
-    flex: 1;
-    width: Min(50vw - 50px, 150px);
-  }
-  
-  .separator .text {
-    padding: 0 10px;
-    color: #ff0;
-  }  
 
   .google-sign-in {
     display: flex;
@@ -126,23 +126,25 @@
     border-radius: 5px;
     padding: 0.5rem 1rem;
     cursor: pointer;
+
+    img {
+      width: 24px;
+      height: 24px;
+      margin-right: 0.5rem;
+    }
   }
 
-  .google-sign-in, input {
+  .google-sign-in,
+  input {
     transition: background-color 0.3s ease;
   }
+
   :is(.google-sign-in, input):is(:hover, :focus) {
     background-color: #000;
   }
 
   input:focus {
     z-index: 1;
-  }
-
-  .google-sign-in img {
-    width: 24px;
-    height: 24px;
-    margin-right: 0.5rem;
   }
 
   .error-message {

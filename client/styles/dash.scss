@@ -1,11 +1,12 @@
 #dashboard {
   margin: 0.5em;
-  
+
   h1 {
     color: white;
     text-align: center;
     margin-top: 0;
   }
+  
   button,
   a {
     transition: var(--transition-time);
@@ -82,12 +83,12 @@
     text-align: center;
     margin: 5px 10px;
   }
-  
+
   .project-container i {
     padding: 5px 10px;
     position: relative;
   }
-  
+
   #contextMenu {
     opacity: 0;
     transition: all var(--transition-time);
@@ -104,45 +105,46 @@
     cursor: default;
     gap: 8px;
     pointer-events: none;
+
+    button {
+      padding: 5px 15px;
+      margin: 0;
+      border: none;
+      background: none;
+      color: white;
+      user-select: none;
+      transition: var(--transition-time);
+      border-radius: 0;
+      width: 100%;
+    }
+
+    button:hover {
+       color: #0095fa;
+       background: #00000055;
+       transition: var(--transition-time);
+     }
   }
-  
-  #contextMenu button {
-    padding: 5px 15px;
-    margin: 0;
-    border: none;
-    background: none;
-    color: white;
-    user-select: none;
-    transition: var(--transition-time);
-    border-radius: 0;
-    width: 100%;
-  }
-  
-  #contextMenu button:hover {
-    color: #0095fa;
-    background: #00000055;
-    transition: var(--transition-time);
-  }
-  
+
   #contextMenu.show,
   #contextMenu:hover {
     opacity: 1;
     transition:
-    all var(--transition-time),
-    left 1ms,
-    top 1ms;
+      all var(--transition-time),
+      left 1ms,
+      top 1ms;
     pointer-events: all;
   }
-  
-  #contextMenu[data-isOwner=false] #deleteProjectButton {
-    display: none;
-  }
-  
-  #contextMenu[data-isOwner=true] #leaveProjectButton {
+
+  #contextMenu[data-isOwner='false'] #deleteProjectButton {
     display: none;
   }
 
-  #deletePopup, #leavePopup {
+  #contextMenu[data-isOwner='true'] #leaveProjectButton {
+    display: none;
+  }
+
+  #deletePopup,
+  #leavePopup {
     position: absolute;
     z-index: 2;
     width: 100vw;
@@ -153,42 +155,43 @@
     opacity: 0;
     transition: opacity var(--transition-time);
     backdrop-filter: brightness(0.25) blur(10px) grayscale(1);
-}
 
-  #deletePopup.show, #leavePopup.show {
+    div {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-col);
+      color: white;
+      padding: 1em;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      border: 2px solid #0095fa;
+    }
+
+    p {
+      font-size: small;
+      width: 100%;
+      text-align: center;
+    }
+
+    span {
+      color: yellow;
+    }
+
+    button {
+      padding: 5px 15px;
+      margin: 0;
+    }
+  }
+
+  #deletePopup.show,
+  #leavePopup.show {
     opacity: 1;
     pointer-events: all;
     transition: opacity var(--transition-time);
-  }
-
-  #deletePopup div, #leavePopup div {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--bg-col);
-    color: white;
-    padding: 1em;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    border: 2px solid #0095fa;
-}
-
-  #deletePopup p, #leavePopup p {
-    font-size: small;
-    width: 100%;
-    text-align: center;
-  }
-
-  #deletePopup span, #leavePopup span {
-    color: yellow;
-  }
-
-  #deletePopup button, #leavePopup button {
-    padding: 5px 15px;
-    margin: 0;
   }
 }
