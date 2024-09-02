@@ -6,13 +6,13 @@ const useScroll = (isPageLoaded) => {
 
   // Doesn't update when 'isPageLoaded' changes, but it should
   useEffect(() => {
-    if (!isPageLoaded) return
+    const onHome = location.pathname === '/'
+    if (!isPageLoaded || !onHome) return
 
     // Close menu after navigating to a new page
     if (document.getElementById('nav-toggle'))
       document.getElementById('nav-toggle').checked = false
 
-    const onHome = location.pathname === '/'
     const scrollingBody = document.getElementById('home')
     const scheduleContainers = document.querySelectorAll('#timelineContainer')
 
@@ -88,13 +88,10 @@ const useScroll = (isPageLoaded) => {
       if (!onHome) return
 
       document.getElementById('nav-toggle').checked = false
-
-      const header = document.getElementById('nav-bar')
-      const headerHeight = header?.clientHeight || 0
       const scroll = scrollingBody.scrollTop
 
       const content = document.querySelectorAll('.content')
-      content.forEach((el, i) => {
+      content.forEach((el) => {
         const container = el.parentElement
         let offset =
           scroll -
@@ -110,12 +107,13 @@ const useScroll = (isPageLoaded) => {
       })
     }
 
-    if (onHome) scrollingBody.addEventListener('scroll', handleScroll)
+    scrollingBody.addEventListener('scroll', handleScroll)
     window.onresize = () => handleScroll()
     handleScroll()
 
     return () => {
-      if (onHome) scrollingBody.removeEventListener('scroll', handleScroll)
+      if (!onHome) return
+      scrollingBody.removeEventListener('scroll', handleScroll)
       window.onresize = null
       document.getElementById('app').style.overflowX = null
       clearInterval(scheduleInterval)

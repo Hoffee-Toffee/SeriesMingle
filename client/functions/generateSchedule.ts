@@ -450,6 +450,7 @@ export function generateSchedule(
     data,
     layers,
     setLayers,
+    titles,
     setTitles,
     setShow,
     setCustom,

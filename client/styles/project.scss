@@ -191,22 +191,38 @@
     margin-top: 5px;
     justify-content: center;
     position: relative;
+
+    #layerTitles {
+      position: sticky;
+      width: 0;
+      top: 0em;
+      
+      span {
+        transform: rotate(180deg);
+        position: absolute;
+        writing-mode: vertical-rl;
+        white-space: nowrap;
+        line-height: 28px;
+        background-color: var(--even-stripe-col);
+        outline: var(--bg-col) solid 2px;
+        height: 100%;
+        top: 0em;
+        width: 28px;
+        padding-bottom: 1em;
+        text-align: right;
+        color: rgba(0, 0, 0, 0.5);
+      }
+
+      span:nth-of-type(2n) {
+        background-color: var(--odd-stripe-col);
+      }
+    }
   }
   #scheduleVisualization {
     height: fit-content;
     width: fit-content;
-    background: repeating-linear-gradient(
-      90deg,
-      var(--bg-col) 0px,
-      var(--bg-col) 2px,
-      var(--even-stripe-col) 2px,
-      var(--even-stripe-col) 30px,
-      var(--bg-col) 30px,
-      var(--bg-col) 32px,
-      var(--odd-stripe-col) 32px,
-      var(--odd-stripe-col) 60px
-    );
     padding-right: 1px;
+    z-index: 1;
   }
   #scheduleVisualization::before {
     background: linear-gradient(#1f3b6e, transparent);
@@ -334,9 +350,12 @@
     transition: var(--transition-time);
     scroll-margin-top: 5px;
     scroll-margin-right: 2px;
+    outline: 2px solid var(--even-stripe-col);
   }
-  .episode-marker.fade:not(:hover),
-  .episode-marker.fade:not(.highlighted) {
+  .episode-marker.odd {
+    outline-color: var(--odd-stripe-col);
+  }
+  .episode-marker.fade:not(:hover, .highlighted) {
     opacity: 0.25;
     transition: var(--transition-time) var(--transition-time);
   }
@@ -603,6 +622,9 @@
     background: linear-gradient(#1f3b6e, #1f3b6e);
   }
   #project {
+    #layerTitles {
+      display: none;
+    }
     #scheduleVisualization {
       width: 0;
       margin-left: 5px;
@@ -612,6 +634,7 @@
       display: inline-grid;
       background: linear-gradient(#1f3b6e, #1f3b6e);
       border: hidden !important;
+      outline: none;
     }
     .episode-marker:before,
     .episode-marker:after {

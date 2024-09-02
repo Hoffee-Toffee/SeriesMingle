@@ -14,9 +14,7 @@ export default function Terminal({ keys, setKeys }) {
     let lastKeyPress = konami[1];
 
     const handleKonamiCode = (e: KeyboardEvent) => {
-      console.log(lastKeyPress);
       if (showTerminal) return;
-      console.log(konamiIndex, e.key, konamiCode[konamiIndex]);
       if (!konamiIndex) lastKeyPress = Date.now();
       if (Date.now() - lastKeyPress > 500) {
         konamiIndex = 0;
