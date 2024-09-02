@@ -40,7 +40,7 @@ This is the documentation for the SeriesMingle Repository.
        * [Schedule.tsx](#Schedule.tsx)
        * [Terminal.tsx](#Terminal.tsx)
      * [Files](#Files)
-       * [example.json](#example.json)
+       * [example.jsonc](#example.jsonc)
        * [favicon.ico](#favicon.ico)
        * [firebase.rules](#firebase.rules)
      * [Functions](#Functions)
@@ -73,11 +73,11 @@ This is the documentation for the SeriesMingle Repository.
    * [Dockerfile](#Dockerfile)
    * [Documentation.md](#Documentation.md)
    * [index.html](#index.html)
-   * [package-lock.json](#package-lock.json)
-   * [package.json](#package.json)
+   * [package-lock.jsonc](#package-lock.jsonc)
+   * [package.jsonc](#package.jsonc)
    * [Procfile](#Procfile)
    * [README.md](#README.md)
-   * [tsconfig.json](#tsconfig.json)
+   * [tsconfig.jsonc](#tsconfig.jsonc)
    * [vite.config.js](#vite.config.js) -->
 
 ## File Structure
@@ -121,7 +121,7 @@ Sends POST request to `/api/v1/projects/clone` with the project id and user id.
 
 **Returns:**
 
-```json
+```jsonc
 // On Success
 {
   "id": "iasIFGOcdOlRZvYNNB4a" // The id of the new project
@@ -155,7 +155,7 @@ Status: 400
 
 **Returns:**
 
-```json
+```jsonc
 // On Success
 {
   "id": "iasIFGOcdOlRZvYNNB4a" // The id of the new project
@@ -186,7 +186,7 @@ Status: 400
 
 **Returns:**
 
-```json
+```jsonc
 // On Success
 Status: 200
 
