@@ -17,7 +17,6 @@ import Schedule from './Schedule.tsx'
 import example from '../files/example.json'
 import setProject from '../apis/setProject.ts'
 import Entry from './Entry.tsx'
-import HelpIcon from './HelpIcon.tsx'
 import Terminal from './Terminal.tsx'
 import { Link, useParams } from 'react-router-dom'
 import { collection } from '../../server/firebase.ts'
@@ -536,9 +535,6 @@ export default function Project() {
                 </summary>
                 <fieldset id="mp" onChange={(e) => setMpSpacing(e.target.value)}>
                   <legend>Space Multi-Parters
-                    <HelpIcon info={
-                      'Adjust how episode parts and arcs are spaced'
-                    } />
                   </legend>
                   {bookmark ? (
                     <span>Spacing adjustment locked while bookmark exists.</span>
@@ -568,9 +564,6 @@ export default function Project() {
                 </fieldset>
                 <fieldset id="streak">
                   <legend>Average Streak Duration (hours)
-                    <HelpIcon info={
-                      "Set a streak duration of how much content from each layer you want to watch in a row"
-                    } />
                   </legend>
                   {bookmark ? (
                     <span>Streak adjustment locked while bookmark exists.</span>
@@ -617,9 +610,6 @@ export default function Project() {
                 {streak !== 0 || goal !== 0 ? (
                   <fieldset id="sessionOptions">
                     <legend>Watch Session Options
-                      <HelpIcon info={
-                        "Control how watch sessions are shown and sorted."
-                      } />
                     </legend>
                     {bookmark ? (
                       <span>Watch session options locked while bookmark exists.</span>
@@ -627,9 +617,6 @@ export default function Project() {
                       <>
                         <fieldset id="showStreaks">
                           <legend>Show Streaks
-                            <HelpIcon info={
-                              "Toggle showing streak indicators on the schedule while watch sessions are active"
-                            } />
                           </legend>
                           <input
                             type="checkbox"
@@ -639,9 +626,6 @@ export default function Project() {
                         </fieldset>
                         <fieldset id="groupStreaks">
                           <legend>Group Streaks
-                            <HelpIcon info={
-                              "Toggle grouping same-source streaks within watch sessions"
-                            } />
                           </legend>
                           <input
                             type="checkbox"
