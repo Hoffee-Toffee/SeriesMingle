@@ -85,7 +85,7 @@ This is the documentation for the SeriesMingle Repository.
 **Test Status Key:**
 
 | Status | Symbol | Usage |
-| --- | --- | --- |
+| --- | :---: | --- |
 | Test Passed | ✅ | Test passes for case |
 | Test Failed | 🛑 | Test fails for case |
 | Future Test | 🚧 | Test not yet implemented |
@@ -93,7 +93,7 @@ This is the documentation for the SeriesMingle Repository.
 **Route Protection Key:**
 
 | Status | Symbol | Usage |
-| --- | --- | --- |
+| --- | :---: | --- |
 | Protected Route | ✅ | Authentication required |
 | Public Route | ❎ | No authentication required |
 | To be Protected | 🛑 | Authentication planned |
@@ -133,7 +133,7 @@ Unless otherwise stated, all functions return the body of the response.
 **Tests:**
 
 | Case | Expected Output | Test Status |
-| --- | --- | --- |
+| --- | --- | :---: |
 | ID is of project user owns | Success | 🚧 |
 | ID is of project user has been invited to | Success | 🚧 |
 | ID is of project user does not have access to | Failure | 🚧 |
@@ -164,7 +164,7 @@ Unless otherwise stated, all functions return the body of the response.
 **Tests:**
 
 | Case | Expected Output | Test Status |
-| --- | --- | --- |
+| --- | --- | :---: |
 | User is authenticated | Success | 🚧 |
 | User is not authenticated | Failure | 🚧 |
 
@@ -187,7 +187,7 @@ Returns a status code.
 **Tests:**
 
 | Case | Output Case | Test Status |
-| --- | --- | --- |
+| --- | --- | :---: |
 | ID is of project user owns | Success | 🚧 |
 | ID is of project user does not own | Failure | 🚧 |
 | ID is invalid | Failure | 🚧 |
@@ -209,7 +209,7 @@ Returns a status code.
 **Tests:**
 
 | Case | Expected Output | Test Status |
-| --- | --- | --- |
+| --- | --- | :---: |
 | ID is valid | Success | 🚧 |
 | ID is invalid | Failure | 🚧 |
 | Type is valid | Success | 🚧 |
@@ -236,7 +236,7 @@ Returns a processed project object.
 **Tests:**
 
 | Case | Expected Output | Test Status |
-| --- | --- | --- |
+| --- | --- | :---: |
 | ID is of project user owns | Success | 🚧 |
 | ID is of project user has been invited to | Success | 🚧 |
 | ID is of project user does not have access to | Failure | 🚧 |
@@ -260,7 +260,7 @@ Returns the raw text decrypted from the Easter Egg file.
 **Tests:**
 
 | Case | Expected Output | Test Status |
-| --- | --- | --- |
+| --- | --- | :---: |
 | Valid passphrase | Success | 🚧 |
 | Invalid passphrase | Failure | 🚧 |
 
@@ -281,7 +281,7 @@ Returns the raw text decrypted from the Easter Egg file.
 **Tests:**
 
 | Case | Expected Output | Test Status |
-| --- | --- | --- |
+| --- | --- | :---: |
 | User is authenticated | Success | 🚧 |
 | User is not authenticated | Failure | 🚧 |
 
@@ -310,7 +310,7 @@ Returns the raw text decrypted from the Easter Egg file.
 **Tests:**
 
 | Case | Expected Output | Test Status |
-| --- | --- | --- |
+| --- | --- | :---: |
 | ID is of project user is a member of | Success | 🚧 |
 | ID is of project user is not a member of | Failure | 🚧 |
 | ID is invalid | Failure | 🚧 |
@@ -335,7 +335,7 @@ Returns an array of search results, with the query added to the front of the arr
 **Tests:**
 
 | Case | Expected Output | Test Status |
-| --- | --- | --- |
+| --- | --- | :---: |
 | Query is valid | Success | 🚧 |
 | Query is invalid | Failure | 🚧 |
 
@@ -368,7 +368,7 @@ Returns an array of search results, with the query added to the front of the arr
 **Tests:**
 
 | Case | Expected Output | Test Status |
-| --- | --- | --- |
+| --- | --- | :---: |
 | ID is of project user owns | Success | 🚧 |
 | ID is of project user has been invited to | Success | 🚧 |
 | ID is of project user does not have access to | Failure | 🚧 |
