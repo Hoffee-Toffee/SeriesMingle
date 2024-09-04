@@ -21,17 +21,6 @@ const useScroll = (isPageLoaded) => {
     // Timeline Container should constantly scroll downwards, resetting at the top when it reaches the bottom
     const scheduleScroll = () => {
       scheduleContainers.forEach((scheduleContainer, i) => {
-        // Return if the element has overflown its container
-        const top =
-          scheduleContainer.parentElement.parentElement.parentElement.getBoundingClientRect()
-            .top
-        // from range scrollingBody.clientHeight / 1.2 to
-        if (
-          top >= Math.floor(scrollingBody.clientHeight / 1.2) ||
-          top <= Math.ceil(scrollingBody.clientHeight / -1.2)
-        )
-          return
-
         const highlightID = `${scheduleContainer.getAttribute('data-id')}-highlighted`
         // Use the current time and height of the container to determine the scroll position (in pixels)
         scheduleContainer.scrollTop =
@@ -88,28 +77,10 @@ const useScroll = (isPageLoaded) => {
       if (!onHome) return
 
       document.getElementById('nav-toggle').checked = false
-      const scroll = scrollingBody.scrollTop
-
-      const content = document.querySelectorAll('.content')
-      content.forEach((el) => {
-        const container = el.parentElement
-        let offset =
-          scroll -
-          Math.floor(
-            container.offsetTop +
-              container.clientHeight / 2 -
-              scrollingBody.clientHeight / 3,
-          )
-        offset = offset / (scrollingBody.clientHeight / 2)
-
-        // Use the offset for the set of transition pairs
-        el.style.transform = `translateY(${(offset * scrollingBody.clientHeight) / 2}px)`
-      })
     }
 
     scrollingBody.addEventListener('scroll', handleScroll)
     window.onresize = () => handleScroll()
-    handleScroll()
 
     return () => {
       if (!onHome) return

@@ -97,7 +97,7 @@ This is the documentation for the SeriesMingle Repository.
 | Protected Route | ✅ | Authentication required |
 | Public Route | ❎ | No authentication required |
 | To be Protected | 🛑 | Authentication planned |
-| Future Route | 🚧 | Route not yet implimented |
+| Future Route | 🚧 | Route not yet implemented |
 
 ### `/client/apis`
 

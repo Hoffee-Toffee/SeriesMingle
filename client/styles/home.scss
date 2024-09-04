@@ -160,9 +160,16 @@
     text-align: center;
     align-content: center;
     color: white;
-    position: relative;
+    position: sticky;
     z-index: -1;
     background: var(--bg-col);
+    clip-path: view-box;
+
+    > div {
+      position: fixed;
+      top: calc(100dvh / 3);
+      width: 100%;
+    }
 
     div h2 {
       font-family: 'Aber Mono';
@@ -174,10 +181,7 @@
       font-size: 2rem;
       margin: 0em 1em;
       width: calc(100% - 2em);
-    }
-
-    #overlay a.button {
-      top: calc(200dvh / 3 - 200dvh / 6);
+      pointer-events: none;
     }
   }
 
@@ -224,7 +228,7 @@
     text-align: center;
     pointer-events: none;
     position: absolute;
-    top: calc(-50dvh / 3 + 100% / 3 - 1px);
+    top: calc(-50dvh / 3 - 1px);
     left: 0;
     width: 100%;
     margin: 0;

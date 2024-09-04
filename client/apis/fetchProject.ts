@@ -5,8 +5,8 @@ import packageJson from '../../package.json'
 const base = packageJson.config.base
 const rootUrl = (base == '/' ? '' : base) + '/api/v1/projects'
 
-export default function fetchProject(user: string): Promise<object | null> {
-  return request.get(`${rootUrl}/${user}`).then((res) => {
+export default function fetchProject(id: string): Promise<object | null> {
+  return request.get(`${rootUrl}/${id}`).then((res) => {
     if (!res.body) return null
 
     return {
