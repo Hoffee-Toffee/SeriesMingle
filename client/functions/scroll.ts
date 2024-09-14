@@ -16,7 +16,7 @@ const useScroll = (isPageLoaded) => {
     const scrollingBody = document.getElementById('home')
     const scheduleContainers = document.querySelectorAll('#timelineContainer')
 
-    const loopTime = 1000 * 60 * 30 // 30 minutes
+    const loopTime = 1000 * 60 * 60 // 1 hour
 
     // Timeline Container should constantly scroll downwards, resetting at the top when it reaches the bottom
     const scheduleScroll = () => {
@@ -32,7 +32,7 @@ const useScroll = (isPageLoaded) => {
 
         // Find the first element (if any) that is within the 2/3 vertical line of the container
         const toHighlight = Array.from(
-          scheduleContainer.children[0].children,
+          scheduleContainer.children[1].children,
         ).find(
           (el) =>
             // If bottom is after halfway point, and top is before halfway point
