@@ -8,9 +8,20 @@
   --transition-time: 0.3s;
 }
 
-@import url(https://db.onlinewebfonts.com/c/ed8b4476ce0cbdba6869859c2fd4ee44?family=Screener+W01+Regular);
-@import url(https://db.onlinewebfonts.com/c/43366a6208b6906d46c7ef4b4c4eba0f?family=Aber+Mono);
-@import url(https://db.onlinewebfonts.com/c/e36d832babb06da18be3bfd2adfddbd9?family=MagdaClean-Black);
+// @import url(https://db.onlinewebfonts.com/c/ed8b4476ce0cbdba6869859c2fd4ee44?family=Screener+W01+Regular);
+// @import url(https://db.onlinewebfonts.com/c/e36d832babb06da18be3bfd2adfddbd9?family=MagdaClean-Black);
+@font-face{
+  font-family: "Aber Mono";
+  src: url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.eot");
+  src: url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.eot?#iefix")format("embedded-opentype"),
+      url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.woff")format("woff"),
+      url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.woff2")format("woff2"),
+      url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.ttf")format("truetype"),
+      url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.svg#Aber Mono")format("svg");
+  font-weight:normal;
+  font-style:normal;
+  font-display:swap;
+}
 
 ::-webkit-scrollbar {
   width: 10px;
