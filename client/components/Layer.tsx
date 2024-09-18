@@ -12,6 +12,8 @@ function Layer({
   setCustom,
   titles,
   setTitles,
+  setShow,
+  setMovie
 }: {
   id: number
   entries: any[]
@@ -23,6 +25,8 @@ function Layer({
   setCustom: any,
   titles: string[],
   setTitles: any,
+  setShow: any,
+  setMovie: any
 }) {
   function setEntries(newEntries, force = false) {
     layers[id] = newEntries
@@ -61,6 +65,8 @@ function Layer({
                 data={data}
                 addData={addData}
                 setCustom={setCustom}
+                setTitle={entry.ref ? entry.ref[0] == 'tv' ? setShow : setMovie : null}
+                titles={titles}
                 className={outlinePos == `${id}-${index}` && 'outline'}
               />
             ))}

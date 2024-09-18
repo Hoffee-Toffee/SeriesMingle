@@ -308,8 +308,7 @@ export default function Project() {
 
   function setShow(showId, newData) {
     if (readOnly) return
-    // If data is a string then it is just the 'userTitle'
-    // If not then it is an object and will replace the entire record
+
     if (typeof newData === 'string' || newData == null) {
       data.tv[showId].userTitle = newData
       setState({
@@ -331,13 +330,25 @@ export default function Project() {
   }
 
   function setMovie(movieId, newData) {
-    data.movies[movie] = newData
-    setState({
-      ...state,
-      data,
+    if (readOnly) return
 
-      force: true,
-    })
+    if (typeof newData === 'string' || newData == null) {
+      data.movie[movieId].userTitle = newData
+      setState({
+        ...state,
+        data,
+
+        force: true,
+      })
+    } else {
+      data.movie[movieId] = newData
+      setState({
+        ...state,
+        data,
+
+        force: true,
+      })
+    }
     setChangedProps([...changedProps, 'data'])
   }
 
@@ -510,6 +521,8 @@ export default function Project() {
                         setCustom={setCustom}
                         titles={titles}
                         setTitles={setTitles}
+                        setShow={setShow}
+                        setMovie={setMovie}
                       />
                     ))}
                   </SortableContext>

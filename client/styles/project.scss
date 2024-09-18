@@ -742,7 +742,7 @@
   [contenteditable='true'] {
     transition: var(--transition-time);
     text-decoration: underline dashed transparent 1px;
-    cursor: text;
+    cursor: text !important;
   }
 
   [contenteditable='true']:hover {

@@ -14,6 +14,8 @@ function Entry({
   addData,
   className,
   setCustom,
+  setTitle,
+  titles
 }: {
   id: number
   layer: number
@@ -23,7 +25,9 @@ function Entry({
   data: object
   addData: any
   className: string | undefined
-  setCustom: any
+  setCustom: any,
+  setTitle: any,
+  titles: string[]
 }) {
   let options, entryData, settings
   const [setting, setSetting] = useState(0)
@@ -327,8 +331,14 @@ function Entry({
               className="option"
               tmdb-id={entryData.id}
               tmdb-type={entryData.type}
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) => {
+                if (!e.target.innerText.trim()) e.target.innerText = entryData.title
+                else setTitle(entryData.show_id || entryData.id, e.target.innerText, true)
+              }}
             >
-              {`${entryData.title}${![undefined, ''].includes(entryData.year) ? ` (${entryData.year})` : ''}`}
+              {entryData.userTitle || entryData.title}
             </span>
             <button
               onClick={() => {
