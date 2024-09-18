@@ -480,49 +480,54 @@ export default function Project() {
                 else setDescription(e.target.innerText)
               }}>{description}</span></div>
           <fieldset id="layerContainer">
-            <legend>Layers</legend>
-            {bookmark ? (
-              <span>Layer editing locked while bookmark exists.</span>
-            ) : (
-              <DndContext
-                sensors={sensors}
-                onDragStart={onDragStart}
-                onDragEnd={onDragEnd}
-                onDragOver={onDragOver}
-              >
-                <SortableContext
-                  items={shown.flatMap((layer, li) =>
-                    layer.map((_, ei) => ({ id: `${li}-${ei}` })),
-                  )}
+            {/* open if a bookmark does not exist */}
+            <details open={!bookmark}>
+              <summary><legend>Layers</legend></summary>
+              {bookmark ? (
+                <span>Layer editing locked while bookmark exists.</span>
+              ) : (
+                <DndContext
+                  sensors={sensors}
+                  onDragStart={onDragStart}
+                  onDragEnd={onDragEnd}
+                  onDragOver={onDragOver}
                 >
-                  {shown.map((entries, index) => (
-                    <Layer
-                      key={index}
-                      id={index}
-                      entries={entries}
-                      layers={shown}
-                      setLayers={setLayers}
-                      data={data}
-                      addData={addData}
-                      outlinePos={outlinePos}
-                      setCustom={setCustom}
-                    />
-                  ))}
-                </SortableContext>
-                <button onClick={() => setLayers([...layers, []])}>
-                  New Layer
-                </button>
-                <DragOverlay dropAnimation={null}>
-                  {activeEntry && (
-                    <Entry
-                      entry={activeEntry}
-                      data={data}
-                      className="overlay"
-                    />
-                  )}
-                </DragOverlay>
-              </DndContext>
-            )}
+                  <SortableContext
+                    items={shown.flatMap((layer, li) =>
+                      layer.map((_, ei) => ({ id: `${li}-${ei}` })),
+                    )}
+                  >
+                    {shown.map((entries, index) => (
+                      <Layer
+                        key={index}
+                        id={index}
+                        entries={entries}
+                        layers={shown}
+                        setLayers={setLayers}
+                        data={data}
+                        addData={addData}
+                        outlinePos={outlinePos}
+                        setCustom={setCustom}
+                        titles={titles}
+                        setTitles={setTitles}
+                      />
+                    ))}
+                  </SortableContext>
+                  <button onClick={() => setLayers([...layers, []])}>
+                    New Layer
+                  </button>
+                  <DragOverlay dropAnimation={null}>
+                    {activeEntry && (
+                      <Entry
+                        entry={activeEntry}
+                        data={data}
+                        className="overlay"
+                      />
+                    )}
+                  </DragOverlay>
+                </DndContext>
+              )}
+            </details>
           </fieldset>
           {/* Collapsible set (summary and details) */}
           {scheduleData.schedule.length > 0 && <>

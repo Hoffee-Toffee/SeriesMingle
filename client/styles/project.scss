@@ -54,13 +54,19 @@
   margin: 0.5em;
 
   .layer {
-    display: flex;
-    justify-content: space-between;
     border: #0095fa 2px solid;
     background-color: var(--bg-col);
     padding: 0.5em;
     margin: 0.5em 0.1em;
-  }
+    position: relative;
+
+      > details > button {
+        position: absolute;
+        right: 0.75em;
+        top: 0.5em;
+        bottom: 0.5em;
+      }
+    }
 
   .dx-state-invisible {
     display: none;
@@ -80,7 +86,7 @@
   .options > *,
   .new input,
   fieldset input[type='number'],
-  .layer > button,
+  .layer > details button,
   .overlay {
     border: orangered 2px solid;
     border-radius: 0.3em;
@@ -169,7 +175,7 @@
   }
 
   .options div button,
-  .layer > button,
+  .layer > details button,
   .overlay button {
     color: #d7e300;
     background-color: transparent;
@@ -227,7 +233,7 @@
     background-color: orangered;
   }
 
-  .layer > button:hover,
+  .layer > details button:hover,
   .options div > :is(button, :is(select, input.value)):hover,
   .options div > :is(button, :is(select, input.value)):focus,
   .options div span > :hover:is(.setting-label, .value, select),
@@ -396,7 +402,7 @@
     opacity: 0.25;
   }
 
-  #settings {
+  #settings, #layerContainer {
     margin-top: 20px;
     padding-left: 11px;
 
@@ -425,6 +431,15 @@
       legend {
         background-color: #1f3b6e;
       }
+    }
+  }
+
+  #layerContainer fieldset {
+    margin-top: 0.75em;
+
+    legend {
+      margin-bottom: 0.5em;
+      margin-left: -1.333em;
     }
   }
 
@@ -722,6 +737,16 @@
     opacity: 1;
     pointer-events: all;
     transition: opacity var(--transition-time);
+  }
+
+  [contenteditable='true'] {
+    transition: var(--transition-time);
+    text-decoration: underline dashed transparent 1px;
+    cursor: text;
+  }
+
+  [contenteditable='true']:hover {
+    text-decoration-color: white;
   }
 }
 

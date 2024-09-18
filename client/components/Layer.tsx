@@ -9,7 +9,9 @@ function Layer({
   data,
   addData,
   outlinePos,
-  setCustom
+  setCustom,
+  titles,
+  setTitles,
 }: {
   id: number
   entries: any[]
@@ -18,7 +20,9 @@ function Layer({
   data: object
   addData: any
   outlinePos: any,
-  setCustom: any
+  setCustom: any,
+  titles: string[],
+  setTitles: any,
 }) {
   function setEntries(newEntries, force = false) {
     layers[id] = newEntries
@@ -34,29 +38,39 @@ function Layer({
   }
 
   return (
-    <div className="layer" id={`layer-${id}`}>
-      <div className="options">
-        <SortableContext items={Array(entries.length)}>
-          {entries.map((entry, index) => (
-            <Entry
-              id={index}
-              key={`${id}-${index}`}
-              entry={entry}
-              entries={entries}
-              setEntries={setEntries}
-              layer={id}
-              data={data}
-              addData={addData}
-              setCustom={setCustom}
-              className={outlinePos == `${id}-${index}` && 'outline'}
-            />
-          ))}
-        </SortableContext>
-      </div>
-      <button onClick={() => setLayers(layers.filter((_, i) => i !== id), true)}>
-        x
-      </button>
-    </div>
+    <fieldset className="layer" id={`layer-${id}`}>
+      <details open>
+        <summary><legend>
+          <span contentEditable suppressContentEditableWarning={true}
+            onBlur={(e) => {
+              if (!e.target.innerText.trim()) e.target.innerText = titles[id]
+              else setTitles(id, e.target.innerText)
+            }}
+          >{titles[id]}</span>
+        </legend></summary>
+        <div className="options">
+          <SortableContext items={Array(entries.length)}>
+            {entries.map((entry, index) => (
+              <Entry
+                id={index}
+                key={`${id}-${index}`}
+                entry={entry}
+                entries={entries}
+                setEntries={setEntries}
+                layer={id}
+                data={data}
+                addData={addData}
+                setCustom={setCustom}
+                className={outlinePos == `${id}-${index}` && 'outline'}
+              />
+            ))}
+          </SortableContext>
+        </div>
+        <button onClick={() => setLayers(layers.filter((_, i) => i !== id), true)}>
+          x
+        </button>
+      </details>
+    </fieldset>
   )
 }
 
