@@ -13,7 +13,9 @@ function Layer({
   titles,
   setTitles,
   setShow,
-  setMovie
+  setMovie,
+  runAfterConfirm,
+  bookmark,
 }: {
   id: number
   entries: any[]
@@ -26,7 +28,9 @@ function Layer({
   titles: string[],
   setTitles: any,
   setShow: any,
-  setMovie: any
+  setMovie: any,
+  runAfterConfirm: any,
+  bookmark: string,
 }) {
   function setEntries(newEntries, force = false) {
     layers[id] = newEntries
@@ -66,13 +70,14 @@ function Layer({
                 addData={addData}
                 setCustom={setCustom}
                 setTitle={entry.ref ? entry.ref[0] == 'tv' ? setShow : setMovie : null}
-                titles={titles}
+                runAfterConfirm={runAfterConfirm}
+                bookmark={bookmark}
                 className={outlinePos == `${id}-${index}` && 'outline'}
               />
             ))}
           </SortableContext>
         </div>
-        <button onClick={() => setLayers(layers.filter((_, i) => i !== id), true)}>
+        <button onClick={() => runAfterConfirm(() => setLayers(layers.filter((_, i) => i !== id), true))}>
           x
         </button>
       </details>

@@ -15,7 +15,8 @@ function Entry({
   className,
   setCustom,
   setTitle,
-  titles
+  runAfterConfirm,
+  bookmark,
 }: {
   id: number
   layer: number
@@ -27,7 +28,8 @@ function Entry({
   className: string | undefined
   setCustom: any,
   setTitle: any,
-  titles: string[]
+  runAfterConfirm: any,
+  bookmark: string | undefined,
 }) {
   let options, entryData, settings
   const [setting, setSetting] = useState(0)
@@ -79,16 +81,18 @@ function Entry({
             className="addEntry"
             value={entry}
             onChange={(e) => {
-              entries[id] = e.target.value
-              setEntries([...entries])
+              runAfterConfirm(() => {
+                entries[id] = e.target.value
+                setEntries([...entries])
+              })
             }}
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+            onKeyPress={(e) => runAfterConfirm(() => e.key === 'Enter' && handleSearch())}
           />
-          <button onClick={handleSearch}>Search</button>
-          <button onClick={() => setCustom(entry, layer, id)}>
+          <button onClick={() => runAfterConfirm(handleSearch)}>Search</button>
+          <button onClick={() => runAfterConfirm(() => setCustom(entry, layer, id))}>
             Create Custom
           </button>
-          <button onClick={() => addBarrier(id)}>
+          <button onClick={() => runAfterConfirm(() => addBarrier(id))}>
             Add Barrier
           </button>
         </div>
@@ -109,6 +113,12 @@ function Entry({
                   }))
                   setEntries([...entries])
                 }}
+                onClick={(e) => {
+                  e.target.blur()
+                  runAfterConfirm(() => { })
+                }
+                }
+
               >
                 {entry.map((option, index) => {
                   if (!index) return
@@ -130,21 +140,21 @@ function Entry({
                 })}
               </select>
               <button
-                onClick={() => {
+                onClick={() => runAfterConfirm(() => {
                   const selected =
                     entry.find((option) => option.selected) || entry[1]
                   getMedia(selected.media_type, selected.id)
-                }}
+                })}
               >
                 Add
               </button>
             </>
           )}
           <button
-            onClick={() => {
+            onClick={() => runAfterConfirm(() => {
               entries[id] = entry[0]
               setEntries([...entries])
-            }}
+            })}
           >
             Back
           </button>
@@ -166,6 +176,12 @@ function Entry({
                       entries[id] = { ...entries[id], start: e.target.value }
                       setEntries([...entries], true)
                     }}
+                    onClick={(e) => {
+                      e.target.blur()
+                      runAfterConfirm(() => { })
+                    }
+                    }
+
                   >
                     {(entry.end
                       ? entryData.seasons.slice(
@@ -207,6 +223,12 @@ function Entry({
                       entries[id] = { ...entries[id], end: e.target.value }
                       setEntries([...entries], true)
                     }}
+                    onClick={(e) => {
+                      e.target.blur()
+                      runAfterConfirm(() => { })
+                    }
+                    }
+
                   >
                     {entryData.seasons
                       .slice(
@@ -251,11 +273,11 @@ function Entry({
                       type="number"
                       min="1"
                       value={value == "" ? null : Math.max(parseInt(value), 1) || entryData.repeat}
-                      onChange={(e) => setValue(e.target.value || "")}
-                      onBlur={() => {
+                      onChange={(e) => runAfterConfirm(() => setValue(e.target.value || ""))}
+                      onBlur={() => runAfterConfirm(() => {
                         setCustom({ ...entryData, repeat: parseInt(value == "" ? 1 : value || entryData.repeat) })
                         setValue(value == "" ? 1 : value)
-                      }}
+                      })}
                     />
                   ),
                 },
@@ -267,12 +289,11 @@ function Entry({
                       type="number"
                       min="0"
                       value={value == "" ? null : Math.max(parseInt(value), 0) || entryData.offset}
-                      onChange={(e) => setValue(e.target.value || "")}
-                      onBlur={() => {
+                      onChange={(e) => runAfterConfirm(() => setValue(e.target.value || ""))}
+                      onBlur={() => runAfterConfirm(() => {
                         setCustom({ ...entryData, offset: parseInt(value == "" ? 0 : value || entryData.offset) })
                         setValue(value == "" ? 0 : value)
-                      }
-                      }
+                      })}
                     />
                   ),
                 },
@@ -283,8 +304,9 @@ function Entry({
                       className="value"
                       type="text"
                       value={value == null ? entryData.term : value}
-                      onChange={(e) => setValue(e.target.value)}
-                      onBlur={() => setCustom({ ...entryData, term: value || entryData.term })}
+                      onChange={(e) => runAfterConfirm(() => setValue(e.target.value))}
+                      onBlur={() => runAfterConfirm(() =>
+                        setCustom({ ...entryData, term: value || entryData.term }))}
                     />
                   ),
                 }, {
@@ -295,11 +317,11 @@ function Entry({
                       type="number"
                       min="1"
                       value={value == "" ? null : Math.max(parseInt(value), 1) || entryData.runtime}
-                      onChange={(e) => setValue(e.target.value)}
-                      onBlur={() => {
+                      onChange={(e) => runAfterConfirm(() => setValue(e.target.value))}
+                      onBlur={() => runAfterConfirm(() => {
                         setCustom({ ...entryData, runtime: parseInt(value || entryData.runtime) })
                         setValue(value == "" ? 1 : value)
-                      }}
+                      })}
                     />
                   ),
                 },
@@ -310,8 +332,7 @@ function Entry({
           <div ref={setNodeRef} className={className}>
             <i
               className="handle fa-solid fa-grip-vertical"
-              {...attributes}
-              {...listeners}
+              {...(bookmark ? { onDragStart: () => runAfterConfirm(() => { }) } : { ...attributes, ...listeners })}
             />
             {entryData.type !== 'movie' && (
               <span className="setting">
@@ -341,9 +362,9 @@ function Entry({
               {entryData.userTitle || entryData.title}
             </span>
             <button
-              onClick={() => {
+              onClick={() => runAfterConfirm(() => {
                 setEntries([...entries.filter((_, i) => i !== id)], true)
-              }}
+              })}
             >
               x
             </button>
@@ -356,8 +377,7 @@ function Entry({
           <div ref={setNodeRef} className="barrier">
             <i
               className="handle fa-solid fa-grip-vertical"
-              {...attributes}
-              {...listeners}
+              {...(bookmark ? { onDragStart: () => runAfterConfirm(() => { }) } : { ...attributes, ...listeners })}
             />
             <span className="setting">
               <label>
@@ -369,19 +389,20 @@ function Entry({
                 min="0"
                 max="100"
                 value={value == "" ? null : (value || entry.barrier)}
-                onChange={(e) => setValue(Math.max(0, Math.min(100, parseFloat(e.target.value))) || "")}
-                onBlur={() => {
+                onChange={(e) => runAfterConfirm(() =>
+                  setValue(Math.max(0, Math.min(100, parseFloat(e.target.value))) || ""))}
+                onBlur={() => runAfterConfirm(() => {
                   entries[id] = { barrier: value == "" ? null : value }
                   setEntries([...entries], true)
                   setValue(value == "" ? null : value)
-                }}
+                })}
               />
             </span>
             <span className="option">Barrier</span>
             <button
-              onClick={() => {
+              onClick={() => runAfterConfirm(() => {
                 setEntries([...entries.filter((_, i) => i !== id)], true)
-              }}
+              })}
             >
               x
             </button>

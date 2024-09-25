@@ -63,7 +63,7 @@ export function generateSchedule(
                     data.tv[entryRef.ref[1]].episode_run_time || 30,
                   season: season.season,
                   show_id: entry.id,
-                  show_title: entry.title,
+                  show_title: entry.userTitle || entry.title,
                   // Set 'premier' and 'finale' depending on if first/last of this season
                   premier: !num,
                   finale: num === season.episodes.length - 1,
@@ -343,7 +343,7 @@ export function generateSchedule(
     // Each layer gets a unique movie color
     else if (entry.type == 'movie' && !sets.movie[entry.layer]) {
       sets.movie[entry.layer] = {
-        title: `'${entry.title}'`,
+        title: `'${entry.userTitle || entry.title}'`,
         userTitle: titles[entry.layer],
         indices: [index],
         layer: entry.layer,

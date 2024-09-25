@@ -142,6 +142,7 @@
     margin: 0 0.3em;
     color: #d7e300;
     width: auto;
+    opacity: 1;
   }
 
   .options div select *,
@@ -340,7 +341,6 @@
     .setTitle {
       line-height: 300%;
       outline: none;
-      text-decoration: underline dashed transparent;
       display: block;
     }
 
@@ -362,11 +362,6 @@
       background-color: black;
       border: 1px solid black;
     }
-  }
-
-  #key span:hover .setTitle,
-  #key span .setTitle:focus {
-    text-decoration-color: white;
   }
 
   #key span:hover span {
@@ -689,7 +684,7 @@
     }
   }
 
-  #removeWatchedPopup {
+  #removeWatchedPopup, #clearSchedulePopup, #rippleActionPopup {
     position: fixed;
     z-index: 2;
     width: 100vw;
@@ -723,6 +718,13 @@
       text-align: center;
     }
 
+    strong {
+      font-size: smaller;
+      width: 100%;
+      text-align: center;
+      color: yellow;
+    }
+
     span {
       color: yellow;
     }
@@ -733,7 +735,7 @@
     }
   }
 
-  #removeWatchedPopup.show {
+  #removeWatchedPopup.show, #clearSchedulePopup.show, #rippleActionPopup.show {
     opacity: 1;
     pointer-events: all;
     transition: opacity var(--transition-time);

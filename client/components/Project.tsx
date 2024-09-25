@@ -370,7 +370,7 @@ export default function Project() {
     setChangedProps([...changedProps, 'keys'])
   }
 
-  function removeWatched() {
+  async function removeWatched(afterAction = null) {
     const seenProgress = {}
     scheduleData.schedule.toReversed().forEach((entry) => {
       const id = `${entry.layer}-${entry.layer_id}-${entry.type}-${entry.show_id || entry.id}`
@@ -410,6 +410,14 @@ export default function Project() {
     )
   }
 
+  async function runAfterConfirm(action) {
+    if (bookmark) {
+      document.getElementById('rippleActionPopup').classList.add('show')
+    } else {
+      action()
+    }
+  }
+
   const scheduleData = generateSchedule(
     layers,
     mpSpacing,
@@ -434,11 +442,40 @@ export default function Project() {
           <div id='removeWatchedPopup'>
             <div>
               <p>Are you sure you want to remove all watched content?</p>
+              <strong>This action cannot be undone.</strong>
               <button onClick={() => {
-                removeWatched();
+                removeWatched()
                 document.getElementById('removeWatchedPopup').classList.remove('show');
-              }}>Yes</button>
-              <button onClick={() => document.getElementById('removeWatchedPopup').classList.remove('show')}>No</button>
+              }}>Remove Watched</button>
+              <button onClick={() => document.getElementById('removeWatchedPopup').classList.remove('show')}>Cancel</button>
+            </div>
+          </div>
+          <div id='clearSchedulePopup'>
+            <div>
+              <p>Are you sure you want to remove all layers?</p>
+              <strong>This action cannot be undone.</strong>
+              <button onClick={() => {
+                // Old state with default layers, data, and titles
+                setState({ ...state, layers: initialState.layers, data: initialState.data, titles: initialState.titles, force: true })
+                setChangedProps([...changedProps, 'layers', 'data', 'titles'])
+                document.getElementById('removeAllPopup').classList.remove('show');
+              }}>
+                Clear Schedule
+              </button>
+              <button onClick={() => document.getElementById('clearSchedulePopup').classList.remove('show')}>Cancel</button>
+            </div>
+          </div>
+          <div id='rippleActionPopup'>
+            <div>
+              <p>Remove watched content to perform this action?</p>
+              <strong>This action cannot be undone.</strong>
+              <button onClick={() => {
+                removeWatched()
+                document.getElementById('rippleActionPopup').classList.remove('show')
+              }}>Remove Watched</button>
+              <button onClick={() => {
+                document.getElementById('rippleActionPopup').classList.remove('show')
+              }}>Cancel</button>
             </div>
           </div>
           <Terminal
@@ -494,52 +531,50 @@ export default function Project() {
             {/* open if a bookmark does not exist */}
             <details open={!bookmark}>
               <summary><legend>Layers</legend></summary>
-              {bookmark ? (
-                <span>Layer editing locked while bookmark exists.</span>
-              ) : (
-                <DndContext
-                  sensors={sensors}
-                  onDragStart={onDragStart}
-                  onDragEnd={onDragEnd}
-                  onDragOver={onDragOver}
+              <DndContext
+                sensors={sensors}
+                onDragStart={onDragStart}
+                onDragEnd={onDragEnd}
+                onDragOver={onDragOver}
+              >
+                <SortableContext
+                  items={shown.flatMap((layer, li) =>
+                    layer.map((_, ei) => ({ id: `${li}-${ei}` })),
+                  )}
                 >
-                  <SortableContext
-                    items={shown.flatMap((layer, li) =>
-                      layer.map((_, ei) => ({ id: `${li}-${ei}` })),
-                    )}
-                  >
-                    {shown.map((entries, index) => (
-                      <Layer
-                        key={index}
-                        id={index}
-                        entries={entries}
-                        layers={shown}
-                        setLayers={setLayers}
-                        data={data}
-                        addData={addData}
-                        outlinePos={outlinePos}
-                        setCustom={setCustom}
-                        titles={titles}
-                        setTitles={setTitles}
-                        setShow={setShow}
-                        setMovie={setMovie}
-                      />
-                    ))}
-                  </SortableContext>
-                  <button onClick={() => setLayers([...layers, []])}>
-                    New Layer
-                  </button>
-                  <DragOverlay dropAnimation={null}>
-                    {activeEntry && (
-                      <Entry
-                        entry={activeEntry}
-                        data={data}
-                        className="overlay"
-                      />
-                    )}
-                  </DragOverlay>
-                </DndContext>
-              )}
+                  {shown.map((entries, index) => (
+                    <Layer
+                      key={index}
+                      id={index}
+                      entries={entries}
+                      layers={shown}
+                      setLayers={setLayers}
+                      data={data}
+                      addData={addData}
+                      outlinePos={outlinePos}
+                      setCustom={setCustom}
+                      titles={titles}
+                      setTitles={setTitles}
+                      setShow={setShow}
+                      setMovie={setMovie}
+                      runAfterConfirm={runAfterConfirm}
+                      bookmark={bookmark}
+                    />
+                  ))}
+                </SortableContext>
+                <button onClick={() => runAfterConfirm(() => setLayers([...layers, []]))}>
+                  New Layer
+                </button>
+                <DragOverlay dropAnimation={null}>
+                  {activeEntry && (
+                    <Entry
+                      entry={activeEntry}
+                      data={data}
+                      className="overlay"
+                    />
+                  )}
+                </DragOverlay>
+              </DndContext>
             </details>
           </fieldset>
           {/* Collapsible set (summary and details) */}
@@ -554,105 +589,89 @@ export default function Project() {
                 <fieldset id="mp" onChange={(e) => setMpSpacing(e.target.value)}>
                   <legend>Space Multi-Parters
                   </legend>
-                  {bookmark ? (
-                    <span>Spacing adjustment locked while bookmark exists.</span>
-                  ) : (
-                    <>{['Normally', 'Closer', 'Consecutively'].map((option, i) => (
-                      <div key={i}>
-                        <input
-                          type="radio"
-                          name={`mp-opt-${i}`}
-                          value={option.toLowerCase().slice(0, 6)}
-                          checked={mpSpacing === option.toLowerCase().slice(0, 6)}
-                        />
-                        <label htmlFor={`mp-opt-${i}`}>{option}</label>
-                      </div>
-                    ))}
-                      <br />
-                      <span>
-                        {
-                          ({
-                            normal: "Normal",
-                            closer: "Less",
-                            consec: "No"
-                          }[mpSpacing]) + " spacing between episode parts and arcs"
-                        }
-                      </span></>
-                  )}
+                  <>{['Normally', 'Closer', 'Consecutively'].map((option, i) => (
+                    <div key={i}>
+                      <input
+                        type="radio"
+                        name={`mp-opt-${i}`}
+                        value={option.toLowerCase().slice(0, 6)}
+                        checked={mpSpacing === option.toLowerCase().slice(0, 6)}
+                      />
+                      <label htmlFor={`mp-opt-${i}`}>{option}</label>
+                    </div>
+                  ))}
+                    <br />
+                    <span>
+                      {
+                        ({
+                          normal: "Normal",
+                          closer: "Less",
+                          consec: "No"
+                        }[mpSpacing]) + " spacing between episode parts and arcs"
+                      }
+                    </span></>
                 </fieldset>
                 <fieldset id="streak">
                   <legend>Average Streak Duration (hours)
                   </legend>
-                  {bookmark ? (
-                    <span>Streak adjustment locked while bookmark exists.</span>
-                  ) : (
+                  <input
+                    type="number"
+                    min="0"
+                    max="25"
+                    step="0.25"
+                    value={streak}
+                    onChange={(e) => setStreak(Math.max(parseFloat(e.target.value), 0))}
+                  />
+                </fieldset>
+                <fieldset id="goal">
+                  <legend>Average {streak !== 0 ? "# of Streaks per" : "duration of each"} Watch Session</legend>
+                  <>
                     <input
                       type="number"
                       min="0"
                       max="25"
-                      step="0.25"
-                      value={streak}
-                      onChange={(e) => setStreak(Math.max(parseFloat(e.target.value), 0))}
+                      step="1"
+                      value={goal}
+                      onChange={(e) => setGoal(Math.max(parseInt(e.target.value), 0))}
                     />
-                  )}
-                </fieldset>
-                <fieldset id="goal">
-                  <legend>Average {streak !== 0 ? "# of Streaks per" : "duration of each"} Watch Session</legend>
-                  {bookmark ? (
-                    <span>Streak adjustment locked while bookmark exists.</span>
-                  ) : (
-                    <>
-                      <input
-                        type="number"
-                        min="0"
-                        max="25"
-                        step="1"
-                        value={goal}
-                        onChange={(e) => setGoal(Math.max(parseInt(e.target.value), 0))}
-                      />
-                      {goal !== 0 ? streak !== 0 ? <>
-                        <br />
-                        <br />
-                        <span>Making ~{Math.round([...new Set(scheduleData.schedule.map(e => e.mid))].length / goal) + 1} watch sessions</span>
-                        <br />
-                        <span>Each with an average length of {Math.round((scheduleData.totalSpan / ([...new Set(scheduleData.schedule.map(e => e.mid))].length / goal) + 1) / 6) / 10} hours</span>
-                      </> : <>
-                        <br />
-                        <br />
-                        <span>Making ~{Math.round(scheduleData.totalSpan / 60 / goal) + 1} watch sessions</span>
-                      </>
-                        : null}
+                    {goal !== 0 ? streak !== 0 ? <>
+                      <br />
+                      <br />
+                      <span>Making ~{Math.round([...new Set(scheduleData.schedule.map(e => e.mid))].length / goal) + 1} watch sessions</span>
+                      <br />
+                      <span>Each with an average length of {Math.round((scheduleData.totalSpan / ([...new Set(scheduleData.schedule.map(e => e.mid))].length / goal) + 1) / 6) / 10} hours</span>
+                    </> : <>
+                      <br />
+                      <br />
+                      <span>Making ~{Math.round(scheduleData.totalSpan / 60 / goal) + 1} watch sessions</span>
                     </>
-                  )}
+                      : null}
+                  </>
                 </fieldset>
                 {streak !== 0 || goal !== 0 ? (
                   <fieldset id="sessionOptions">
                     <legend>Watch Session Options
                     </legend>
-                    {bookmark ? (
-                      <span>Watch session options locked while bookmark exists.</span>
-                    ) : (
-                      <>
-                        <fieldset id="showStreaks">
-                          <legend>Show Streaks
-                          </legend>
-                          <input
-                            type="checkbox"
-                            checked={showStreaks}
-                            onChange={(e) => setShowStreaks(e.target.checked)}
-                          />
-                        </fieldset>
-                        <fieldset id="groupStreaks">
-                          <legend>Group Streaks
-                          </legend>
-                          <input
-                            type="checkbox"
-                            checked={groupStreaks}
-                            onChange={(e) => setGroupStreaks(e.target.checked)}
-                          />
-                        </fieldset>
-                      </>
-                    )}
+                    <>
+                      <fieldset id="showStreaks">
+                        <legend>Show Streaks
+                        </legend>
+                        <input
+                          type="checkbox"
+                          checked={showStreaks}
+                          onChange={(e) => setShowStreaks(e.target.checked)}
+                        />
+                      </fieldset>
+                      <fieldset id="groupStreaks">
+                        <legend>Group Streaks
+                        </legend>
+                        <input
+                          type="checkbox"
+                          checked={groupStreaks}
+                          onChange={(e) => setGroupStreaks(e.target.checked)}
+                        />
+                      </fieldset>
+                    </>
                   </fieldset>
                 ) : null}
               </details></fieldset >

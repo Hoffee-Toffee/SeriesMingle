@@ -174,33 +174,10 @@ export default function Schedule({ scheduleData, user }) {
               key={color.indices[0]}
               style={{ backgroundColor: `hwb(${color.color} 0% 25%)` }}
             >
-              <span
-                className={`setTitle${color.isShow ? ' showTitle' : ''}`}
-                contentEditable
-                suppressContentEditableWarning={true}
-                onBlur={(e) => {
-                  let newText = null
-                  if (!e.target.innerText.trim()) {
-                    e.target.innerText = color.title
-                  } else if (
-                    (color.userTitle || color.title) == e.target.innerText
-                  ) {
-                    e.target.innerText = color.userTitle || color.title
-                    return
-                  } else {
-                    newText = e.target.innerText
-                  }
-
-                  if (color.isShow) {
-                    setShow(color.show, newText)
-                  } else if (color.type == 'movie') {
-                    setTitles(color.layer, newText)
-                  } else {
-                    setCustom({ ...data.custom[color.layer], title: newText })
-                  }
-                }}
-              >
-                {color.userTitle || color.title}
+              <span className="setTitle">
+                {color.indices.length > 1
+                  ? color.userTitle || color.title
+                  : color.title}
               </span>
               <span className="setWatched">
                 {`(${Math.round((color.watched / color.span) * 10000) / 100}% watched)`}
@@ -213,17 +190,15 @@ export default function Schedule({ scheduleData, user }) {
           <button onClick={scrollToBookmark}>
             Jump to Progress ({Math.round(seenPercentage * 100) / 100}% watched)
           </button>
-          <button
-            onClick={() =>
-              document
-                .getElementById('removeWatchedPopup')
-                .classList.add('show')
-            }
+          <button onClick={() => document.getElementById('removeWatchedPopup').classList.add('show')}
           >
             Remove Watched
           </button>
         </>
       )}
+      <button onClick={() => document.getElementById('clearSchedulePopup').classList.add('show')}>
+        Clear Schedule
+      </button>
       <div id="timelineContainer">
         <div id="layerTitles">
           {numOfLayers && Array(numOfLayers)
