@@ -114,7 +114,7 @@ function Entry({
                   setEntries([...entries])
                 }}
                 onClick={(e) => {
-                  e.target.blur()
+                  if (bookmark) e.target.blur()
                   runAfterConfirm(() => { })
                 }
                 }
@@ -177,7 +177,7 @@ function Entry({
                       setEntries([...entries], true)
                     }}
                     onClick={(e) => {
-                      e.target.blur()
+                      if (bookmark) e.target.blur()
                       runAfterConfirm(() => { })
                     }
                     }
@@ -224,7 +224,7 @@ function Entry({
                       setEntries([...entries], true)
                     }}
                     onClick={(e) => {
-                      e.target.blur()
+                      if (bookmark) e.target.blur()
                       runAfterConfirm(() => { })
                     }
                     }

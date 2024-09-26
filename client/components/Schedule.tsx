@@ -40,7 +40,7 @@ export default function Schedule({ scheduleData, user }) {
   const sessionLength =
     streak !== 0
       ? totalSpan / Math.round(Math.max(streakLengths.length / goal, 1))
-      : totalSpan / (goal * 60)
+      : totalSpan / Math.round(totalSpan / (goal * 60))
   const sessionEnds = []
 
   if (goal !== 0)
@@ -105,6 +105,8 @@ export default function Schedule({ scheduleData, user }) {
       schedule.findIndex((entry) => entry.posIndex == end),
     )
   }
+
+  console.log('sessionEnds', sessionEnds)
 
   const seenPercentage = (seenSpan / totalSpan) * 100
 

@@ -458,7 +458,7 @@ export default function Project() {
                 // Old state with default layers, data, and titles
                 setState({ ...state, layers: initialState.layers, data: initialState.data, titles: initialState.titles, force: true })
                 setChangedProps([...changedProps, 'layers', 'data', 'titles'])
-                document.getElementById('removeAllPopup').classList.remove('show');
+                document.getElementById('clearSchedulePopup').classList.remove('show')
               }}>
                 Clear Schedule
               </button>
@@ -630,7 +630,7 @@ export default function Project() {
                       type="number"
                       min="0"
                       max="25"
-                      step="1"
+                      step={streak !== 0 ? "1" : "0.25"}
                       value={goal}
                       onChange={(e) => runAfterConfirm(() => setGoal(Math.max(parseInt(e.target.value), 0)))}
                     />
@@ -643,12 +643,12 @@ export default function Project() {
                     </> : <>
                       <br />
                       <br />
-                      <span>Making ~{Math.round(scheduleData.totalSpan / 60 / goal) + 1} watch sessions</span>
+                      <span>Making {Math.round(scheduleData.totalSpan / (goal * 60))} watch sessions</span>
                     </>
                       : null}
                   </>
                 </fieldset>
-                {streak !== 0 || goal !== 0 ? (
+                {streak !== 0 && goal !== 0 ? (
                   <fieldset id="sessionOptions">
                     <legend>Watch Session Options
                     </legend>

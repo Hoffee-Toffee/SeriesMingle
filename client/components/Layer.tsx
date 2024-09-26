@@ -54,7 +54,7 @@ function Layer({
               if (!e.target.innerText.trim()) e.target.innerText = titles[id]
               else setTitles(id, e.target.innerText)
             }}
-          >{titles[id]}</span>
+          >{titles[id] || `Layer ${id + 1}`}</span>
         </legend></summary>
         <div className="options">
           <SortableContext items={Array(entries.length)}>
