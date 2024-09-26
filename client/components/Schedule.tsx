@@ -2,7 +2,7 @@ import EpisodeDetails from './EpisodeDetails.tsx'
 import { useEffect } from 'react'
 
 export default function Schedule({ scheduleData, user }) {
-  const {
+  let {
     schedule,
     colors,
     bookmark,
@@ -18,10 +18,9 @@ export default function Schedule({ scheduleData, user }) {
     goal,
     showStreaks,
     groupStreaks,
+    streakEnds,
+    streakLengths,
   } = scheduleData
-
-  let streakEnds = []
-  const streakLengths = []
 
   const numOfLayers = layers.reduce(
     (acc, layer) => (acc += layer.length > 1 ? 1 : 0),

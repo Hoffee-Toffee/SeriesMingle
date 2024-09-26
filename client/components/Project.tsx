@@ -586,7 +586,7 @@ export default function Project() {
                     Schedule Settings
                   </legend>
                 </summary>
-                <fieldset id="mp" onChange={(e) => setMpSpacing(e.target.value)}>
+                <fieldset id="mp" onChange={(e) => runAfterConfirm(() => setMpSpacing(e.target.value))}>
                   <legend>Space Multi-Parters
                   </legend>
                   <>{['Normally', 'Closer', 'Consecutively'].map((option, i) => (
@@ -620,7 +620,7 @@ export default function Project() {
                     max="25"
                     step="0.25"
                     value={streak}
-                    onChange={(e) => setStreak(Math.max(parseFloat(e.target.value), 0))}
+                    onChange={(e) => runAfterConfirm(() => setStreak(Math.max(parseFloat(e.target.value), 0)))}
                   />
                 </fieldset>
                 <fieldset id="goal">
@@ -632,7 +632,7 @@ export default function Project() {
                       max="25"
                       step="1"
                       value={goal}
-                      onChange={(e) => setGoal(Math.max(parseInt(e.target.value), 0))}
+                      onChange={(e) => runAfterConfirm(() => setGoal(Math.max(parseInt(e.target.value), 0)))}
                     />
                     {goal !== 0 ? streak !== 0 ? <>
                       <br />
@@ -659,7 +659,7 @@ export default function Project() {
                         <input
                           type="checkbox"
                           checked={showStreaks}
-                          onChange={(e) => setShowStreaks(e.target.checked)}
+                          onChange={(e) => runAfterConfirm(() => setShowStreaks(e.target.checked))}
                         />
                       </fieldset>
                       <fieldset id="groupStreaks">
@@ -668,7 +668,7 @@ export default function Project() {
                         <input
                           type="checkbox"
                           checked={groupStreaks}
-                          onChange={(e) => setGroupStreaks(e.target.checked)}
+                          onChange={(e) => runAfterConfirm(() => setGroupStreaks(e.target.checked))}
                         />
                       </fieldset>
                     </>

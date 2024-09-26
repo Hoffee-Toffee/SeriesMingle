@@ -391,6 +391,8 @@ export function generateSchedule(
   let showing = !bookmark
   let seenSpan = 0
   let lastStreak = null
+  const streakLengths = []
+  const streakEnds = []
 
   processed = processed.flatMap((entry, i) => {
     if (entry.barrier !== undefined)
@@ -458,5 +460,7 @@ export function generateSchedule(
     goal,
     showStreaks,
     groupStreaks,
+    streakEnds,
+    streakLengths,
   }
 }
