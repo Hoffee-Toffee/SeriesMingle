@@ -60,13 +60,13 @@
     margin: 0.5em 0.1em;
     position: relative;
 
-      > details > button {
-        position: absolute;
-        right: 0.75em;
-        top: 0.5em;
-        bottom: 0.5em;
-      }
+    > details > button {
+      position: absolute;
+      right: 0.75em;
+      top: 0.5em;
+      bottom: 0.5em;
     }
+  }
 
   .dx-state-invisible {
     display: none;
@@ -397,7 +397,8 @@
     opacity: 0.25;
   }
 
-  #settings, #layerContainer {
+  #settings,
+  #layerContainer {
     margin-top: 20px;
     padding-left: 11px;
 
@@ -600,6 +601,24 @@
       padding-right: 5px;
     }
 
+    .title .spoiler::before {
+      content: '-';
+      position: absolute;
+      margin-left: -1em;
+      transform: translateX(-50%);
+      color: #88B;
+    }
+
+    .title .spoiler {
+      color: #CCF;
+      font-size: 0.8em;
+      background: var(--bg-col);
+      margin-left: 1.25em;
+      padding: 0.2em 0.3em;
+      border-radius: 0.5em;
+      outline: 1px solid #447;
+    }
+
     ::-webkit-scrollbar-track-piece {
       background-color: #234;
     }
@@ -684,7 +703,9 @@
     }
   }
 
-  #removeWatchedPopup, #clearSchedulePopup, #rippleActionPopup {
+  #removeWatchedPopup,
+  #clearSchedulePopup,
+  #rippleActionPopup {
     position: fixed;
     z-index: 2;
     width: 100vw;
@@ -735,7 +756,9 @@
     }
   }
 
-  #removeWatchedPopup.show, #clearSchedulePopup.show, #rippleActionPopup.show {
+  #removeWatchedPopup.show,
+  #clearSchedulePopup.show,
+  #rippleActionPopup.show {
     opacity: 1;
     pointer-events: all;
     transition: opacity var(--transition-time);
@@ -779,14 +802,6 @@
   }
 }
 @media screen and (max-width: 500px) {
-  #home div .episode-marker {
-    background: linear-gradient(var(--bg-col), var(--bg-col));
-  }
-
-  #home div:nth-of-type(2n) .episode-marker {
-    background: linear-gradient(#1f3b6e, #1f3b6e);
-  }
-
   #project {
     #layerTitles {
       display: none;
@@ -825,6 +840,14 @@
       outline-color: white;
       background-color: transparent;
     }
+  }
+
+  #home div .episode-marker {
+    background: linear-gradient(var(--bg-col), var(--bg-col));
+  }
+
+  #home div:nth-of-type(2n) div .episode-marker {
+    background: linear-gradient(#1f3b6e, #1f3b6e);
   }
 }
 

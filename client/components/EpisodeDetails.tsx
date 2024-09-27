@@ -102,6 +102,7 @@ export default function EpisodeDetails(props) {
             {entry.type == 'custom'
               ? `${entry.title}${colors.custom[entry.set].indices.length > 1 || (entry.offset && entry.offset > 0) ? ` (${entry.term} ${colors.custom[entry.set].indices.findIndex((e) => e == i) + 1 + (entry.offset || 0)})` : ''}`
               : entry.userTitle || entry.title}
+            {entry.runtime && <span className="spoiler">{`${entry.runtime > 59 ? `${Math.floor(entry.runtime / 60)}h` : ''}${entry.runtime > 59 && entry.runtime % 60 ? ' ' : ''}${entry.runtime % 60 ? `${entry.runtime % 60}m` : ''}`}</span>}
           </span>
           {entry.type !== 'custom' && (
             <span className="spoiler">
