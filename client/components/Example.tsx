@@ -6988,7 +6988,7 @@ export default function Example({ id }) {
             style={{
               height: "calc(var(--scale) * 123px)",
               marginLeft: 4,
-              backgroundColor: "rgb(0, 191, 108)",
+              backgroundColor: "rgb(191, 0, 45)",
               marginTop: "calc(var(--scale) * 30px / 2)",
               marginBottom: "calc(var(--scale) * 30px / 2)"
             }}
