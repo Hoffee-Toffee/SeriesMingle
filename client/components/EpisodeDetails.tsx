@@ -90,25 +90,31 @@ export default function EpisodeDetails(props) {
               {entry.season}E{entry.episode})
             </span>
           ) : (
-            entry.type == 'movie' &&
-            colors.movie[entry.layer].userTitle &&
-            colors.movie[entry.layer].indices.length > 1 && (
-              <span>
-                {`${colors.movie[entry.layer].userTitle} (${colors.movie[entry.layer].indices.findIndex((e) => e == i) + 1} of ${colors.movie[entry.layer].indices.length})`}
-              </span>
-            )
+            entry.type == 'movie' ? (
+              colors.movie[entry.layer].userTitle &&
+              colors.movie[entry.layer].indices.length > 1 && (
+                <span>
+                  {`${colors.movie[entry.layer].userTitle} (${colors.movie[entry.layer].indices.findIndex((e) => e == i) + 1} of ${colors.movie[entry.layer].indices.length})`}
+                </span>
+              ))
+              :
+              colors.custom[entry.set].indices.length > 1 || (entry.offset && entry.offset > 0) ? (
+                <span>
+                  {colors.custom[entry.set].userTitle || colors.custom[entry.set].title}
+                </span>
+              ) : null
           )}
           <span className="title">
-            {entry.type == 'custom'
-              ? `${entry.title}${colors.custom[entry.set].indices.length > 1 || (entry.offset && entry.offset > 0) ? ` (${entry.term} ${colors.custom[entry.set].indices.findIndex((e) => e == i) + 1 + (entry.offset || 0)})` : ''}`
-              : entry.userTitle || entry.title}
+            {entry.type == 'custom' ?
+              colors.custom[entry.set].indices.length > 1 || (entry.offset && entry.offset > 0) ? `${entry.term} ${colors.custom[entry.set].indices.findIndex((e) => e == i) + 1 + (entry.offset || 0)}` : colors.custom[entry.set].userTitle || colors.custom[entry.set].title
+              :
+              entry.userTitle || entry.title}
             {entry.runtime && <span className="spoiler">{`${entry.runtime > 59 ? `${Math.floor(entry.runtime / 60)}h` : ''}${entry.runtime > 59 && entry.runtime % 60 ? ' ' : ''}${entry.runtime % 60 ? `${entry.runtime % 60}m` : ''}`}</span>}
           </span>
-          {entry.type !== 'custom' && (
-            <span className="spoiler">
-              {entry.overview || 'No Description Available'}
-            </span>
-          )}
+          <span className="spoiler">
+            {entry.type !== 'custom' ? entry.overview || 'No Description Available' :
+              colors.custom[entry.set].indices.length > 1 || (entry.offset && entry.offset > 0) ? `From '${colors.custom[entry.set].userTitle || colors.custom[entry.set].title}', a custom entry` : 'A custom entry'}
+          </span>
         </div>
       </div>
     </div>

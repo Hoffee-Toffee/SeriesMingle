@@ -51,8 +51,8 @@ function Layer({
         <summary><legend>
           <span contentEditable suppressContentEditableWarning={true}
             onBlur={(e) => {
-              if (!e.target.innerText.trim()) e.target.innerText = titles[id]
-              else setTitles(id, e.target.innerText)
+              setTitles(id, e.target.innerText.trim() ? e.target.innerText : null)
+              if (!e.target.innerText.trim()) e.target.innerText = `Layer ${id + 1}`
             }}
           >{titles[id] || `Layer ${id + 1}`}</span>
         </legend></summary>

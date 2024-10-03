@@ -118,7 +118,6 @@ function Entry({
                   runAfterConfirm(() => { })
                 }
                 }
-
               >
                 {entry.map((option, index) => {
                   if (!index) return
@@ -356,6 +355,9 @@ function Entry({
               suppressContentEditableWarning
               onBlur={(e) => {
                 if (!e.target.innerText.trim()) e.target.innerText = entryData.title
+                else if (entryData.type == 'custom') {
+                  setCustom({ ...entryData, title: e.target.innerText })
+                }
                 else setTitle(entryData.show_id || entryData.id, e.target.innerText, true)
               }}
             >
