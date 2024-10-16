@@ -50,9 +50,14 @@ function Layer({
       <details open>
         <summary><legend>
           <span contentEditable suppressContentEditableWarning={true}
+            className={titles[id] ? '' : 'placeholder'}
             onBlur={(e) => {
               setTitles(id, e.target.innerText.trim() ? e.target.innerText : null)
-              if (!e.target.innerText.trim()) e.target.innerText = `Layer ${id + 1}`
+              if (!e.target.innerText.trim()) {
+                e.target.innerText = `Layer ${id + 1}`
+                e.target.classList.add('placeholder')
+              }
+              else e.target.classList.remove('placeholder')
             }}
           >{titles[id] || `Layer ${id + 1}`}</span>
         </legend></summary>

@@ -1,4 +1,4 @@
-export default function EpisodeDetails(props) {
+export default function EpisodeDetails(props: any) {
   const {
     entry,
     i,
@@ -7,7 +7,6 @@ export default function EpisodeDetails(props) {
     numberOfLayers,
     bookmark,
     setBookmark,
-    last,
   } = props
 
   const minHeight = 30
@@ -32,7 +31,7 @@ export default function EpisodeDetails(props) {
     </div>
   )
 
-  const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (entry.type == 'episode' ? entry.id : colors.custom[entry.set].indices.findIndex((e) => e == i))}`
+  const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (entry.type == 'episode' ? entry.id : colors.custom[entry.set].indices.findIndex((e: any) => e == i))}`
 
   return (
     <div
@@ -94,7 +93,7 @@ export default function EpisodeDetails(props) {
               colors.movie[entry.layer].userTitle &&
               colors.movie[entry.layer].indices.length > 1 && (
                 <span>
-                  {`${colors.movie[entry.layer].userTitle} (${colors.movie[entry.layer].indices.findIndex((e) => e == i) + 1} of ${colors.movie[entry.layer].indices.length})`}
+                  {`${colors.movie[entry.layer].userTitle} (${colors.movie[entry.layer].indices.findIndex((e: any) => e == i) + 1} of ${colors.movie[entry.layer].indices.length})`}
                 </span>
               ))
               :
@@ -106,7 +105,7 @@ export default function EpisodeDetails(props) {
           )}
           <span className="title">
             {entry.type == 'custom' ?
-              colors.custom[entry.set].indices.length > 1 || (entry.offset && entry.offset > 0) ? `${entry.term} ${colors.custom[entry.set].indices.findIndex((e) => e == i) + 1 + (entry.offset || 0)}` : colors.custom[entry.set].userTitle || colors.custom[entry.set].title
+              colors.custom[entry.set].indices.length > 1 || (entry.offset && entry.offset > 0) ? `${entry.term} ${colors.custom[entry.set].indices.findIndex((e: any) => e == i) + 1 + (entry.offset || 0)}` : colors.custom[entry.set].userTitle || colors.custom[entry.set].title
               :
               entry.userTitle || entry.title}
             {entry.runtime && <span className="spoiler">{`${entry.runtime > 59 ? `${Math.floor(entry.runtime / 60)}h` : ''}${entry.runtime > 59 && entry.runtime % 60 ? ' ' : ''}${entry.runtime % 60 ? `${entry.runtime % 60}m` : ''}`}</span>}

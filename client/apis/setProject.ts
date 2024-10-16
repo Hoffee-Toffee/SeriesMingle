@@ -15,7 +15,11 @@ export default async function setProject(
       id,
       ...state,
       props,
-      layers: { ...state.layers.flatMap((layer, i) => ({ [i]: layer })) },
+      layers: {
+        ...state.layers.flatMap((layer: object[], i: number) => ({
+          [i]: layer,
+        })),
+      },
     })
     return res.body
   } catch (error) {

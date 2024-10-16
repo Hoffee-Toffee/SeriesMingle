@@ -30,6 +30,11 @@
     font-size: 2rem;
     margin-bottom: 1rem;
 
+    span {
+      font-family: 'Fredoka One';
+      font-weight: normal;
+    }
+
     span:first-child {
       color: #bfbf30;
     }
@@ -51,6 +56,8 @@
   h2 {
     color: white;
     margin-bottom: 1rem;
+    font-family: 'Fredoka One';
+    font-weight: normal;
   }
 
   input {
@@ -91,6 +98,10 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+
+    * {
+      font-weight: normal;
+    }
   }
 
   button:hover {

@@ -1,11 +1,15 @@
 {
-  "name": "boilerplate-fullstack-query",
+  "name": "SeriesMingle",
   "type": "module",
   "version": "2.0.0",
   "main": "server/index.js",
   "license": "MIT",
   "keywords": [
-    "fullstack"
+    "fullstack",
+    "react",
+    "vite",
+    "express",
+    "firebase"
   ],
   "scripts": {
     "test": "vitest",
@@ -13,8 +17,7 @@
     "dev": "run-p dev:client dev:server",
     "dev:client": "vite",
     "dev:server": "tsx watch server/index.ts",
-    "build": "run-s build:client build:server",
-    "postbuild": "react-snap",
+    "build": "npm i && npm run build:client && npm run build:server",
     "build:client": "vite build --assetsDir=$npm_package_config_assets_dir --base=$npm_package_config_base",
     "build:server": "esbuild --packages=external --platform=node --format=esm --outfile=dist/server.js --bundle server/index.ts",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
@@ -43,6 +46,7 @@
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@eulertour/studio": "^1.0.32",
     "devextreme-react": "^23.2.6",
     "dotenv": "^16.4.5",
     "express": "^4.17.2",

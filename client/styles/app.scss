@@ -8,8 +8,10 @@
   --transition-time: 0.3s;
 }
 
+// @import url(https://db.onlinewebfonts.com/c/43366a6208b6906d46c7ef4b4c4eba0f?family=Aber+Mono);
 // @import url(https://db.onlinewebfonts.com/c/ed8b4476ce0cbdba6869859c2fd4ee44?family=Screener+W01+Regular);
 // @import url(https://db.onlinewebfonts.com/c/e36d832babb06da18be3bfd2adfddbd9?family=MagdaClean-Black);
+// @import url(https://db.onlinewebfonts.com/c/5165c0facbfede7afe6c9ef3fd635f11?family=Fredoka+One);
 @font-face{
   font-family: "Aber Mono";
   src: url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.eot");
@@ -18,6 +20,42 @@
       url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.woff2")format("woff2"),
       url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.ttf")format("truetype"),
       url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.svg#Aber Mono")format("svg");
+  font-weight:normal;
+  font-style:normal;
+  font-display:swap;
+}
+// @font-face{
+//   font-family: "Screener W01 Regular";
+//   src: url("https://db.onlinewebfonts.com/t/ed8b4476ce0cbdba6869859c2fd4ee44.eot");
+//   src: url("https://db.onlinewebfonts.com/t/ed8b4476ce0cbdba6869859c2fd4ee44.eot?#iefix")format("embedded-opentype"),
+//       url("https://db.onlinewebfonts.com/t/ed8b4476ce0cbdba6869859c2fd4ee44.woff")format("woff"),
+//       url("https://db.onlinewebfonts.com/t/ed8b4476ce0cbdba6869859c2fd4ee44.woff2")format("woff2"),
+//       url("https://db.onlinewebfonts.com/t/ed8b4476ce0cbdba6869859c2fd4ee44.ttf")format("truetype"),
+//       url("https://db.onlinewebfonts.com/t/ed8b4476ce0cbdba6869859c2fd4ee44.svg#Screener W01 Regular")format("svg");
+//   font-weight:normal;
+//   font-style:normal;
+//   font-display:swap;
+// }
+// @font-face{
+//   font-family: "MagdaClean-Black";
+//   src: url("https://db.onlinewebfonts.com/t/e36d832babb06da18be3bfd2adfddbd9.eot");
+//   src: url("https://db.onlinewebfonts.com/t/e36d832babb06da18be3bfd2adfddbd9.eot?#iefix")format("embedded-opentype"),
+//       url("https://db.onlinewebfonts.com/t/e36d832babb06da18be3bfd2adfddbd9.woff")format("woff"),
+//       url("https://db.onlinewebfonts.com/t/e36d832babb06da18be3bfd2adfddbd9.woff2")format("woff2"),
+//       url("https://db.onlinewebfonts.com/t/e36d832babb06da18be3bfd2adfddbd9.ttf")format("truetype"),
+//       url("https://db.onlinewebfonts.com/t/e36d832babb06da18be3bfd2adfddbd9.svg#MagdaClean-Black")format("svg");
+//   font-weight:normal;
+//   font-style:normal;
+//   font-display:swap;
+// }
+@font-face{
+  font-family: "Fredoka One";
+  src: url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.eot");
+  src: url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.eot?#iefix")format("embedded-opentype"),
+      url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.woff")format("woff"),
+      url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.woff2")format("woff2"),
+      url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.ttf")format("truetype"),
+      url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.svg#Fredoka One")format("svg");
   font-weight:normal;
   font-style:normal;
   font-display:swap;

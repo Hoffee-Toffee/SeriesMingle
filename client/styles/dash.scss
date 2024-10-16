@@ -5,6 +5,8 @@
     color: white;
     text-align: center;
     margin-top: 0;
+    font-family: 'Fredoka One';
+    font-weight: normal;
   }
   
   button,
@@ -43,6 +45,11 @@
     > a {
       margin: 0;
       min-width: 200px;
+      
+      > div > h2 {
+        font-family: 'Fredoka One';
+        font-weight: normal;
+      }
     }
 
     > h2 {
@@ -53,6 +60,8 @@
       width: max-content;
       margin: 0 100%;
       white-space: nowrap;
+      font-family: 'Fredoka One';
+      font-weight: normal;
     }
 
     > h2::after {

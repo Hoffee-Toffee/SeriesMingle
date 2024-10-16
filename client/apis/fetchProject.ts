@@ -16,7 +16,9 @@ export default function fetchProject(id: string): Promise<object | null> {
       layers: res.body.state
         ? res.body.state.layers
         : res.body.layers
-          ? Object.values(res.body.layers).map((layer, i) => layer[i])
+          ? Object.values(res.body.layers as { [key: number]: object[] }).map(
+              (layer, i) => layer[i],
+            )
           : [[]],
     }
   })

@@ -188,7 +188,7 @@ export default function Project() {
     data[entry.type][entry.id] = entry
     layers[layerId][entryId] = { ref: [entry.type, entry.id] }
     setState({ ...state, layers, data, force: true })
-    setChangedProps([...changedProps, 'data'])
+    setChangedProps([...changedProps, 'data', 'layers'])
   }
 
   function setCustom(newData = null, layer = null, id = null) {
@@ -583,7 +583,7 @@ export default function Project() {
               <details>
                 <summary>
                   <legend>
-                    Schedule Settings
+                    Settings
                   </legend>
                 </summary>
                 <fieldset id="mp" onChange={(e) => runAfterConfirm(() => setMpSpacing(e.target.value))}>
@@ -675,6 +675,65 @@ export default function Project() {
                   </fieldset>
                 ) : null}
               </details></fieldset >
+            <fieldset id='stats'>
+              <details>
+                <summary>
+                  <legend>
+                    Statistics
+                  </legend>
+                </summary>
+                {/* Percentage of schedule completed */}
+                {/* Percentage of layer / show / set completed, as well as time remaining / passed (2 decimal places)*/}
+                {/* Entire schedule time remaining / passed */}
+                {/* Finish estimate (comparing start date to current date and percentage watched over that time) */}
+                <fieldset>
+                  <legend>Progress</legend>
+                  <span>
+                    {/* 1 hour and 3 minutes watched (25%) out of 4 hours and 12 minutes. */}
+                    {Math.floor(scheduleData.seenSpan / 60) ?
+                      <>
+                        <span className="yellow">
+                          {`${Math.floor(scheduleData.seenSpan / 60)}`}
+                        </span>
+                        {scheduleData.seenSpan / 60 > 1 ? ' hours ' : ' hour '}
+                      </>
+                      : ''
+                    }
+                    {Math.floor(scheduleData.seenSpan / 60) && scheduleData.seenSpan % 60 ? 'and ' : ''}
+                    {scheduleData.seenSpan % 60 ?
+                      <>
+                        <span className="yellow">
+                          {`${scheduleData.seenSpan % 60}`}
+                        </span>
+                        {scheduleData.seenSpan % 60 > 1 ? ' minutes ' : ' minute '}
+                      </>
+                      : ''
+                    }
+                    watched ({Math.round(scheduleData.seenSpan / scheduleData.totalSpan * 10000) / 100}%) out of {scheduleData.totalSpan ? <>
+                      {Math.floor(scheduleData.totalSpan / 60) ?
+                        <>
+                          <span className="yellow">
+                            {`${Math.floor(scheduleData.totalSpan / 60)}`}
+                          </span>
+                          {scheduleData.totalSpan / 60 > 1 ? ' hours' : ' hour'}
+                        </>
+                        : ''
+                      }
+                      {Math.floor(scheduleData.totalSpan / 60) && scheduleData.totalSpan % 60 ? ' and ' : ''}
+                      {scheduleData.totalSpan % 60 ?
+                        <>
+                          <span className="yellow">
+                            {`${scheduleData.totalSpan % 60}`}
+                          </span>
+                          {scheduleData.totalSpan % 60 > 1 ? ' minutes' : ' minute'}
+                        </>
+                        : ''
+                      }
+                    </> : '0 minutes'}.
+                  </span>
+                </fieldset>
+              </details>
+            </fieldset>
             <Schedule scheduleData={scheduleData} user={user} />
           </>
           }
@@ -691,7 +750,7 @@ export default function Project() {
     setActiveEntry({ ...event.active, ...event.active.data.current.entry })
   }
 
-  function onDragEnd(event) {
+  function onDragEnd() {
     console.log('drag end')
     setActiveEntry(null)
     setOutlinePos(null)

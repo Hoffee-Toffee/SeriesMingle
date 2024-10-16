@@ -60,11 +60,17 @@
     margin: 0.5em 0.1em;
     position: relative;
 
-    > details > button {
-      position: absolute;
-      right: 0.75em;
-      top: 0.5em;
-      bottom: 0.5em;
+    > details {
+      legend > span.placeholder:not(:focus) {
+        opacity: 0.5;
+      }
+
+      > button {
+        position: absolute;
+        right: 0.75em;
+        top: 0.5em;
+        bottom: 0.5em;
+      }
     }
   }
 
@@ -398,7 +404,8 @@
   }
 
   #settings,
-  #layerContainer {
+  #layerContainer,
+  #stats {
     margin-top: 20px;
     padding-left: 11px;
 
@@ -606,11 +613,11 @@
       position: absolute;
       margin-left: -1em;
       transform: translateX(-50%);
-      color: #88B;
+      color: #88b;
     }
 
     .title .spoiler {
-      color: #CCF;
+      color: #ccf;
       font-size: 0.8em;
       background: var(--bg-col);
       margin-left: 1.25em;
@@ -685,6 +692,8 @@
       width: fit-content;
       padding: 5px 10px;
       margin: 0;
+      font-family: 'Fredoka One';
+      font-weight: normal;
     }
 
     .setDescription {

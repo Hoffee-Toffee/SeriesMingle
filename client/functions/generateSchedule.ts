@@ -1,28 +1,26 @@
-import { sortCollisionsDesc } from '@dnd-kit/core/dist/utilities/algorithms/helpers'
-import Entry from '../components/Entry.tsx'
 import generateColors from '../functions/generateColors.ts'
 
 export function generateSchedule(
-  layers,
-  mpSpacing,
-  bookmark,
-  setBookmark,
-  data,
-  setLayers,
-  titles,
-  setTitles,
-  setShow,
-  setCustom,
-  streak,
-  goal,
-  showStreaks,
-  groupStreaks,
+  layers: any[],
+  mpSpacing: string,
+  bookmark: string,
+  setBookmark: any,
+  data: any,
+  setLayers: any,
+  titles: string[],
+  setTitles: any,
+  setShow: any,
+  setCustom: any,
+  streak: number,
+  goal: number,
+  showStreaks: boolean,
+  groupStreaks: boolean,
 ) {
   // Loop over each layer, ignoring the final entry in each
   const schedule = layers.map((entries) => {
     // Loop over each entry, collapsing and removing some episodes
     return entries
-      .map((entryRef, i) => {
+      .map((entryRef: any, i: number) => {
         if (i === entries.length - 1) return undefined
 
         // Return those where entryRef.barrier is defined
@@ -49,8 +47,8 @@ export function generateSchedule(
           ...entry,
           seasons: undefined,
           episodes: entry.seasons
-            .flatMap((season) =>
-              season.episodes.map((episode, num) => {
+            .flatMap((season: any) =>
+              season.episodes.map((episode: any, num: number) => {
                 if (
                   !inRange &&
                   entryRef.start !== `${season.season}:${episode.episode}`
@@ -70,22 +68,22 @@ export function generateSchedule(
                 }
               }),
             )
-            .filter((entry) => entry),
+            .filter((entry: any) => entry),
         }
       })
-      .filter((entry) => entry)
+      .filter((entry: any) => entry)
   })
 
   const layerSpans = schedule.map((layer) =>
     layer.reduce(
-      (running, entry) =>
+      (running: number, entry: any) =>
         running +
         (entry.barrier !== undefined
           ? 0
           : entry.type !== 'tv'
             ? (entry.runtime || entry.average_run_time) * (entry.repeat || 1)
             : entry.episodes.reduce(
-                (running, episode) =>
+                (running: number, episode: any) =>
                   running + (episode.runtime || episode.average_run_time),
                 0,
               )),
@@ -105,15 +103,15 @@ export function generateSchedule(
       // So, now we flatten the entries for each layer, giving them their 'start' points
       // That will be one set of padding offset from the current total, then it's runtime and it's padding will then be added to the new runtime
 
-      const condensed = []
-      let series = []
-      let temp
+      const condensed = [] as any[]
+      let series = [] as any[]
+      let temp = undefined as any
 
       layer
-        .map((entry, layer_id) =>
+        .map((entry: any, layer_id: number) =>
           entry.barrier === undefined && entry.type !== 'movie'
             ? entry[entry.type == 'tv' ? 'episodes' : 'entries'].map(
-                (episode) => ({
+                (episode: any) => ({
                   ...episode,
                   layer_id,
                   layer: i,
@@ -124,7 +122,7 @@ export function generateSchedule(
         )
         .flat()
         .concat({ check: true })
-        .forEach((entry) => {
+        .forEach((entry: any) => {
           if (
             [undefined, null].includes(entry.barrier) &&
             entry.type !== 'custom' &&
@@ -243,7 +241,7 @@ export function generateSchedule(
               ...entry,
               mid,
             }
-          return entry.episodes.map((episode) => ({
+          return entry.episodes.map((episode: any) => ({
             ...episode,
             mid,
           }))

@@ -7,18 +7,18 @@
 const logging = false
 
 function maximizeSpread(array) {
-  const n = array.length;
-  const numGroups = Math.ceil(Math.sqrt(n));
+  const n = array.length
+  const numGroups = Math.ceil(Math.sqrt(n))
 
   // Sort the array using a custom comparator based on modulus
   const spreadArray = array.slice().sort((a, b) => {
-      return (array.indexOf(a) % numGroups) - (array.indexOf(b) % numGroups);
-  });
+    return (array.indexOf(a) % numGroups) - (array.indexOf(b) % numGroups)
+  })
 
-  return spreadArray;
+  return spreadArray
 }
 
-export default function generateColors(n) {
+export default function generateColors(n: number) {
   const hues = Array(n)
     .fill(null)
     .map((_, i) => (((i * (280 / n)) % 280) + 290) % 360)
@@ -95,17 +95,17 @@ export default function generateColors(n) {
   return maximizeSpread(bestSet)
 }
 
-function makeColor(hue) {
+function makeColor(hue: number) {
   // Convert 'hwb(hue 0% 25%)' to the rgb values for each color
 
-  const output = {}
+  const output = {} as { [key: string]: number }
 
-  function f(n) {
+  function f(n: number) {
     const k = (n + hue / 30) % 12
     return 0.5 - 0.5 * Math.max(-1, Math.min(k - 3, 9 - k, 1))
   }
 
-  const rgb = { r: f(0), g: f(8), b: f(4) }
+  const rgb = { r: f(0), g: f(8), b: f(4) } as { [key: string]: number }
 
   ;['r', 'g', 'b'].forEach((channel) => {
     output[channel] = rgb[channel] * 0.75
@@ -113,7 +113,7 @@ function makeColor(hue) {
   return output
 }
 
-function getContrast(hue1, hue2) {
+function getContrast(hue1: number, hue2: number) {
   // Find the contrast between the two colors
 
   // Turn each hue into an rgb object
@@ -122,15 +122,15 @@ function getContrast(hue1, hue2) {
 
   if (logging) console.log(color1)
 
-  function luminance(r, g, b) {
+  function luminance(r: number, g: number, b: number) {
     const a = [r, g, b].map((v) =>
       v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4),
     )
     return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722
   }
 
-  const lum1 = luminance(...Object.values(color1))
-  const lum2 = luminance(...Object.values(color2))
+  const lum1 = luminance(...(Object.values(color1) as [number, number, number]))
+  const lum2 = luminance(...(Object.values(color2) as [number, number, number]))
   const brightest = Math.max(lum1, lum2)
   const darkest = Math.min(lum1, lum2)
   return (brightest + 0.05) / (darkest + 0.05)

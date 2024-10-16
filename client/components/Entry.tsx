@@ -2,7 +2,6 @@ import search from '../apis/search.ts'
 import { useState } from 'react'
 import fetchMedia from '../apis/fetchMedia.ts'
 import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
 
 function Entry({
   id,
@@ -44,7 +43,7 @@ function Entry({
       .catch((err) => console.log(err))
   }
 
-  function getMedia(type, mid) {
+  function getMedia(type: string, mid: number) {
     if (data[type][mid]) {
       entries[id] = { ref: [type, mid] }
       setEntries([...entries], true)
@@ -62,7 +61,7 @@ function Entry({
     setEntries([...entries], true)
   }
 
-  const { setNodeRef, attributes, listeners, isDragging } = useSortable({
+  const { setNodeRef, attributes, listeners } = useSortable({
     id: `${layer}-${id}`,
     data: {
       type: 'Entry',
@@ -86,7 +85,7 @@ function Entry({
                 setEntries([...entries])
               })
             }}
-            onKeyPress={(e) => runAfterConfirm(() => e.key === 'Enter' && handleSearch())}
+            onKeyDown={(e) => runAfterConfirm(() => e.key === 'Enter' && handleSearch())}
           />
           <button onClick={() => runAfterConfirm(handleSearch)}>Search</button>
           <button onClick={() => runAfterConfirm(() => setCustom(entry, layer, id))}>
@@ -107,7 +106,7 @@ function Entry({
             <>
               <select
                 onChange={(e) => {
-                  entries[id] = entry.map((option) => ({
+                  entries[id] = entry.map((option: any) => ({
                     ...option,
                     selected: option.id == e.target.value,
                   }))
@@ -119,7 +118,7 @@ function Entry({
                 }
                 }
               >
-                {entry.map((option, index) => {
+                {entry.map((option: any, index: number) => {
                   if (!index) return
 
                   const year = (
@@ -141,7 +140,7 @@ function Entry({
               <button
                 onClick={() => runAfterConfirm(() => {
                   const selected =
-                    entry.find((option) => option.selected) || entry[1]
+                    entry.find((option: any) => option.selected) || entry[1]
                   getMedia(selected.media_type, selected.id)
                 })}
               >
@@ -188,7 +187,7 @@ function Entry({
                         parseInt(entry.end.split(':')[0]),
                       )
                       : entryData.seasons
-                    ).map((season) => (
+                    ).map((season: any) => (
                       <optgroup
                         label={`Season ${season.season}`}
                         key={season.season}
@@ -199,7 +198,7 @@ function Entry({
                             parseInt(entry.end.split(':')[1]),
                           )
                           : season.episodes
-                        ).map((episode) => (
+                        ).map((episode: any) => (
                           <option
                             key={episode.episode}
                             value={season.season + ':' + episode.episode}
@@ -232,10 +231,10 @@ function Entry({
                     {entryData.seasons
                       .slice(
                         entry.start
-                          ? entryData.seasons.findIndex(s => s.season >= parseInt(entry.start.split(':')[0] - 1))
+                          ? entryData.seasons.findIndex((s: any) => s.season >= parseInt(entry.start.split(':')[0] - 1))
                           : 0,
                       )
-                      .map((season) => (
+                      .map((season: any) => (
                         <optgroup
                           label={`Season ${season.season}`}
                           key={season.season}
@@ -243,10 +242,10 @@ function Entry({
                           {season.episodes
                             .slice(
                               entry.start && entry.start.split(':')[0] == season.season
-                                ? season.episodes.findIndex(e => e.episode >= parseInt(entry.start.split(':')[1] - 1))
+                                ? season.episodes.findIndex((e: any) => e.episode >= parseInt(entry.start.split(':')[1] - 1))
                                 : 0,
                             )
-                            .map((episode) => (
+                            .map((episode: any) => (
                               <option
                                 key={episode.episode}
                                 value={season.season + ':' + episode.episode}
@@ -382,10 +381,11 @@ function Entry({
               {...(bookmark ? { onDragStart: () => runAfterConfirm(() => { }) } : { ...attributes, ...listeners })}
             />
             <span className="setting">
-              <label>
+              <label htmlFor={`barrier-${id}`}>
                 Position (Percentage):
               </label>
               <input
+                id={`barrier-${id}`}
                 className="value"
                 type="number"
                 min="0"
