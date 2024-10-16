@@ -1,5 +1,5 @@
 {
-  "name": "SeriesMingle",
+  "name": "series-mingle",
   "type": "module",
   "version": "2.0.0",
   "main": "server/index.js",
@@ -19,7 +19,7 @@
     "dev:server": "tsx watch server/index.ts",
     "build": "npm i && npm run build:client && npm run build:server",
     "build:client": "vite build --assetsDir=$npm_package_config_assets_dir --base=$npm_package_config_base",
-    "build:server": "esbuild --packages=external --platform=node --format=esm --outfile=dist/server.js --bundle server/index.ts",
+    "build:server": "node server/build.js",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "knex": "knex --knexfile ./server/db/knexfile.js"
   },
