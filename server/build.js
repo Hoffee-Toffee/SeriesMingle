@@ -14,7 +14,7 @@ esbuild
     platform: 'node',
     format: 'esm',
     outfile: 'dist/server.js',
-    external: ['express'],
+    external: ['express', 'fs', 'path', 'url'],
   })
   .then(() => {
     console.log('Build complete')
