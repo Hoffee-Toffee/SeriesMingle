@@ -12,7 +12,7 @@ esbuild
     entryPoints: ['server/index.ts'],
     bundle: true,
     platform: 'node',
-    format: 'esm',
+    format: 'cjs',
     outfile: 'dist/server.js',
     external: ['express', 'fs', 'path', 'url'],
   })
