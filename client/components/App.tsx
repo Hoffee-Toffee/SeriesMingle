@@ -1,5 +1,3 @@
-import { Helmet } from 'react-helmet'
-import favicon from '../files/favicon.ico'
 import { Outlet, useLocation, useOutlet } from 'react-router-dom'
 import { createContext, useEffect, useState } from 'react'
 import useScroll from '../functions/scroll.ts'
@@ -43,22 +41,6 @@ export default function App() {
 
   return (
     <>
-      <Helmet>
-        <meta
-          property="og:url"
-          content={`${window.location.origin}${window.location.pathname}`}
-        />
-        <meta
-          property="og:image"
-          content={favicon}
-        />
-        {page == 'project' &&
-          <meta
-            property="og:description"
-            content="Check out my TV and movie schedule on SeriesMingle!"
-          />
-        }
-      </Helmet>
       {showLoading &&
         <div id="loading" className={hasLoaded ? 'loaded' : 'loading'}>
           <div className="lds-ripple">
