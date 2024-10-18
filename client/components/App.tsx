@@ -36,6 +36,12 @@ export default function App() {
   // Log the outlet component element name
   const page = useOutlet()?.props.children.props.routeContext.matches.at(-1).pathname.split('/')[1] || 'home'
 
+  if (!isPageLoaded) {
+    // Set the page title
+    document.title = "SeriesMingle"
+    if (page !== 'home') document.title = `${page.charAt(0).toUpperCase()}${page.slice(1)} | ${document.title}`
+  }
+
   // Scroll logic
   useScroll(isPageLoaded)
 
