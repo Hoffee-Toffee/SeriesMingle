@@ -2,7 +2,7 @@ import express from 'express'
 import * as Path from 'node:path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
-import Index from './index.jsx'
+import fs from 'fs'
 
 // Get the directory name of the current module file
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -34,9 +34,36 @@ if (process.env.NODE_ENV === 'production') {
   server.get('/sitemap.xml', (req, res) =>
     res.sendFile(Path.resolve(__dirname, 'sitemap.xml')),
   )
-  server.get('*', (req, res) =>
-    res.sendFile(Path.resolve(__dirname, 'index.html')),
-  )
+  server.get('*', (req, res) => {
+    const index = fs.readFileSync(
+      Path.resolve(__dirname, 'index.html'),
+      'utf-8',
+    )
+
+    const data = {
+      title: 'SeriesMingle',
+      description: 'Create your own TV and movie schedules with SeriesMingle.',
+    }
+
+    const page = req.url.split('/')[1].toLowerCase()
+    if (['login', 'dashboard', 'project'].includes(page)) {
+      data.title = `${page.charAt(0).toUpperCase()}${page.slice(1)} | ${data.title}`
+
+      if (page === 'project') {
+        data.description = 'Check out my TV and movie schedule on SeriesMingle!'
+      }
+    }
+
+    // replace all occurrences of '%KEY%' with the corresponding data value
+    const html = Object.entries(data).reduce(
+      (acc, [key, value]) =>
+        acc.replace(new RegExp(`%${key.toUpperCase()}%`, 'g'), value),
+      index,
+    )
+
+    res.contentType('text/html')
+    res.send(html)
+  })
 }
 
 export default server
