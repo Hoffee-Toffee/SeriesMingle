@@ -3,6 +3,8 @@ import * as Path from 'node:path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import fs from 'fs'
+import ReactDOMServer from 'react-dom/server'
+import { Outlet, useOutlet } from 'react-router-dom'
 
 // Get the directory name of the current module file
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -40,12 +42,14 @@ if (process.env.NODE_ENV === 'production') {
       'utf-8',
     )
 
+    const page = req.url.split('/')[1].toLowerCase()
+
     const data = {
       title: 'SeriesMingle',
       description: 'Create your own TV and movie schedules with SeriesMingle.',
+      app: `<div id="${page || 'home'}">${ReactDOMServer.renderToString(Outlet({}))}</div>`,
     }
 
-    const page = req.url.split('/')[1].toLowerCase()
     if (['login', 'dashboard', 'project'].includes(page)) {
       data.title = `${page.charAt(0).toUpperCase()}${page.slice(1)} | ${data.title}`
 
