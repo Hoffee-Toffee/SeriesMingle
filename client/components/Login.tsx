@@ -8,7 +8,7 @@ import {
   signInWithPopup,
 } from 'firebase/auth'
 
-import favicon from '../files/favicon.ico'
+import favicon from '../../favicon.ico'
 import { useContext } from 'react';
 import { LoadingContext, UserContext } from './App.tsx';
 

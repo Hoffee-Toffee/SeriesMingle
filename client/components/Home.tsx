@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react'
 import { UserContext, LoadingContext } from './App.tsx'
 import Example from './Example.tsx'
 
-import favicon from '../files/favicon.ico'
+import favicon from '../../favicon.ico'
 import '../styles/home.scss'
 import { Link } from 'react-router-dom'
 

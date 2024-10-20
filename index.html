@@ -8,17 +8,22 @@
       crossorigin="anonymous"
     ></script>
     <title>%TITLE%</title>
-    <link
-      href="./client/files/favicon.ico"
-      rel="shortcut icon"
-      type="image/x-icon"
-    />
+    <meta name="title" content="%TITLE%" />
+    <meta name="description" content="%DESCRIPTION%" />
+    <link href="./favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="%URL%" />
     <meta property="og:title" content="%TITLE%" />
     <meta property="og:description" content="%DESCRIPTION%" />
+    <meta property="og:image" content="%IMAGE%" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="%URL%" />
+    <meta property="twitter:title" content="%TITLE%" />
+    <meta property="twitter:description" content="%DESCRIPTION%" />
+    <meta property="twitter:image" content="%IMAGE%" />
   </head>
   <body>
-    <div id="app">%APP%</div>
+    <div id="app"></div>
     <script src="./client/index.tsx" type="module"></script>
   </body>
 </html>

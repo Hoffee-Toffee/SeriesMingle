@@ -9,7 +9,7 @@ import * as Path from 'node:path'
 
 const __dirname = Path.join(dirname(fileURLToPath(import.meta.url)), '..')
 
-;['robots.txt', 'sitemap.xml'].forEach((file) =>
+;['favicon.ico', 'robots.txt', 'sitemap.xml'].forEach((file) =>
   fs.copyFileSync(
     Path.resolve(__dirname, file),
     Path.resolve(__dirname, 'dist', file),

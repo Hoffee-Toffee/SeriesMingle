@@ -3,8 +3,8 @@ import * as Path from 'node:path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import fs from 'fs'
-import ReactDOMServer from 'react-dom/server'
-import { Outlet, useOutlet } from 'react-router-dom'
+// import ReactDOMServer from 'react-dom/server'
+// import { Outlet, useOutlet } from 'react-router-dom'
 
 // Get the directory name of the current module file
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -30,12 +30,12 @@ server.get('/api/v1/secret', (req, res) => {
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))
   server.use('/assets', express.static(Path.resolve(__dirname, 'assets')))
-  server.get('/robots.txt', (req, res) =>
-    res.sendFile(Path.resolve(__dirname, 'robots.txt')),
+  ;['favicon.ico', 'robots.txt', 'sitemap.xml'].forEach((file) =>
+    server.get(`/${file}`, (_, res) =>
+      res.sendFile(Path.resolve(__dirname, file)),
+    ),
   )
-  server.get('/sitemap.xml', (req, res) =>
-    res.sendFile(Path.resolve(__dirname, 'sitemap.xml')),
-  )
+
   server.get('*', (req, res) => {
     const index = fs.readFileSync(
       Path.resolve(__dirname, 'index.html'),
@@ -47,7 +47,12 @@ if (process.env.NODE_ENV === 'production') {
     const data = {
       title: 'SeriesMingle',
       description: 'Create your own TV and movie schedules with SeriesMingle.',
-      app: `<div id="${page || 'home'}">${ReactDOMServer.renderToString(Outlet({}))}</div>`,
+      long_description:
+        'Create your own watch schedules for shows and movies! Define layers of shows and movies, with each layer watched in order, but all layers watched simultaneously. Select start and end points for shows, so you can watch only the range you want. Bookmark your progress, seeing statistics on your progress. Add custom entries such as books or activities to your schedule. Share and create schedules with friends. And much more with SeriesMingle!',
+      url: 'https://seriesmingle.com',
+      image:
+        'https://repository-images.githubusercontent.com/792981103/55633c4f-81a0-407d-99a2-baa5621836a0',
+      // app: `<div id="${page || 'home'}">${ReactDOMServer.renderToString(Outlet({}))}</div>`,
     }
 
     if (['login', 'dashboard', 'project'].includes(page)) {
