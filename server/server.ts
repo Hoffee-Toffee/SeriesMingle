@@ -28,12 +28,17 @@ server.get('/api/v1/secret', (req, res) => {
 })
 
 if (process.env.NODE_ENV === 'production') {
-  server.use(express.static(Path.resolve('public')))
-  server.use('/assets', express.static(Path.resolve(__dirname, 'assets')))
-  ;['favicon.ico', 'robots.txt', 'sitemap.xml'].forEach((file) =>
-    server.get(`/${file}`, (_, res) =>
-      res.sendFile(Path.resolve(__dirname, file)),
-    ),
+  server.use(
+    '/icons/:icon',
+    (req, res) =>
+      ['512.png', '192.png'].includes(req.params.icon) &&
+      res.sendFile(Path.resolve(__dirname, 'icons', req.params.icon)),
+  )
+  ;['favicon.ico', 'manifest.json', 'robots.txt', 'sitemap.xml'].forEach(
+    (file) =>
+      server.get(`/${file}`, (_, res) =>
+        res.sendFile(Path.resolve(__dirname, file)),
+      ),
   )
 
   server.get('*', (req, res) => {

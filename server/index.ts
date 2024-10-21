@@ -9,10 +9,19 @@ import * as Path from 'node:path'
 
 const __dirname = Path.join(dirname(fileURLToPath(import.meta.url)), '..')
 
-;['favicon.ico', 'robots.txt', 'sitemap.xml'].forEach((file) =>
+;['favicon.ico', 'manifest.json', 'robots.txt', 'sitemap.xml'].forEach((file) =>
   fs.copyFileSync(
     Path.resolve(__dirname, file),
     Path.resolve(__dirname, 'dist', file),
+  ),
+)
+
+// Copy '/icons' to '/dist/icons'
+fs.mkdirSync(Path.resolve(__dirname, 'dist', 'icons'), { recursive: true })
+;['512.png', '192.png'].forEach((file) =>
+  fs.copyFileSync(
+    Path.resolve(__dirname, 'icons', file),
+    Path.resolve(__dirname, 'dist/icons', file),
   ),
 )
 
