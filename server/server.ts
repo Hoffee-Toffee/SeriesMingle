@@ -36,11 +36,16 @@ if (process.env.NODE_ENV === 'production') {
       ['512.png', '192.png'].includes(req.params.icon) &&
       res.sendFile(Path.resolve(__dirname, 'icons', req.params.icon)),
   )
-  ;['favicon.ico', 'manifest.json', 'robots.txt', 'sitemap.xml'].forEach(
-    (file) =>
-      server.get(`/${file}`, (_, res) =>
-        res.sendFile(Path.resolve(__dirname, file)),
-      ),
+  ;[
+    'favicon.ico',
+    'manifest.json',
+    'robots.txt',
+    'service-worker.js',
+    'sitemap.xml',
+  ].forEach((file) =>
+    server.get(`/${file}`, (_, res) =>
+      res.sendFile(Path.resolve(__dirname, file)),
+    ),
   )
 
   server.get('*', (req, res) => {
