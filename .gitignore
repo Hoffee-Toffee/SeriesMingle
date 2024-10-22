@@ -7,9 +7,6 @@ node_modules
 # SQLite DBs
 *.sqlite3
 
-# Build products
-/dist
-
 # Jest coverage report
 coverage/*
 
@@ -17,7 +14,9 @@ coverage/*
 .env
 
 # Build directory
-/dist
+/dist/assets
+/dist/index.html
+/dist/server.js
 
 # Raw easteregg files
 /server/eastereggs/raw
