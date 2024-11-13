@@ -7,6 +7,7 @@ export default function EpisodeDetails(props: any) {
     numberOfLayers,
     bookmark,
     setBookmark,
+    className,
   } = props
 
   const minHeight = 30
@@ -42,6 +43,7 @@ export default function EpisodeDetails(props: any) {
         entry.finale && 'finale',
         entry.layer % 2 && 'odd',
         !entry.show && 'fade',
+        className,
       ]
         .filter(Boolean)
         .join(' ')}

@@ -19,8 +19,7 @@ import setProject from '../apis/setProject.ts'
 import Entry from './Entry.tsx'
 import Terminal from './Terminal.tsx'
 import { Link, useParams } from 'react-router-dom'
-import { collection } from '../../server/firebase.ts'
-import { doc, getFirestore, onSnapshot, query, where } from 'firebase/firestore'
+import { doc, getFirestore, onSnapshot } from 'firebase/firestore'
 import fetchSecret from '../apis/fetchSecret.ts'
 
 export default function Project() {

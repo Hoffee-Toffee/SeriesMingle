@@ -246,8 +246,7 @@
 
     #scheduleVisualization::before,
     #scheduleVisualization::after {
-      height: calc(200dvh / 3 - 2px);
-      background: none;
+      display: none;
     }
   }
 
@@ -263,16 +262,17 @@
     #timelineContainer {
       // All after .highlighted will be visible
       .episode-marker:not(
-          #bookmark-highlighted,
-          #bookmark-highlighted ~ .episode-marker
+          .highlighted,
+          .bookmarked,
+          .bookmarked ~ .episode-marker
         ) {
         opacity: 0.25;
       }
     }
+  }
 
-    ~ div .episode-marker {
-      opacity: 0.25;
-    }
+  > div [data-id = "background"] {
+    opacity: 0.25;
   }
 }
 

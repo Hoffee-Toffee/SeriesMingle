@@ -1,6 +1,5 @@
 import { Outlet, useLocation, useOutlet } from 'react-router-dom'
 import { createContext, useEffect, useState } from 'react'
-import useScroll from '../functions/scroll.ts'
 import { auth } from '../../server/firebase.ts'
 import '../styles/app.scss'
 
@@ -41,9 +40,6 @@ export default function App() {
     document.title = "SeriesMingle"
     if (page !== 'home') document.title = `${page.charAt(0).toUpperCase()}${page.slice(1)} | ${document.title}`
   }
-
-  // Scroll logic
-  useScroll(isPageLoaded)
 
   return (
     <>

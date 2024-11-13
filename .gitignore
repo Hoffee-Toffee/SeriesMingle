@@ -14,9 +14,7 @@ coverage/*
 .env
 
 # Build directory
-/dist/assets
-/dist/index.html
-/dist/server.js
+/dist
 
 # Raw easteregg files
 /server/eastereggs/raw
