@@ -13,7 +13,7 @@ import {
 import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyC542gsgzWSigDuIGc9VUZabDVKZPsNyM4',
+  apiKey: 'AIzaSyCTwrQr6gu3sPRyL1QHGEJb0s_vxbkj9Rg',
   authDomain: 'series-mingle.firebaseapp.com',
   projectId: 'series-mingle',
   storageBucket: 'series-mingle.appspot.com',
