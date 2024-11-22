@@ -32,7 +32,7 @@ export default function Home() {
         </label>
         <nav>
           <a href="#about">About</a>
-          <a href="#upcoming-features">Upcoming Features</a>
+          <a href="#contact">Contact</a>
           {user ?
             <Link to="/dashboard">Dashboard</Link> :
             <Link to="/login">Login or Register</Link>
@@ -91,24 +91,19 @@ export default function Home() {
           <Example id="custom" />
         </div>
       </div>
-      <div id="upcoming-features">
+      <div id="contact">
         <div className="content">
-          <h2>Upcoming Features</h2>
+          <h2>Contact</h2>
           <div className="bg">
             <p>
-              SeriesMingle is in <strong>early</strong> development.
-              <br />
-              Here are some features that are planned for the future:
+              Send feedback and personal inquiries to <a href="mailto:contact@seriesmingle.com">contact@seriesmingle.com</a>.
             </p>
             <p>
-              <strong>Schedule Stats</strong> - Track your progress and see predictions on when you'll finish your schedule.
-            </p>
-            <p>
-              <strong>Mobile App</strong> - A mobile app for Android and iOS.
+              Send bug reports, issues, and help requests to <a href="mailto:support@seriesmingle.com">support@seriesmingle.com</a>.
             </p>
           </div>
         </div>
-      </div>
+      </div >
       <div>
         <div className="content">
           <h2>Get started with SeriesMingle today!</h2>
@@ -119,8 +114,17 @@ export default function Home() {
               </h3>
             </Link>
           </span>
+          <footer>
+            <p>
+              This website uses <a href="https://www.themoviedb.org/about" target="_blank" rel="noreferrer">TMDB</a> and the <a href="https://www.themoviedb.org/documentation/api" target="_blank" rel="noreferrer">TMDB APIs</a> but is not endorsed, certified, or otherwise approved by TMDB.
+            </p>
+            <p>
+              &copy; <a href="https://github.com/Hoffee-Toffee"
+                target="_blank" rel="noreferrer">Tristan Bulmer</a>, 2024.
+            </p>
+          </footer>
         </div>
-      </div>
+      </div >
     </>
   )
 }
