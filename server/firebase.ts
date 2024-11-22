@@ -12,11 +12,8 @@ import {
 } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 
-import dotenv from 'dotenv'
-dotenv.config()
-
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
+  apiKey: 'AIzaSyC542gsgzWSigDuIGc9VUZabDVKZPsNyM4',
   authDomain: 'series-mingle.firebaseapp.com',
   projectId: 'series-mingle',
   storageBucket: 'series-mingle.appspot.com',
