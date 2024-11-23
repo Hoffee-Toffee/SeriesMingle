@@ -107,6 +107,18 @@
     padding-left: 17px;
   }
 
+  div.option {
+    display: inline-block;
+    margin: -10px 0;
+    padding: 0px 0px !important;
+    div {
+      min-height: 0px;
+      left: -2px;
+      top: -2px;
+      padding: 2px 4px;
+    }
+  }
+
   .outline {
     border-style: dashed;
     opacity: 0.5;
@@ -413,11 +425,19 @@
       list-style-position: outside;
       margin-top: -20px;
       margin-left: 20px;
-
+      width: 0;
+      white-space: nowrap;
+      
       > legend {
         width: fit-content;
         padding-left: 20px;
         margin-left: -25px;
+
+        span {
+          padding: 2px 4px;
+          margin-left: -4px;
+          margin-right: -4px;
+        }
       }
     }
 

@@ -250,6 +250,10 @@
     }
   }
 
+  #contact a {
+    pointer-events: auto;
+  }
+
   > div:first-of-type {
     height: 100dvh;
 
@@ -273,6 +277,30 @@
 
   > div [data-id = "background"] {
     opacity: 0.25;
+  }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #00000044;
+    color: white;
+    text-align: center;
+    z-index: 3;
+
+    p:nth-of-type(1) {
+      font-size: 0.6rem;
+      color: grey;
+
+      a {
+        opacity: 0.75;
+      }
+    }
+
+    p:nth-of-type(2) {
+      font-size: 0.75rem;
+      margin-top: 0;
+    }
   }
 }
 

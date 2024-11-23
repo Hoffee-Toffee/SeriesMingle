@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { UserContext, LoadingContext } from './App.tsx'
 import '../styles/project.scss'
 import {
@@ -26,6 +26,32 @@ export default function Project() {
   const { user } = useContext(UserContext)
   const { isPageLoaded, setIsPageLoaded } = useContext(LoadingContext)
   const [readOnly, setReadOnly] = useState(true)
+  const summaryRefs = useRef<(HTMLElement | null)[]>([])
+
+  useEffect(() => {
+    const handleKeyOrClick = (e) => {
+      console.log(e)
+      if (e.pointerId == -1 || e.target.tagName == 'LEGEND') {
+        e.preventDefault()
+        e.target.blur()
+      }
+    }
+
+    const currentSummaryRefs = summaryRefs.current;
+    console.log(currentSummaryRefs)
+    currentSummaryRefs.forEach((summary) => {
+      if (!summary) return
+      summary.addEventListener('click', handleKeyOrClick)
+      summary.addEventListener('keydown', handleKeyOrClick)
+    })
+
+    return () => {
+      currentSummaryRefs.forEach((summary) => {
+        summary.removeEventListener('click', handleKeyOrClick)
+        summary.removeEventListener('keydown', handleKeyOrClick)
+      })
+    }
+  }, [summaryRefs])
 
   const id = useParams().id
   const uid = user?.uid
@@ -157,7 +183,8 @@ export default function Project() {
         showStreaks,
         groupStreaks,
         title,
-        description
+        description,
+        keys,
       })
     }
   }, [
@@ -237,6 +264,33 @@ export default function Project() {
     setState({ ...state, bookmark: newBookmark, force: true })
     setChangedProps([...changedProps, 'bookmark'])
   }
+
+  // function setBookmarkType(newType, schedule) {
+  //   if (readOnly || newType == bookmarkType) return
+
+  //   // 'Bookmark' will always be the scroll point, the first unwatched entry
+
+  //   // 'Normal' -> 'Layers' = Get the last entry in each layer above the bookmark, mark with 'bookmarked'
+  //   // 'Normal' -> 'Manual' = Mark all entries above the bookmark with 'watched'
+  //   // 'Layers' -> 'Manual' = Mark all entries above and including each 'bookmarked' entry with 'watched'
+  //   // 'Manual' -> 'Layers' = Remove all 'watched' marks, except for the last one of each layer, to be replaced with 'bookmarked'
+
+  //   // If going to normal, remove any 'bookmarked' or 'watched' marks
+  //   let newLayers = null
+  //   newLayers = layers.map((layer) =>
+  //     layer.map((entry, i) => {
+  //       if (i === layer.length - 1) return entry
+  //       if (newType == 'normal') {
+  //         delete entry.bookmarked
+  //         delete entry.watched
+  //       }
+
+  //     }),
+  //   )
+
+  //   setState({ ...state, bookmarkType: newType, bookmark: newBookmark, layers: newLayers, force: true })
+  //   setChangedProps([...changedProps, 'bookmarkType', 'bookmark', 'layers'])
+  // }
 
   function setLayers(newLayers, force = false) {
     if (readOnly) return
@@ -529,7 +583,8 @@ export default function Project() {
           <fieldset id="layerContainer">
             {/* open if a bookmark does not exist */}
             <details open={!bookmark}>
-              <summary><legend>Layers</legend></summary>
+              <summary ref={summaryRefs[0]}>
+                <legend>Layers</legend></summary>
               <DndContext
                 sensors={sensors}
                 onDragStart={onDragStart}
@@ -580,7 +635,7 @@ export default function Project() {
           {scheduleData.schedule.length > 0 && <>
             <fieldset id='settings'>
               <details>
-                <summary>
+                <summary ref={summaryRefs[1]}>
                   <legend>
                     Settings
                   </legend>
@@ -676,7 +731,7 @@ export default function Project() {
               </details></fieldset >
             <fieldset id='stats'>
               <details>
-                <summary>
+                <summary ref={summaryRefs[2]}>
                   <legend>
                     Statistics
                   </legend>

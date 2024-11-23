@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import Entry from './Entry.tsx'
 import { SortableContext } from "@dnd-kit/sortable";
 
@@ -30,12 +31,43 @@ function Layer({
   setShow: any,
   setMovie: any,
   runAfterConfirm: any,
-  bookmark: string,
+  bookmark: string | null
 }) {
   function setEntries(newEntries, force = false) {
     layers[id] = newEntries
     setLayers([...layers], force)
   }
+
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const event = (e) => {
+      if (e.key === ' ' || (!e.key && e.target.tagName !== 'SUMMARY')) e.preventDefault()
+
+      if (e.key === " ") {
+        // Change the span text to replace the selected text with a space
+        console.log(ref.current.querySelector('span').innerText)
+        const start = ref.current.querySelector('span').innerText.slice(0, window.getSelection().anchorOffset) || ''
+        const end = ref.current.querySelector('span').innerText.slice(window.getSelection().focusOffset) || ''
+        ref.current.querySelector('span').innerHTML = start + '&nbsp;' + end
+        // Move the cursor to the end of the space
+        const range = document.createRange()
+        range.setStart(ref.current.querySelector('span').childNodes[0], start.length + 1)
+        range.collapse(true)
+        const selection = window.getSelection()
+        selection.removeAllRanges()
+        selection.addRange(range)
+      }
+    }
+
+    ref.current.addEventListener('keydown', event)
+    ref.current.addEventListener('click', event)
+
+    return () => {
+      ref.current.removeEventListener('keydown', event)
+      ref.current.removeEventListener('click', event)
+    }
+  }, [ref])
 
   // If no entries exist, or all entries are objects (but not arrays) then add a blank entry
   if (
@@ -48,7 +80,7 @@ function Layer({
   return (
     <fieldset className="layer" id={`layer-${id}`}>
       <details open>
-        <summary><legend>
+        <summary ref={ref}><legend>
           <span contentEditable suppressContentEditableWarning={true}
             className={titles[id] ? '' : 'placeholder'}
             onBlur={(e) => {

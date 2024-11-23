@@ -346,22 +346,23 @@ function Entry({
                 {settings[setting].content}
               </span>
             )}
-            <span
-              className="option"
-              tmdb-id={entryData.id}
-              tmdb-type={entryData.type}
-              contentEditable
-              suppressContentEditableWarning
-              onBlur={(e) => {
-                if (!e.target.innerText.trim()) e.target.innerText = entryData.title
-                else if (entryData.type == 'custom') {
-                  setCustom({ ...entryData, title: e.target.innerText })
-                }
-                else setTitle(entryData.show_id || entryData.id, e.target.innerText, true)
-              }}
-            >
-              {entryData.userTitle || entryData.title}
-            </span>
+            <div className="option">
+              <div
+                tmdb-id={entryData.id}
+                tmdb-type={entryData.type}
+                contentEditable
+                suppressContentEditableWarning
+                onBlur={(e) => {
+                  if (!e.target.innerText.trim()) e.target.innerText = entryData.title
+                  else if (entryData.type == 'custom') {
+                    setCustom({ ...entryData, title: e.target.innerText })
+                  }
+                  else setTitle(entryData.show_id || entryData.id, e.target.innerText, true)
+                }}
+              >
+                {entryData.userTitle || entryData.title}
+              </div>
+            </div>
             <button
               onClick={() => runAfterConfirm(() => {
                 setEntries([...entries.filter((_, i) => i !== id)], true)
