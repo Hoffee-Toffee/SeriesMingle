@@ -64,6 +64,7 @@ function Layer({
     ref.current.addEventListener('click', event)
 
     return () => {
+      if (!ref.current) return
       ref.current.removeEventListener('keydown', event)
       ref.current.removeEventListener('click', event)
     }
