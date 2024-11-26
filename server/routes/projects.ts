@@ -12,6 +12,8 @@ import {
 import { Router } from 'express'
 const router = Router()
 
+import { ProjectData, ScheduleStored } from '../../models/schedule.ts'
+
 // Get and set project routes
 
 // Get all user projects
@@ -21,15 +23,18 @@ router.get('/user/:user', async (req, res) => {
   const projectQuery = collection(firestore, 'projects')
   const querySnapshot = await getDocs(projectQuery)
 
-  const projectArr = []
+  const projectArr = [] as ProjectData[]
   querySnapshot.forEach((doc) => {
-    const data = doc.data()
+    const data = doc.data() as ScheduleStored
 
     if (data.user === user) {
       projectArr.push({
         id: doc.id,
         ...data,
-        state: data.state ? JSON.parse(data.state) : undefined,
+        state:
+          data.state && typeof data.state === 'string'
+            ? JSON.parse(data.state)
+            : undefined,
       })
     }
   })
@@ -74,7 +79,7 @@ router.post('/', async (req, res) => {
   const projectData = await req.body
   const props = projectData.props
   const toUpdate = props.reduce(
-    (obj, prop) => ({ ...obj, [prop]: projectData[prop] }),
+    (obj: object, prop: string) => ({ ...obj, [prop]: projectData[prop] }),
     {
       lastModified: new Date().getTime(),
     },

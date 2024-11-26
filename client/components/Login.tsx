@@ -24,14 +24,12 @@ export default function LogIn() {
   const { isPageLoaded, setIsPageLoaded } = useContext(LoadingContext)
   if (!isPageLoaded) setIsPageLoaded(true)
 
-  function onSubmit(e) {
+  function onSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    const email = emailRef.current?.value
-    const password = passwordRef.current?.value
-    const confirmPassword = confirmPasswordRef.current?.value
-
-    console.log({ email, password, confirmPassword })
+    const email = emailRef.current?.value || ''
+    const password = passwordRef.current?.value || ''
+    const confirmPassword = confirmPasswordRef.current?.value || ''
 
     if (creatingEmail && password != confirmPassword) {
       return setError("Passwords don't match.")
@@ -169,12 +167,12 @@ export default function LogIn() {
       </fieldset>
       <span>
         {`${creatingEmail ? 'Already' : "Don't"} have an account?`}
-        <a href="#" onClick={() => {
+        <button onClick={() => {
           setCreatingEmail(!creatingEmail)
           setError('')
         }}>
           {creatingEmail ? 'Sign In' : 'Create Account'}
-        </a>
+        </button>
       </span>
     </>
   )

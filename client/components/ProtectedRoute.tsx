@@ -2,16 +2,17 @@ import { Navigate, useLocation, useSearchParams } from 'react-router-dom'
 import { useContext } from 'react';
 import { UserContext } from './App.tsx';
 
-export default function ProtectedRoute({ children, ifLoggedIn = true, redirectTo = '/login', includeRedirect = false }) {
+import { ReactNode } from 'react';
+
+export default function ProtectedRoute({ children, ifLoggedIn = true, redirectTo = '/login', includeRedirect = false }: { children: ReactNode, ifLoggedIn?: boolean, redirectTo?: string, includeRedirect?: boolean }) {
   const { user } = useContext(UserContext)
 
   const [searchParams] = useSearchParams();
   const from = searchParams.get('from')
 
-  console.log(from)
-
   // Get the current path
-  if (includeRedirect) redirectTo = `${redirectTo}?from=${useLocation().pathname}`
+  const location = useLocation();
+  if (includeRedirect) redirectTo = `${redirectTo}?from=${location.pathname}`
   else if (from) redirectTo = from
 
 

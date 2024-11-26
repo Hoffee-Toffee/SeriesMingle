@@ -1,7 +1,13 @@
 import { Outlet, useLocation, useOutlet } from 'react-router-dom'
-import { createContext, useEffect, useState } from 'react'
+import { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { auth } from '../../server/firebase.ts'
 import '../styles/app.scss'
+
+import { User as FirebaseUser, UserInfo } from 'firebase/auth';
+
+interface User extends FirebaseUser {
+  providerData: UserInfo[];
+}
 
 export default function App() {
   const location = useLocation().key
@@ -63,5 +69,5 @@ export default function App() {
   )
 }
 
-export const UserContext = createContext({})
-export const LoadingContext = createContext({})
+export const UserContext = createContext({} as { user: User | null, setUser: Dispatch<SetStateAction<User | null>> })
+export const LoadingContext = createContext({} as { isPageLoaded: boolean, setIsPageLoaded: Dispatch<SetStateAction<boolean>> })

@@ -1,26 +1,26 @@
 import EpisodeDetails from './EpisodeDetails.tsx'
-import { useEffect } from 'react'
+import { EntryDetails, ScheduleData } from '../../models/schedule.ts'
 
-export default function Schedule({ scheduleData, user }) {
-  let {
+export default function Schedule({ scheduleData }: { scheduleData: ScheduleData }) {
+  const {
     schedule,
     colors,
     bookmark,
-    data,
+    // data,
     layers,
     titles,
     seenSpan,
     totalSpan,
-    setTitles,
-    setShow,
-    setCustom,
+    // setTitles,
+    // setShow,
+    // setCustom,
     streak,
     goal,
     showStreaks,
     groupStreaks,
-    streakEnds,
     streakLengths,
   } = scheduleData
+  let { streakEnds } = scheduleData
 
   const numOfLayers = layers.reduce(
     (acc, layer) => (acc += layer.length > 1 ? 1 : 0),
@@ -28,9 +28,10 @@ export default function Schedule({ scheduleData, user }) {
   )
 
   function scrollToBookmark() {
-    document.getElementById('bookmark') &&
-      document.getElementById('timelineContainer').scroll({
-        top: document.getElementById('bookmark').offsetTop - 5,
+    const bookmark = document.getElementById('bookmark')
+    bookmark &&
+      document.getElementById('timelineContainer')?.scroll({
+        top: bookmark.offsetTop - 5,
         left: 0,
         behavior: 'smooth',
       })
@@ -41,13 +42,15 @@ export default function Schedule({ scheduleData, user }) {
     streak !== 0
       ? totalSpan / Math.round(Math.max(streakLengths.length / goal, 1))
       : totalSpan / Math.round(totalSpan / (goal * 60))
-  const sessionEnds = []
+  const sessionEnds = [] as number[]
 
   if (goal !== 0)
-    (streak !== 0 ? streakLengths : schedule).reduce((total, element, i) => {
+    (streak !== 0 ? streakLengths : schedule).reduce((total: number, element, i) => {
+      // Exit if a barrier
+      if (typeof element === 'object' && 'barrier' in element) return total
       const newTotal =
         total +
-        (streak !== 0 ? element : element.runtime || element.average_run_time)
+        (typeof element === 'number' ? element : (element.runtime || ('average_run_time' in element ? element?.average_run_time : 0) || 0))
       const target = sessionLength * (sessionEnds.length + 1)
 
       // We will start by checking if total is closer to totalPassed + 1 than newTotal is
@@ -64,14 +67,14 @@ export default function Schedule({ scheduleData, user }) {
     // Group same-source streaks within watch sessions
     // AKA for every session, loop over each streak, averaging out the midpoints of all streak entries of the same layer_id
 
-    const sessions = [[]]
+    const sessions = [[]] as { i: number; mid: number; layer: number }[][]
 
     schedule.forEach((entry, i) => {
       // Add to the end of the last session in the array
       sessions[sessions.length - 1].push({
         i,
-        mid: entry.mid,
-        layer: entry.layer,
+        mid: (entry.mid as number),
+        layer: (entry.layer as number),
       })
 
       // If the end of a session, then add an empty array for the next session
@@ -85,7 +88,7 @@ export default function Schedule({ scheduleData, user }) {
         if (!groups[layer]) groups[layer] = []
         groups[layer].push(entry)
         return groups
-      }, [])
+      }, [] as { i: number; mid: number; layer: number }[][])
 
       // For each group, calculate the average midpoint of all entries
       groups.forEach((group) => {
@@ -97,16 +100,14 @@ export default function Schedule({ scheduleData, user }) {
       })
     })
 
-    const oldSchedule = [...schedule]
-    schedule.sort((a, b) => a.mid - b.mid)
+    // const oldSchedule = [...schedule]
+    schedule.sort((a, b) => (a.mid as number) - (b.mid as number))
 
     // Fix streakEnds to match the new sorted schedule
     streakEnds = streakEnds.map((end) =>
       schedule.findIndex((entry) => entry.posIndex == end),
     )
   }
-
-  console.log('sessionEnds', sessionEnds)
 
   const seenPercentage = (seenSpan / totalSpan) * 100
 
@@ -122,12 +123,12 @@ export default function Schedule({ scheduleData, user }) {
     minute: 1,
   }
 
-  const timeNames = Object.keys(timeUnits)
+  const timeNames = Object.keys(timeUnits) as (keyof typeof timeUnits)[]
 
-  const minutesToTime = (minutes) => {
+  const minutesToTime = (minutes: number) => {
     let remainder = minutes
     const time = timeNames
-      .map((unit) => {
+      .map((unit: keyof typeof timeUnits) => {
         const unitValue = Math.floor(remainder / timeUnits[unit])
         remainder -= unitValue * timeUnits[unit]
         return unitValue
@@ -143,11 +144,7 @@ export default function Schedule({ scheduleData, user }) {
 
     return (
       time.reduce((timeString, unit, i) => {
-        // Rules:
-        // If the last unit, simply add it
-        // If the first of two units, add it with ' and '
-        // If the second to last past this point, add it with ', and '
-        // Otherwise, add it with ', '
+        if (!timeString) return unit
 
         const reverseIndex = time.length - i - 1
         if (reverseIndex == 0) return timeString + unit
@@ -158,10 +155,6 @@ export default function Schedule({ scheduleData, user }) {
     )
   }
 
-  // console.log(`You have watched ${seenPercentage}% of your schedule.\nOr ${seenSpan} minutes out of ${totalSpan} minutes, with ${totalSpan - seenSpan} minutes remaining.`)
-  console.log(
-    `You have watched ${seenPercentage}% of your schedule.\nOr '${minutesToTime(seenSpan)}' out of '${minutesToTime(totalSpan)}', with '${minutesToTime(totalSpan - seenSpan)}' remaining.`,
-  )
   return (
     <>
       <fieldset id="key">
@@ -169,19 +162,19 @@ export default function Schedule({ scheduleData, user }) {
         {Object.values(colors.movie)
           .concat(Object.values(colors.tv))
           .concat(Object.values(colors.custom))
-          .sort((a, b) => a.indices[0] - b.indices[0])
+          .sort((a, b) => ((a.indices as number[])[0]) - ((b.indices as number[])[0]))
           .map((color) => (
             <span
-              key={color.indices[0]}
+              key={(color.indices as number[])[0]}
               style={{ backgroundColor: `hwb(${color.color} 0% 25%)` }}
             >
               <span className="setTitle">
-                {color.indices.length > 1
+                {(color.indices as number[]).length > 1
                   ? color.userTitle || color.title
                   : color.title}
               </span>
               <span className="setWatched">
-                {`(${Math.round((color.watched / color.span) * 10000) / 100}% watched)`}
+                {`(${Math.round(((color.watched || 0) / (color.span || 0)) * 10000) / 100}% watched)`}
               </span>
             </span>
           ))}
@@ -191,19 +184,19 @@ export default function Schedule({ scheduleData, user }) {
           <button onClick={scrollToBookmark}>
             Jump to Progress ({Math.round(seenPercentage * 100) / 100}% watched)
           </button>
-          <button onClick={() => document.getElementById('removeWatchedPopup').classList.add('show')}
+          <button onClick={() => document.getElementById('removeWatchedPopup')?.classList.add('show')}
           >
             Remove Watched
           </button>
         </>
       )}
-      <button onClick={() => document.getElementById('clearSchedulePopup').classList.add('show')}>
+      <button onClick={() => document.getElementById('clearSchedulePopup')?.classList.add('show')}>
         Clear Schedule
       </button>
       <div id="timelineContainer">
         <div id="layerTitles">
           {numOfLayers && Array(numOfLayers)
-            .fill()
+            .fill(0)
             .map((_, j) => (
               <span
                 key={j}
@@ -219,9 +212,9 @@ export default function Schedule({ scheduleData, user }) {
         <div id="scheduleVisualization">
           {schedule.map((entry, i) => (
             <>
-              {entry.episodes ? (
+              {"episodes" in entry ? (
                 <div className="multiple" key={i}>
-                  {entry.episodes.map((episode, j) => (
+                  {(entry.episodes as EntryDetails[]).map((episode: EntryDetails, j) => (
                     <EpisodeDetails
                       entry={{ ...entry, ...episode }}
                       key={`${i}.${j + 1}`}

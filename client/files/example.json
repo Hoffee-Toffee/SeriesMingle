@@ -1,4 +1,5 @@
 {
+  "id": "",
   "title": "Example Schedule",
   "description": "Breaking Bad, El Camino, and Better Call Saul, with James Bond, and with House M.D.",
   "bookmark": null,
@@ -2945,5 +2946,8 @@
       "James Bond Films",
       "'House'"
   ],
+  "lastModified": 0,
+  "user": "",
+  "permissions": {},
   "keys": []
 }

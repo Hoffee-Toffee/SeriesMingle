@@ -21,6 +21,7 @@ import Terminal from './Terminal.tsx'
 import { Link, useParams } from 'react-router-dom'
 import { doc, getFirestore, onSnapshot } from 'firebase/firestore'
 import fetchSecret from '../apis/fetchSecret.ts'
+import { MediaDetails, LayerEntry, ScheduleState, ProjectData } from '../../models/schedule.ts'
 
 export default function Project() {
   const { user } = useContext(UserContext)
@@ -29,11 +30,10 @@ export default function Project() {
   const summaryRefs = useRef<(HTMLElement | null)[]>([])
 
   useEffect(() => {
-    const handleKeyOrClick = (e) => {
-      console.log(e)
-      if (e.pointerId == -1 || e.target.tagName == 'LEGEND') {
-        e.preventDefault()
-        e.target.blur()
+    const handleKeyOrClick = (e: MouseEvent | KeyboardEvent) => {
+      if ((e as PointerEvent).pointerId == -1 || (e.target as HTMLElement).tagName == 'LEGEND') {
+        e.preventDefault();
+        (e.target as HTMLElement).blur()
       }
     }
 
@@ -47,6 +47,7 @@ export default function Project() {
 
     return () => {
       currentSummaryRefs.forEach((summary) => {
+        if (!summary) return
         summary.removeEventListener('click', handleKeyOrClick)
         summary.removeEventListener('keydown', handleKeyOrClick)
       })
@@ -60,7 +61,11 @@ export default function Project() {
   const initialState = {
     layers: [[]],
     mpSpacing: 'normal',
-    data: { tv: {}, movie: {}, custom: {} },
+    data: {
+      tv: {},
+      movie: {},
+      custom: {},
+    },
     bookmark: null,
     force: false,
     titles: [],
@@ -71,19 +76,22 @@ export default function Project() {
     title: 'Untitled Schedule',
     description: 'No Description',
     keys: [],
-  }
+    lastModified: Date.now(),
+    user: uid,
+    permissions: {}
+  } as ScheduleState
   // Layers as a state
   const [state, setState] = useState(initialState)
 
   const [activeEntry, setActiveEntry] = useState(null)
   const [tempLayers, setTempLayers] = useState(null)
-  const [outlinePos, setOutlinePos] = useState(null)
+  const [outlinePos, setOutlinePos] = useState<string | null>(null)
   const [hasAccess, setHasAccess] = useState(false)
-  const [changedProps, setChangedProps] = useState([])
+  const [changedProps, setChangedProps] = useState<string[]>([])
   const [saved, setSaved] = useState(true)
 
   useEffect(() => {
-    const onBeforeUnload = (e) => {
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
       if (!saved) {
         e.preventDefault()
         e.returnValue = ''
@@ -105,27 +113,27 @@ export default function Project() {
 
   useEffect(() => {
     // Create listener for document in the projects collection with the given id
+    if (!id) return;
     const projectRef = doc(db, 'projects', id)
     const projectListener = onSnapshot(projectRef, (doc) => {
-      let project = doc.data()
+      let project = doc.data() as ProjectData
       project = {
         ...project,
-        ...(project.state || {}),
-        state: project.state ? true : undefined,
-        layers: project.state
+        ...(typeof project.state == 'object' ? project.state : {}),
+        state: project?.state ? true : undefined,
+        layers: (typeof project.state == 'object' && 'layers' in project.state)
           ? project.state.layers
-          : project.layers
-            ? Object.values(project.layers).map((layer, i) => layer[i])
+          : 'layers' in project
+            ? (Object.values(project.layers).map((layer: { [key: number]: LayerEntry[] }, i: number) => layer[i]) as LayerEntry[][])
             : [[]],
       }
 
-      if (project.user == uid || (project.permissions && project.permissions[uid] >= 1)) {
+      if (project?.user == uid || (uid && project?.permissions && project?.permissions[uid] >= 1)) {
         setReadOnly(false)
         setHasAccess(true)
       }
-      setState(project)
+      if (project) setState(project)
       setIsPageLoaded(true)
-      console.log(project)
     })
 
     return () => {
@@ -138,7 +146,7 @@ export default function Project() {
     ...state,
   }
 
-  const [savedJS, setSavedJS] = useState({})
+  const [savedJS, setSavedJS] = useState<{ [key: string]: string }>({})
 
   useEffect(() => {
     let updated = false
@@ -149,12 +157,13 @@ export default function Project() {
       }
       eval(savedJS[key])
     })
-    if (updated) setSavedJS([...savedJS])
+    if (updated) setSavedJS({ ...savedJS })
   }, [keys, savedJS])
 
   useEffect(() => {
-    if (document.getElementById('bookmark')) document.getElementById('timelineContainer').scroll({
-      top: document.getElementById('bookmark').offsetTop - 5,
+    const bookmark = document.getElementById('bookmark')
+    if (bookmark) document.getElementById('timelineContainer')?.scroll({
+      top: bookmark.offsetTop - 5,
       left: 0,
       behavior: 'smooth',
     })
@@ -164,12 +173,13 @@ export default function Project() {
 
   useEffect(() => {
     if (state.force && !readOnly) {
-      // console.log('force rerender')
       // Compare the new state with the old state
       setSaved(false)
-      setProject({ ...state, force: false }, id, changedProps).then((_) =>
-        setSaved(true),
-      )
+      if (id) {
+        setProject({ ...state, force: false }, id, changedProps)
+          .then(() => setSaved(true))
+          .catch((error) => console.error(error));
+      }
       setChangedProps([])
       setState({
         mpSpacing,
@@ -208,7 +218,7 @@ export default function Project() {
     keys
   ])
 
-  function addData(entry, layerId: number, entryId: number) {
+  function addData(entry: MediaDetails, layerId: number, entryId: number) {
     if (readOnly) return
     data[entry.type] = data[entry.type] || {}
     data[entry.type][entry.id] = entry
@@ -217,10 +227,10 @@ export default function Project() {
     setChangedProps([...changedProps, 'data', 'layers'])
   }
 
-  function setCustom(newData = null, layer = null, id = null) {
+  function setCustom(newData: string | MediaDetails | null = null, layer = null, id = null) {
     if (readOnly) return
     const defaultData = {
-      title: newData || 'Custom Set',
+      title: typeof newData === 'string' ? newData : 'Custom Set',
       type: 'custom',
       id: data.custom ? Object.keys(data.custom).length + 1 : 1,
       runtime: 30,
@@ -228,38 +238,38 @@ export default function Project() {
       offset: 0,
       term: 'Part',
     }
-    if (!layer) {
+    if (!layer && newData && typeof newData == 'object') {
       data.custom = data.custom || {}
       data.custom[newData.id] = newData
       setState({ ...state, data, force: true })
       setChangedProps([...changedProps, 'data'])
-    } else {
-      addData(typeof newData == 'string' ? defaultData : newData, layer, id)
+    } else if (layer && id && newData) {
+      addData(typeof newData == 'string' ? { ...defaultData, type: 'custom' } : newData, layer, id)
     }
   }
 
-  function setBarrier(layer = null, id = null) {
-    if (readOnly) return
-    const defaultData = {
-      title: newData || 'Custom Set',
-      type: 'custom',
-      id: data.custom ? Object.keys(data.custom).length + 1 : 1,
-      runtime: 30,
-      repeat: 1,
-      offset: 0,
-      term: 'Part',
-    }
-    if (!layer) {
-      data.custom = data.custom || {}
-      data.custom[newData.id] = newData
-      setState({ ...state, data, force: true })
-      setChangedProps([...changedProps, 'data'])
-    } else {
-      addData(typeof newData == 'string' ? defaultData : newData, layer, id)
-    }
-  }
+  // function setBarrier(layer = null, id = null) {
+  //   if (readOnly) return
+  //   const defaultData = {
+  //     title: newData || 'Custom Set',
+  //     type: 'custom',
+  //     id: data.custom ? Object.keys(data.custom).length + 1 : 1,
+  //     runtime: 30,
+  //     repeat: 1,
+  //     offset: 0,
+  //     term: 'Part',
+  //   }
+  //   if (!layer) {
+  //     data.custom = data.custom || {}
+  //     data.custom[newData.id] = newData
+  //     setState({ ...state, data, force: true })
+  //     setChangedProps([...changedProps, 'data'])
+  //   } else {
+  //     addData(typeof newData == 'string' ? defaultData : newData, layer, id)
+  //   }
+  // }
 
-  function setBookmark(newBookmark) {
+  function setBookmark(newBookmark: string | null) {
     if (readOnly) return
     setState({ ...state, bookmark: newBookmark, force: true })
     setChangedProps([...changedProps, 'bookmark'])
@@ -292,7 +302,7 @@ export default function Project() {
   //   setChangedProps([...changedProps, 'bookmarkType', 'bookmark', 'layers'])
   // }
 
-  function setLayers(newLayers, force = false) {
+  function setLayers(newLayers: LayerEntry[][], force = false) {
     if (readOnly) return
     // If newLayers has less layers and sublayers than the old set, ensure all unreferenced data is removed to save space
     const newProps = [...changedProps, 'layers']
@@ -300,8 +310,9 @@ export default function Project() {
     const updateData = layers.flat().length > newLayers.flat().length
     if (updateData) {
       // Transfer all referenced data from 'data' to 'newData', removing all that is not referenced
-      newLayers.forEach(layer => layer.forEach((entry, i) => {
-        if (entry.ref) newData[entry.ref[0]][entry.ref[1]] = data[entry.ref[0]][entry.ref[1]]
+      newLayers.forEach(layer => (layer as LayerEntry[]).forEach((entry) => {
+        // If entry has type of MediaDetails...
+        if (typeof entry == "object" && 'ref' in entry) newData[entry.ref[0]][entry.ref[1]] = data[entry.ref[0]][entry.ref[1]]
       }))
       newProps.push('data')
     }
@@ -317,37 +328,37 @@ export default function Project() {
     setChangedProps(newProps)
   }
 
-  function setMpSpacing(mpSpacing) {
+  function setMpSpacing(mpSpacing: string) {
     if (readOnly) return
     setState({ ...state, mpSpacing, force: true })
     setChangedProps([...changedProps, 'mpSpacing'])
   }
 
-  function setStreak(streak) {
+  function setStreak(streak: number) {
     if (readOnly) return
     setState({ ...state, streak, force: true })
     setChangedProps([...changedProps, 'streak'])
   }
 
-  function setGoal(goal) {
+  function setGoal(goal: number) {
     if (readOnly) return
     setState({ ...state, goal, force: true })
     setChangedProps([...changedProps, 'goal'])
   }
 
-  function setShowStreaks(showStreaks) {
+  function setShowStreaks(showStreaks: boolean) {
     if (readOnly) return
     setState({ ...state, showStreaks, force: true })
     setChangedProps([...changedProps, 'showStreaks'])
   }
 
-  function setGroupStreaks(groupStreaks) {
+  function setGroupStreaks(groupStreaks: boolean) {
     if (readOnly) return
     setState({ ...state, groupStreaks, force: true })
     setChangedProps([...changedProps, 'groupStreaks'])
   }
 
-  function setTitles(layer, title) {
+  function setTitles(layer: number, title: string) {
     if (readOnly) return
     titles[layer] = title
     setState({
@@ -359,7 +370,7 @@ export default function Project() {
     setChangedProps([...changedProps, 'titles'])
   }
 
-  function setShow(showId, newData) {
+  function setShow(showId: number, newData: MediaDetails | string | null) {
     if (readOnly) return
 
     if (typeof newData === 'string' || newData == null) {
@@ -382,7 +393,7 @@ export default function Project() {
     setChangedProps([...changedProps, 'data'])
   }
 
-  function setMovie(movieId, newData) {
+  function setMovie(movieId: number, newData: MediaDetails | string | null) {
     if (readOnly) return
 
     if (typeof newData === 'string' || newData == null) {
@@ -405,26 +416,26 @@ export default function Project() {
     setChangedProps([...changedProps, 'data'])
   }
 
-  function setTitle(newTitle) {
+  function setTitle(newTitle: string) {
     if (readOnly) return
     setState({ ...state, title: newTitle, force: true })
     setChangedProps([...changedProps, 'title'])
   }
 
-  function setDescription(newDescription) {
+  function setDescription(newDescription: string) {
     if (readOnly) return
     setState({ ...state, description: newDescription, force: true })
     setChangedProps([...changedProps, 'description'])
   }
 
-  function setKeys(newKeys) {
+  function setKeys(newKeys: string[]) {
     if (readOnly) return
     setState({ ...state, keys: newKeys, force: true })
     setChangedProps([...changedProps, 'keys'])
   }
 
-  async function removeWatched(afterAction = null) {
-    const seenProgress = {}
+  async function removeWatched() {
+    const seenProgress: { [key: string]: any } = {}
     scheduleData.schedule.toReversed().forEach((entry) => {
       const id = `${entry.layer}-${entry.layer_id}-${entry.type}-${entry.show_id || entry.id}`
       if (!entry.show && !seenProgress[id]) seenProgress[id] = entry
@@ -463,9 +474,9 @@ export default function Project() {
     )
   }
 
-  async function runAfterConfirm(action) {
+  async function runAfterConfirm(action: () => void) {
     if (bookmark) {
-      document.getElementById('rippleActionPopup').classList.add('show')
+      document.getElementById('rippleActionPopup')?.classList.add('show')
     } else {
       action()
     }
@@ -498,9 +509,9 @@ export default function Project() {
               <strong>This action cannot be undone.</strong>
               <button onClick={() => {
                 removeWatched()
-                document.getElementById('removeWatchedPopup').classList.remove('show');
+                document.getElementById('removeWatchedPopup')?.classList.remove('show');
               }}>Remove Watched</button>
-              <button onClick={() => document.getElementById('removeWatchedPopup').classList.remove('show')}>Cancel</button>
+              <button onClick={() => document.getElementById('removeWatchedPopup')?.classList.remove('show')}>Cancel</button>
             </div>
           </div>
           <div id='clearSchedulePopup'>
@@ -511,11 +522,11 @@ export default function Project() {
                 // Old state with default layers, data, and titles
                 setState({ ...state, layers: initialState.layers, data: initialState.data, titles: initialState.titles, force: true })
                 setChangedProps([...changedProps, 'layers', 'data', 'titles'])
-                document.getElementById('clearSchedulePopup').classList.remove('show')
+                document.getElementById('clearSchedulePopup')?.classList.remove('show')
               }}>
                 Clear Schedule
               </button>
-              <button onClick={() => document.getElementById('clearSchedulePopup').classList.remove('show')}>Cancel</button>
+              <button onClick={() => document.getElementById('clearSchedulePopup')?.classList.remove('show')}>Cancel</button>
             </div>
           </div>
           <div id='rippleActionPopup'>
@@ -524,10 +535,10 @@ export default function Project() {
               <strong>This action cannot be undone.</strong>
               <button onClick={() => {
                 removeWatched()
-                document.getElementById('rippleActionPopup').classList.remove('show')
+                document.getElementById('rippleActionPopup')?.classList.remove('show')
               }}>Remove Watched</button>
               <button onClick={() => {
-                document.getElementById('rippleActionPopup').classList.remove('show')
+                document.getElementById('rippleActionPopup')?.classList.remove('show')
               }}>Cancel</button>
             </div>
           </div>
@@ -799,39 +810,39 @@ export default function Project() {
   )
 
   function onDragStart(event: DragStartEvent) {
-    console.log('drag start')
     setTempLayers(null)
-    setActiveEntry({ ...event.active, ...event.active.data.current.entry })
+    setActiveEntry({ ...event.active, ...(event.active.data.current?.entry || {}) })
   }
 
   function onDragEnd() {
-    console.log('drag end')
     setActiveEntry(null)
     setOutlinePos(null)
     if (JSON.stringify(tempLayers) !== JSON.stringify(layers))
-      setLayers(tempLayers, true)
+      if (tempLayers) setLayers(tempLayers, true)
+
     setTempLayers(null)
   }
 
   function onDragOver(event: DragOverEvent) {
-    console.log('drag over')
     const { active, over } = event
     if (!over) return
 
-    if (outlinePos === `${over.id.split('-')[0]}-${over.id.split('-')[1]}`)
-      return
+    const ActID = String(active.id).split('-')
+    const OvrID = String(over.id).split('-')
+
+    if (outlinePos === `${OvrID[0]}-${OvrID[1]}`) return
 
     setTempLayers(
       moveEntry(
-        active.id.split('-')[0],
-        active.id.split('-')[1],
-        over.id.split('-')[0],
-        over.id.split('-')[1],
+        Number(ActID[0]),
+        Number(ActID[1]),
+        Number(OvrID[0]),
+        Number(OvrID[1]),
       ),
     )
   }
 
-  function moveEntry(oldLayer, oldIndex, newLayer, newIndex) {
+  function moveEntry(oldLayer: number, oldIndex: number, newLayer: number, newIndex: number) {
     const clone = JSON.parse(JSON.stringify(layers))
     const entry = layers[oldLayer][oldIndex]
 

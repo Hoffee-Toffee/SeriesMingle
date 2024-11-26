@@ -6,7 +6,7 @@
 // We will assume we already have 'n' and 'n' equally spread hues (by number, i.e. 10 different, not spread by even contrast, this will be the baseline)
 const logging = false
 
-function maximizeSpread(array) {
+function maximizeSpread(array: number[]) {
   const n = array.length
   const numGroups = Math.ceil(Math.sqrt(n))
 
@@ -58,7 +58,7 @@ export default function generateColors(n: number) {
       bestSet = newHues
     }
 
-    // Pick new hues, where each hue becomes a new value between it's neighbours, such that it makes it's old contrasts even
+    // Pick new hues, where each hue becomes a new value between it's neighbors, such that it makes it's old contrasts even
     newHues = Array(n)
       .fill(null)
       .map((_, i) => {
@@ -72,12 +72,12 @@ export default function generateColors(n: number) {
           contrasts[(i + newHues.length - 2) % (newHues.length - 1)]
         let modifier = (nextContrast - prevContrast) / (nextHue - prevHue)
         // If any of it's hue span goes through the 210 to 290 void, then compensate the modifier by scaling it down
-        // I.e. if anything between 210 and 290 are within the bounds of the neighbours
+        // I.e. if anything between 210 and 290 are within the bounds of the neighbors
         // The scale will decrease depending how much of that range is in between
         if (prevHue <= 210 && 290 >= nextHue) {
           // Get the num of overlap, getting the difference between the start and end of overlap
           const overlap = Math.min(nextHue, 290) - Math.max(prevHue, 210)
-          // Scale the modifier down by ratio of overlap area to the rest of the neighbour difference
+          // Scale the modifier down by ratio of overlap area to the rest of the neighbor difference
           modifier *= 1 - overlap / (nextHue - prevHue)
         }
 

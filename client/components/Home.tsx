@@ -25,7 +25,7 @@ export default function Home() {
           </h1>
         </header>
         <input type="checkbox" id="nav-toggle" />
-        <label htmlFor="nav-toggle" id="nav-toggle-label">
+        <label htmlFor="nav-toggle" id="nav-toggle-label" aria-label="Toggle Navigation">
           <span></span>
           <span></span>
           <span></span>

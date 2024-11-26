@@ -24,6 +24,9 @@ server.use(express.urlencoded({ extended: true, limit: '50mb' }))
 server.use('/api/v1', tmdbRoutes)
 server.use('/api/v1/projects', projectRoutes)
 server.get('/api/v1/secret', (req, res) => {
+  if (typeof req.query.passphrase !== 'string') {
+    return res.status(400).send('Invalid passphrase')
+  }
   res.send(decrypt(req.query.passphrase))
 })
 

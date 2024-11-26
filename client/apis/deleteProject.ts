@@ -5,10 +5,8 @@ import packageJson from '../../package.json'
 const base = packageJson.config.base
 const rootUrl = (base == '/' ? '' : base) + '/api/v1/projects/delete'
 
-export default function deleteProject(projectId: string) {
-  return request.get(`${rootUrl}/${projectId}`).then((res) => {
-    if (!res.body) return null
-
-    return res.body.success
-  })
+export default async function deleteProject(projectId: string) {
+  const res = await request.get(`${rootUrl}/${projectId}`)
+  if (!res.body) return null
+  return res.body.success
 }

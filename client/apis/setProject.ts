@@ -5,18 +5,20 @@ import packageJson from '../../package.json'
 const base = packageJson.config.base
 const rootUrl = (base == '/' ? '' : base) + '/api/v1/projects'
 
+import { ScheduleState, LayerEntry } from '../../models/schedule.ts'
+
 export default async function setProject(
-  state: object,
+  state: ScheduleState,
   id: string,
   props: string[],
 ) {
   try {
     const res = await request.post(`${rootUrl}/`).send({
-      id,
       ...state,
+      id,
       props,
       layers: {
-        ...state.layers.flatMap((layer: object[], i: number) => ({
+        ...state.layers.flatMap((layer: LayerEntry[], i: number) => ({
           [i]: layer,
         })),
       },

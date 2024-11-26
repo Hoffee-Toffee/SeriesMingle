@@ -10,6 +10,7 @@ import cloneProject from '../apis/cloneProject.ts';
 import deleteProject from '../apis/deleteProject.ts';
 import leaveProject from '../apis/leaveProject.ts';
 import { getFirestore, collection, query, where, onSnapshot } from 'firebase/firestore';
+import { ProjectData, ScheduleStored } from '../../models/schedule.ts';
 
 export default function Dashboard() {
   const { user } = useContext(UserContext) as {
@@ -19,25 +20,27 @@ export default function Dashboard() {
   };
 
   const { isPageLoaded, setIsPageLoaded } = useContext(LoadingContext) as { isPageLoaded: boolean, setIsPageLoaded: React.Dispatch<React.SetStateAction<boolean>> };
-  const [ownedProjects, setOwnedProjects] = useState<{ id: string, lastModified?: number }[]>([]);
-  const [joinedProjects, setJoinedProjects] = useState<{ id: string, lastModified?: number }[]>([]);
+  const [ownedProjects, setOwnedProjects] = useState<ProjectData[]>([]);
+  const [joinedProjects, setJoinedProjects] = useState<ProjectData[]>([]);
 
   const navigate = useNavigate();
   const db = getFirestore();
 
-  async function createProjectAndOpen(project = null) {
+  async function createProjectAndOpen(projectId: string | null = null) {
     let newProject;
-    if (project) newProject = await cloneProject(project, user.uid);
+    if (projectId) newProject = await cloneProject(projectId, user.uid);
     else newProject = await createProject(user.uid);
     navigate(`/project/${newProject.id}`);
   }
 
-  async function deleteProjectAndRemove(projectId: string) {
+  async function deleteProjectAndRemove(projectId: string | null) {
+    if (!projectId) return;
     await deleteProject(projectId);
     setOwnedProjects(ownedProjects.filter((p: { id: string }) => p.id !== projectId));
   }
 
-  async function leaveProjectAndRemove(projectId: string) {
+  async function leaveProjectAndRemove(projectId: string | null) {
+    if (!projectId) return;
     await leaveProject(projectId, user.uid);
     setJoinedProjects(joinedProjects.filter((p: { id: string }) => p.id !== projectId));
   }
@@ -47,17 +50,17 @@ export default function Dashboard() {
     const joinedProjectsQuery = query(collection(db, 'projects'), where(`permissions.${user.uid}`, '>=', 1));
 
     const ownedProjectsListener = onSnapshot(ownedProjectsQuery, (querySnapshot) => {
-      const projectsArray: { id: string, lastModified?: number }[] = []
+      const projectsArray: ProjectData[] = [];
       querySnapshot.forEach((doc) => {
-        projectsArray.push({ ...doc.data(), id: doc.id });
+        projectsArray.push({ ...doc.data() as ScheduleStored, id: doc.id });
       });
       setOwnedProjects(projectsArray.sort((a, b) => (b.lastModified || 0) - (a.lastModified || 0)))
     });
 
     const joinedProjectsListener = onSnapshot(joinedProjectsQuery, (querySnapshot) => {
-      const projectsArray: { id: string, lastModified?: number }[] = []
+      const projectsArray: ProjectData[] = [];
       querySnapshot.forEach((doc) => {
-        projectsArray.push({ ...doc.data(), id: doc.id });
+        projectsArray.push({ ...doc.data() as ScheduleStored, id: doc.id });
       });
       setJoinedProjects(projectsArray.sort((a, b) => (b.lastModified || 0) - (a.lastModified || 0)))
     });
@@ -77,26 +80,31 @@ export default function Dashboard() {
       <div id='contextMenu'>
         <button id="deleteProjectButton" onClick={() => document.getElementById('deletePopup')?.classList.add('show')}>Delete Project</button>
         <button id="leaveProjectButton" onClick={() => document.getElementById('leavePopup')?.classList.add('show')}>Leave Project</button>
-        <button onClick={(e) => createProjectAndOpen(e.target.parentElement.getAttribute('data-id'))}>Clone Project</button>
+        <button onClick={(e) => {
+          const projectId = (e.target as HTMLElement).parentElement?.getAttribute('data-id');
+          createProjectAndOpen(projectId);
+        }}>Clone Project</button>
       </div>
       <div id='deletePopup'>
         <div>
           <p>Delete <span />?</p>
           <button onClick={() => {
-            deleteProjectAndRemove(document.getElementById('contextMenu').getAttribute('data-id'));
-            document.getElementById('deletePopup').classList.remove('show');
+            const contextMenu = document.getElementById('contextMenu');
+            if (contextMenu) deleteProjectAndRemove(contextMenu.getAttribute('data-id'));
+            document.getElementById('deletePopup')?.classList.remove('show');
           }}>Yes</button>
-          <button onClick={() => document.getElementById('deletePopup').classList.remove('show')}>No</button>
+          <button onClick={() => document.getElementById('deletePopup')?.classList.remove('show')}>No</button>
         </div>
       </div>
       <div id='leavePopup'>
         <div>
           <p>Leave <span />?</p>
           <button onClick={() => {
-            leaveProjectAndRemove(document.getElementById('contextMenu').getAttribute('data-id'));
-            document.getElementById('leavePopup').classList.remove('show');
+            const contextMenu = document.getElementById('contextMenu');
+            if (contextMenu) leaveProjectAndRemove(contextMenu.getAttribute('data-id'));
+            document.getElementById('leavePopup')?.classList.remove('show');
           }}>Yes</button>
-          <button onClick={() => document.getElementById('leavePopup').classList.remove('show')}>No</button>
+          <button onClick={() => document.getElementById('leavePopup')?.classList.remove('show')}>No</button>
         </div>
       </div>
       {isPageLoaded && <>

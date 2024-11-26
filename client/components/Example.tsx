@@ -1,8 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
 import { useEffect, useState } from 'react'
 import { generateSchedule } from '../functions/generateSchedule.ts'
-import example from '../files/example.json'
+import { ScheduleState, MediaDetails, Barrier, CustomDetails } from '../../models/schedule.ts'
 import EpisodeDetails from '../components/EpisodeDetails.tsx'
+
+import untypedExample from '../files/example.json'
+const example = untypedExample as ScheduleState
 
 const { schedule, colors } = generateSchedule(
   example.layers,
@@ -21,12 +24,12 @@ const { schedule, colors } = generateSchedule(
   false,
 );
 
-[colors.movie[0].color, colors.movie[1].color] = [colors.movie[1].color, colors.movie[0].color]
+if (colors) [colors.movie[0].color, colors.movie[1].color] = [colors.movie[1].color, colors.movie[0].color]
 
 export default function Example({ id }: { id: string }) {
   if (!["main", "bookmark", "background"].includes(id)) id = "background"
 
-  const [refresh, setRefresh] = useState(true)
+  const [, setRefresh] = useState(true)
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -45,19 +48,18 @@ export default function Example({ id }: { id: string }) {
 
   const viewHeight = window.outerHeight * (2 / 3)
   const bodyHeight = schedule.reduce(
-    (acc, cur) => acc + (scale * (Math.max(10, cur.runtime || cur.average_run_time) + 0.5 * (Math.max(0, 30 - (cur.runtime || cur.average_run_time))) + 15)) + 4,
-    viewHeight / 2,
+    (acc, cur) => acc + (scale * (Math.max(10, ('runtime' in cur && cur.runtime) || ('average_run_time' in cur && cur.average_run_time) || 0) + 0.5 * (Math.max(0, 30 - (('runtime' in cur && cur.runtime) || ('average_run_time' in cur && cur.average_run_time) || 0)) + 15))) + 4, viewHeight / 2,
   )
 
-  const entryPositions = (offset, top = 0) => {
+  const entryPositions = (offset: number, top = 0) => {
     let isFirst = true
 
     return schedule.map((entry) => {
-      const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (entry.type == 'episode' ? entry.id : colors.custom[entry.set].indices.findIndex((e: any) => e == i))}`
+      const posId = `${entry.layer}-${'layer_id' in entry && entry.layer_id}${'type' in entry && entry.type == 'movie' ? '' : '-' + ('type' in entry && entry.type == 'episode' ? entry.id : (colors.custom[(entry as CustomDetails).set as number].indices || []).findIndex((e: number) => e == (entry as CustomDetails).id))}`
 
-      const height = scale * Math.max(10, entry.runtime || entry.average_run_time) + 4
-      const margin = scale * Math.max(0, 30 - (entry.runtime || entry.average_run_time)) / 2 + (scale * 15)
-      const toReturn = []
+      const height = scale * Math.max(10, ("runtime" in entry && entry.runtime) || ("average_run_time" in entry && entry.average_run_time) || 0) + 4
+      const margin = scale * Math.max(0, 30 - (("runtime" in entry && entry.runtime) || ("average_run_time" in entry && entry.average_run_time) || 0)) / 2 + (scale * 15)
+      const toReturn: (number | MediaDetails | Barrier)[] = []
 
       if (
         top + height >= offset - margin &&
@@ -76,7 +78,7 @@ export default function Example({ id }: { id: string }) {
         // If any part is touching the 1/2 vertical line...
         if (top - height <= offset + viewHeight / 2 && top >= offset + viewHeight / 2) entry = { ...entry, className: "highlighted" }
         // If schedule is 'bookmark' and if any part is touching one margin after the 1/2 vertical line then also set it's bookmark to it's posID
-        if (id == "bookmark" && top - height <= offset + viewHeight / 2 - (scale * 15) && top >= offset + viewHeight / 2 - (scale * 30)) entry = { ...entry, className: `${entry.className || ""} bookmarked`, bookmark: posId }
+        if (id == "bookmark" && top - height <= offset + viewHeight / 2 - (scale * 15) && top >= offset + viewHeight / 2 - (scale * 30)) entry = { ...entry, className: `${('className' in entry && entry.className) || ""} bookmarked`, bookmark: posId }
         toReturn.push(entry)
 
         return toReturn
@@ -129,9 +131,9 @@ export default function Example({ id }: { id: string }) {
             schedule={schedule}
             colors={colors}
             numberOfLayers={example.layers.length}
-            bookmark={entry.bookmark || null}
+            bookmark={"bookmark" in entry ? entry.bookmark : null}
             setBookmark={() => { }}
-            className={entry.className || null}
+            className={"className" in entry ? entry.className : ""}
           />
         ))}
       </div>

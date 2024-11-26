@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import fetch from 'node-fetch'
 import dotenv from 'dotenv'
+import { MediaResult, SeasonResult } from '../../models/schedule'
 dotenv.config()
 
 const router = Router()
@@ -31,7 +32,7 @@ router.get('/movie', async (req, res) => {
   const url =
     'https://api.themoviedb.org/3/movie/' + req.query.id + '?language=en-US'
   await fetch(url, api)
-    .then((response) => response.json())
+    .then((response) => response.json() as Promise<MediaResult>)
     .then((movie) =>
       res.json({
         id: movie.id,
@@ -51,7 +52,7 @@ router.get('/tv', async (req, res) => {
   const url =
     'https://api.themoviedb.org/3/tv/' + req.query.id + '?language=en-US'
   await fetch(url, api)
-    .then((response) => response.json())
+    .then((response) => response.json() as Promise<MediaResult>)
     .then(async (show) => {
       const numOfSeasons = show.number_of_seasons
       let withRuntime = 0
@@ -66,7 +67,7 @@ router.get('/tv', async (req, res) => {
               `https://api.themoviedb.org/3/tv/${show.id}/season/${season + 1}?language=en-US`,
               api,
             )
-            const seasonData = await seasonRes.json()
+            const seasonData = (await seasonRes.json()) as SeasonResult
             return {
               season: seasonData.season_number,
               episodes: seasonData.episodes.map((episode) => ({
@@ -91,7 +92,7 @@ router.get('/tv', async (req, res) => {
             (grandTotal, season) =>
               grandTotal +
               season.episodes.reduce((seasonTotal, episode) => {
-                if (episode.runtime > 0) withRuntime++
+                if ((episode.runtime || 0) > 0) withRuntime++
                 return seasonTotal + (episode.runtime || 0)
               }, 0),
             0,

@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
 import Entry from './Entry.tsx'
 import { SortableContext } from "@dnd-kit/sortable";
+import { CustomDetails, Data, LayerEntry } from '../../models/schedule.ts';
 
-function Layer({
+export default function Layer({
   id,
   entries,
   layers,
@@ -19,54 +20,55 @@ function Layer({
   bookmark,
 }: {
   id: number
-  entries: any[]
-  layers: any[]
-  setLayers: any
-  data: object
-  addData: any
-  outlinePos: any,
-  setCustom: any,
+  entries: LayerEntry[]
+  layers: LayerEntry[][]
+  setLayers: (layers: LayerEntry[][], force: boolean) => void
+  data: Data
+  addData: (entry: LayerEntry, layer: number, id: number) => void
+  outlinePos: string | null
+  setCustom: (entry: CustomDetails | string, layer?: number, id?: number) => void
   titles: string[],
-  setTitles: any,
-  setShow: any,
-  setMovie: any,
-  runAfterConfirm: any,
-  bookmark: string | null
+  setTitles: (id: number, title: string | null) => void,
+  setShow: () => void,
+  setMovie: () => void,
+  runAfterConfirm: (func: () => void) => void
+  bookmark?: string | null
 }) {
-  function setEntries(newEntries, force = false) {
+  function setEntries(newEntries: LayerEntry[], force = false) {
     layers[id] = newEntries
     setLayers([...layers], force)
   }
 
-  const ref = useRef(null)
+  const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const event = (e) => {
-      if (e.key === ' ' || (!e.key && e.target.tagName !== 'SUMMARY')) e.preventDefault()
+    const event = (e: KeyboardEvent | MouseEvent) => {
+      const span = ref.current?.querySelector('span')
 
-      if (e.key === " ") {
+      if (("key" in e && e.key === ' ') || (!("key" in e) && (e.target as HTMLElement)?.tagName !== 'SUMMARY')) e.preventDefault()
+
+      if (("key" in e && e.key === ' ') && ref.current && span) {
         // Change the span text to replace the selected text with a space
-        console.log(ref.current.querySelector('span').innerText)
-        const start = ref.current.querySelector('span').innerText.slice(0, window.getSelection().anchorOffset) || ''
-        const end = ref.current.querySelector('span').innerText.slice(window.getSelection().focusOffset) || ''
-        ref.current.querySelector('span').innerHTML = start + '&nbsp;' + end
+        const start = span.innerText.slice(0, window.getSelection()?.anchorOffset) || ''
+        const end = span.innerText.slice(window.getSelection()?.focusOffset) || ''
+        span.innerHTML = start + '&nbsp;' + end
         // Move the cursor to the end of the space
         const range = document.createRange()
-        range.setStart(ref.current.querySelector('span').childNodes[0], start.length + 1)
+        range.setStart(span.childNodes[0], start.length + 1)
         range.collapse(true)
         const selection = window.getSelection()
-        selection.removeAllRanges()
-        selection.addRange(range)
+        selection?.removeAllRanges()
+        selection?.addRange(range)
       }
     }
 
-    ref.current.addEventListener('keydown', event)
-    ref.current.addEventListener('click', event)
+    const currentRef = ref.current;
+    currentRef?.addEventListener('keydown', event)
+    currentRef?.addEventListener('click', event)
 
     return () => {
-      if (!ref.current) return
-      ref.current.removeEventListener('keydown', event)
-      ref.current.removeEventListener('click', event)
+      currentRef?.removeEventListener('keydown', event)
+      currentRef?.removeEventListener('click', event)
     }
   }, [ref])
 
@@ -107,10 +109,10 @@ function Layer({
                 data={data}
                 addData={addData}
                 setCustom={setCustom}
-                setTitle={entry.ref ? entry.ref[0] == 'tv' ? setShow : setMovie : null}
+                setTitle={typeof entry === 'object' && 'ref' in entry && entry.ref ? entry.ref[0] == 'tv' ? setShow : setMovie : undefined}
                 runAfterConfirm={runAfterConfirm}
                 bookmark={bookmark}
-                className={outlinePos == `${id}-${index}` && 'outline'}
+                className={outlinePos == `${id}-${index}` ? 'outline' : ''}
               />
             ))}
           </SortableContext>
@@ -122,5 +124,3 @@ function Layer({
     </fieldset>
   )
 }
-
-export default Layer

@@ -169,6 +169,14 @@
     background-color: darkred;
   }
 
+  .options div select,
+  .overlay select {
+    max-width: Max(15vw, 10em);
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+  }
+
   .setting {
     display: flex;
 
@@ -182,6 +190,11 @@
       font-size: x-small;
       margin-right: 2px;
       opacity: 0.5;
+    }
+
+    button {
+      color: white !important;
+      margin: 0 !important;
     }
   }
 
@@ -502,7 +515,8 @@
     transition: var(--transition-time) var(--transition-time);
   }
 
-  .episode-marker:is(.premier, .finale):after {
+  .episode-marker.premier:before,
+  .episode-marker.finale:after {
     content: '';
     background-color: var(--even-stripe-col);
     display: block;
@@ -514,27 +528,13 @@
     left: 3px;
   }
 
-  .episode-marker.odd:after {
+  .episode-marker.odd:after,
+  .episode-marker.odd:before {
     background-color: var(--odd-stripe-col);
   }
 
-  .finale.premier.episode-marker:before {
-    content: '';
-    margin-left: -2px;
-    margin-top: -1px;
-    display: block;
-    position: relative;
-    background-color: black;
-    top: 50%;
-    width: 24px;
-    height: 2px;
-  }
-
   .finale.premier.episode-marker:after {
-    border: solid 2px;
-    border-radius: 10px;
-    height: 10px;
-    top: calc(50% - 8px);
+    top: calc(100% - 12px);
   }
 
   .finale.episode-marker:after {
@@ -544,11 +544,16 @@
     border-bottom: hidden;
   }
 
-  .premier.episode-marker:after {
+  .premier.episode-marker:before {
+    top: calc(100% - 5px);
     top: -2px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     border-top: hidden;
+  }
+
+  .premier.episode-marker .episode-detail {
+    margin-top: -10px;
   }
 
   .episode-marker.barrier {

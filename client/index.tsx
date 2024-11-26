@@ -17,8 +17,12 @@ if ('serviceWorker' in navigator) {
 const router = createBrowserRouter(routes);
 const rootElement = document.getElementById('app');
 
-if (rootElement.hasChildNodes()) {
-  hydrateRoot(rootElement, <RouterProvider router={router} />);
+if (rootElement) {
+  if (rootElement.hasChildNodes()) {
+    hydrateRoot(rootElement, <RouterProvider router={router} />);
+  } else {
+    createRoot(rootElement).render(<RouterProvider router={router} />);
+  }
 } else {
-  createRoot(rootElement).render(<RouterProvider router={router} />);
+  console.error('Root element not found');
 }

@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 
+import { ProjectData } from "../../models/schedule";
 
-export default function ProjectCard({ project, owner }) {
+export default function ProjectCard({ project, owner }: { project: ProjectData, owner: boolean }) {
   const contextMenu = document.getElementById('contextMenu')
   const deletePopup = document.getElementById('deletePopup')
 
-  function positionContextMenu(target) {
+  function positionContextMenu(target: HTMLElement) {
+    if (!contextMenu || !deletePopup) return
     contextMenu.setAttribute('data-id', project.id)
     deletePopup.setAttribute('data-id', project.id)
 
@@ -50,15 +52,19 @@ export default function ProjectCard({ project, owner }) {
           e.preventDefault()
         }}
           onMouseEnter={(e) => {
-            positionContextMenu(e.target)
-            contextMenu.classList.add("show")
-            contextMenu.setAttribute("data-isOwner", owner)
-            document.querySelector("#leavePopup > div > p > span").innerHTML = project.title || 'Untitled Schedule'
-            document.querySelector("#deletePopup > div > p > span").innerHTML = project.title || 'Untitled Schedule'
+            positionContextMenu(e.target as HTMLElement)
+            if (!contextMenu) return
+            contextMenu.classList?.add("show")
+            contextMenu.setAttribute("data-isOwner", String(owner))
+            const leavePopupSpan = document.querySelector("#leavePopup > div > p > span");
+            const deletePopupSpan = document.querySelector("#deletePopup > div > p > span");
+            if (leavePopupSpan) leavePopupSpan.innerHTML = project.title || 'Untitled Schedule';
+            if (deletePopupSpan) deletePopupSpan.innerHTML = project.title || 'Untitled Schedule';
           }}
-          onMouseLeave={(_) => {
-            contextMenu.classList.remove("show")
-          }}
+          onMouseLeave={() => contextMenu?.classList.remove("show")}
+          tabIndex={0}
+          role="button"
+          onKeyDown={() => { }}
         >
         </i>
       </h2>

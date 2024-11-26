@@ -4,12 +4,12 @@ import request from 'superagent'
 import packageJson from '../../package.json'
 const base = packageJson.config.base
 const rootUrl = (base == '/' ? '' : base) + '/api/v1'
+import { MediaResult } from '../../models/schedule.ts'
 
-export default function fetchMedia(
+export default async function fetchMedia(
   type: string,
   id: number,
-): Promise<object[]> {
-  return request.get(`${rootUrl}/${type}?id=${id}`).then((res) => {
-    return res.body
-  })
+): Promise<MediaResult[]> {
+  const res = await request.get(`${rootUrl}/${type}?id=${id}`)
+  return res.body
 }

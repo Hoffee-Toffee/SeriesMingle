@@ -1,7 +1,7 @@
 import fetchSecret from "../apis/fetchSecret";
 import { useState, useEffect } from "react";
 
-export default function Terminal({ keys, setKeys }) {
+export default function Terminal({ keys, setKeys }: { keys: string[], setKeys: (keys: string[]) => void }) {
   const [passphrase, setPassphrase] = useState<string>("");
   const [showTerminal, setShowTerminal] = useState<boolean>(false);
   const [konami, setKonami] = useState<number[]>([0, 0]);
