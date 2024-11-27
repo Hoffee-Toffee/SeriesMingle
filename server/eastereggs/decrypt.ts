@@ -7,6 +7,8 @@ import { dirname } from 'path'
 // Get the directory name of the current module file
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+console.log(__dirname)
+
 export default function decrypt(passphrase = 'test123') {
   // Must try it on all txt files in the directory, and return the one that works
   const encodedFiles = fs.readdirSync(Path.resolve(__dirname))

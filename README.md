@@ -1,6 +1,6 @@
 # SeriesMingle
 
-> [Live-Site](https://tristan-bulmer.onrender.com/projects/SeriesMingle)
+> [Live-Site](https://seriesmingle.com)
 
 This is the documentation for the SeriesMingle Repository.
 
