@@ -1,5 +1,4 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useEffect, useState } from 'react'
 import { generateSchedule } from '../functions/generateSchedule.ts'
 import { ScheduleState, MediaDetails, Barrier, CustomDetails } from '../../models/schedule.ts'
 import EpisodeDetails from '../components/EpisodeDetails.tsx'
@@ -28,16 +27,6 @@ if (colors) [colors.movie[0].color, colors.movie[1].color] = [colors.movie[1].co
 
 export default function Example({ id }: { id: string }) {
   if (!["main", "bookmark", "background"].includes(id)) id = "background"
-
-  const [, setRefresh] = useState(true)
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setRefresh((prev) => !prev)
-    }, 50) // 20ms, time between re-renders
-
-    return () => clearInterval(intervalId)
-  }, [])
 
   const loopTime = 1000 * 60 * 60 // 1 hour, until loop restarts
   const scale = parseFloat(
@@ -126,14 +115,14 @@ export default function Example({ id }: { id: string }) {
         ) : (
           <EpisodeDetails
             entry={entry}
-            key={entry.posIndex}
-            i={entry.posIndex}
+            key={entry.posIndex as number}
+            i={entry.posIndex as number}
             schedule={schedule}
             colors={colors}
             numberOfLayers={example.layers.length}
-            bookmark={"bookmark" in entry ? entry.bookmark : null}
+            bookmark={"bookmark" in entry && entry.bookmark !== undefined ? entry.bookmark : null}
             setBookmark={() => { }}
-            className={"className" in entry ? entry.className : ""}
+            className={"className" in entry && entry.className !== undefined ? entry.className : ""}
           />
         ))}
       </div>

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { UserContext, LoadingContext } from './App.tsx'
 import Example from './Example.tsx'
 
@@ -13,6 +13,23 @@ export default function Home() {
   useEffect(() => {
     if (!isPageLoaded) setIsPageLoaded(true);
   }, [isPageLoaded, setIsPageLoaded]);
+
+  const [, setRefresh] = useState(true)
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setRefresh((prev) => !prev)
+
+      const home = document.getElementById('home')
+
+      if (home) {
+        const height = Math.floor(home.clientHeight / 1.5)
+        home.style.setProperty('--scroll', Math.abs(home.scrollTop % (height * 2) / height - 1).toString())
+      }
+    }, 50) // 20ms, time between re-renders
+
+    return () => clearInterval(intervalId)
+  }, [])
 
   return (
     <>

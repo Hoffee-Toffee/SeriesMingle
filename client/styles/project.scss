@@ -54,7 +54,7 @@
   margin: 0.5em;
 
   .layer {
-    border: #0095fa 2px solid;
+    border: var(--bg-border-col) 2px solid;
     background-color: var(--bg-col);
     padding: 0.5em;
     margin: 0.5em 0.1em;
@@ -94,10 +94,10 @@
   fieldset input[type='number'],
   .layer > details button,
   .overlay {
-    border: orangered 2px solid;
+    border: var(--button-orange) 2px solid;
     border-radius: 0.3em;
-    background-color: darkred;
-    color: white;
+    background-color: var(--button-red);
+    color: var(--sec-text-col);
     padding: 0.3em;
     display: inline-block;
   }
@@ -136,8 +136,8 @@
   .new input,
   fieldset input[type='number'] {
     margin: 0.25em;
-    color: orangered;
-    background-color: white;
+    color: var(--button-orange);
+    background-color: var(--sec-text-col);
     margin-left: calc(0.25em - 10px);
   }
 
@@ -147,26 +147,26 @@
   }
 
   .new input::placeholder {
-    color: #888;
+    color: var(--light-grey);
   }
 
   .options div :is(select, input.value),
   .overlay :is(select, input.value) {
     cursor: pointer;
     border: none;
-    background-color: darkred;
+    background-color: var(--button-red);
     appearance: none;
     padding: 0 0.3em;
     margin: 0 0.3em;
-    color: #d7e300;
+    color: var(--sec-link-col);
     width: auto;
     opacity: 1;
   }
 
   .options div select *,
   .overlay select optgroup {
-    color: #d7e300;
-    background-color: darkred;
+    color: var(--sec-link-col);
+    background-color: var(--button-red);
   }
 
   .options div select,
@@ -193,7 +193,7 @@
     }
 
     button {
-      color: white !important;
+      color: var(--sec-text-col) !important;
       margin: 0 !important;
     }
   }
@@ -209,7 +209,7 @@
   .options div button,
   .layer > details button,
   .overlay button {
-    color: #d7e300;
+    color: var(--sec-link-col);
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -236,9 +236,9 @@
 
   button,
   a {
-    color: #d7e300;
-    border: orangered 2px solid;
-    background-color: darkred;
+    color: var(--sec-link-col);
+    border: var(--button-orange) 2px solid;
+    background-color: var(--button-red);
     padding: 0.3em;
     margin: 0.25em;
     cursor: pointer;
@@ -260,9 +260,9 @@
   button:hover,
   .options button:hover,
   a:hover {
-    color: white;
-    border: orange 2px solid;
-    background-color: orangered;
+    color: var(--sec-text-col);
+    border: var(--button-yellow) 2px solid;
+    background-color: var(--button-orange);
   }
 
   .layer > details button:hover,
@@ -270,7 +270,7 @@
   .options div > :is(button, :is(select, input.value)):focus,
   .options div span > :hover:is(.setting-label, .value, select),
   .options div span > :focus:is(.setting-label, .value, select) {
-    color: #00f2ea;
+    color: var(--main-hover-col);
     background: #00000040;
     border: none;
     outline: #ffffff88 solid 2px;
@@ -286,24 +286,24 @@
   }
 
   fieldset {
-    border: #0095fa 2px solid;
-    color: white;
-    background-color: #1f3b6e;
+    border: var(--bg-border-col) 2px solid;
+    color: var(--sec-text-col);
+    background-color: var(--bg-col);
     padding: 6px;
   }
 
   legend {
-    background-color: var(--bg-col);
+    background-color: var(--dark-bg-col);
     padding: 5px 10px;
   }
 
   input[type='radio'] {
-    accent-color: darkred;
+    accent-color: var(--button-red);
   }
 
   #timelineContainer {
-    border: #0095fa 2px solid;
-    background-color: #1f3b6e;
+    border: var(--bg-border-col) 2px solid;
+    background-color: var(--bg-col);
     max-height: calc(75dvh - 20px);
     overflow-y: scroll;
     display: flex;
@@ -322,8 +322,8 @@
         writing-mode: vertical-rl;
         white-space: nowrap;
         line-height: 28px;
-        background-color: var(--even-stripe-col);
-        outline: var(--bg-col) solid 2px;
+        background-color: var(--dust-grey);
+        outline: var(--dark-bg-col) solid 2px;
         height: 100%;
         top: 0em;
         width: 28px;
@@ -333,7 +333,7 @@
       }
 
       span:nth-of-type(2n) {
-        background-color: var(--odd-stripe-col);
+        background-color: var(--lav);
       }
     }
   }
@@ -346,12 +346,12 @@
   }
 
   #scheduleVisualization::before {
-    background: linear-gradient(#1f3b6e, transparent);
+    background: linear-gradient(var(--bg-col), transparent);
     height: 38px;
   }
 
   #scheduleVisualization::after {
-    background: linear-gradient(transparent, #1f3b6e);
+    background: linear-gradient(transparent, var(--bg-col));
     height: 53px;
   }
 
@@ -390,8 +390,8 @@
         var(--transition-time) var(--transition-time),
         color var(--transition-time);
       padding: 0 10px;
-      background-color: black;
-      border: 1px solid black;
+      background-color: var(--main-text-col);
+      border: 1px solid var(--main-text-col);
     }
   }
 
@@ -402,7 +402,7 @@
       color var(--transition-time) var(--transition-time);
   }
   #key span:hover .setWatched {
-    color: white;
+    color: var(--sec-text-col);
   }
 
   #key,
@@ -420,7 +420,7 @@
   }
 
   span.sessionBound {
-    background: #888;
+    background: var(--light-grey);
     outline: var(--bg-col) solid 3px;
   }
 
@@ -460,12 +460,12 @@
     }
 
     fieldset {
-      background-color: var(--bg-col);
+      background-color: var(--dark-bg-col);
       padding: 0.5em;
       margin: 0.5em 0.1em;
 
       legend {
-        background-color: #1f3b6e;
+        background-color: var(--bg-col);
       }
     }
   }
@@ -485,7 +485,7 @@
 
   :is(.options, .overlay) span :is(select, input.value) {
     font-size: small !important;
-    color: #d7e300;
+    color: var(--sec-link-col);
   }
 
   :is(.options, .overlay) label,
@@ -499,15 +499,15 @@
     margin-top: 8px;
     width: 20px;
     margin-right: 3px;
-    border: 2px solid black;
+    border: 2px solid var(--main-text-col);
     transition: var(--transition-time);
     scroll-margin-top: 5px;
     scroll-margin-right: 2px;
-    outline: 2px solid var(--even-stripe-col);
+    outline: 2px solid var(--dust-grey);
   }
 
   .episode-marker.odd {
-    outline-color: var(--odd-stripe-col);
+    outline-color: var(--lav);
   }
 
   .episode-marker.fade:not(:hover, .highlighted) {
@@ -518,19 +518,19 @@
   .episode-marker.premier:before,
   .episode-marker.finale:after {
     content: '';
-    background-color: var(--even-stripe-col);
+    background-color: var(--dust-grey);
     display: block;
     width: 10px;
     height: 5px;
     position: relative;
     border-radius: 10px;
-    border: black solid 2px;
+    border: var(--main-text-col) solid 2px;
     left: 3px;
   }
 
   .episode-marker.odd:after,
   .episode-marker.odd:before {
-    background-color: var(--odd-stripe-col);
+    background-color: var(--lav);
   }
 
   .finale.premier.episode-marker:after {
@@ -559,8 +559,8 @@
   .episode-marker.barrier {
     background: repeating-linear-gradient(
       45deg,
-      black 0px,
-      black 3px,
+      var(--main-text-col) 0px,
+      var(--main-text-col) 3px,
       transparent 3px,
       transparent 7px
     );
@@ -570,7 +570,7 @@
     position: absolute;
     left: 4px;
     background-color: inherit;
-    color: white;
+    color: var(--sec-text-col);
     margin-top: -2px;
 
     * {
@@ -580,19 +580,19 @@
     }
 
     div {
-      background: black;
+      background: var(--main-text-col);
       display: flex;
       height: calc(100% - 16px);
       width: calc(100% - 18px);
       margin: 3px;
-      border: 6px solid black;
+      border: 6px solid var(--main-text-col);
       font-size: smaller;
       flex-direction: column;
     }
 
     .title {
       width: fit-content;
-      color: #d7e300;
+      color: var(--sec-link-col);
       padding: 2px;
       margin: -2px;
     }
@@ -612,11 +612,11 @@
 
       i.fa-regular {
         opacity: 0;
-        color: grey;
+        color: var(--light-grey);
       }
 
       i.fa-solid:before {
-        color: #d7e300;
+        color: var(--sec-link-col);
       }
     }
 
@@ -638,25 +638,25 @@
       position: absolute;
       margin-left: -1em;
       transform: translateX(-50%);
-      color: #88b;
+      color: var(--light-lav);
     }
 
     .title .spoiler {
-      color: #ccf;
+      color: var(--lav-white);
       font-size: 0.8em;
       background: var(--bg-col);
       margin-left: 1.25em;
       padding: 0.2em 0.3em;
       border-radius: 0.5em;
-      outline: 1px solid #447;
+      outline: 1px solid var(--dark-lav);
     }
 
     ::-webkit-scrollbar-track-piece {
-      background-color: #234;
+      background-color: var(--misc-col-2);
     }
 
     ::-webkit-scrollbar-thumb {
-      outline-color: #234;
+      outline-color: var(--misc-col-2);
     }
   }
 
@@ -666,7 +666,7 @@
   }
 
   .part .episode-detail div {
-    outline: 3px dashed black;
+    outline: 3px dashed var(--main-text-col);
   }
 
   .episode-detail.odd {
@@ -676,7 +676,7 @@
 
   .episode-detail label i:hover:before,
   .highlighted.episode-detail label i:before {
-    color: white;
+    color: var(--sec-text-col);
   }
 
   .episode-marker:hover .episode-detail label i.fa-regular,
@@ -709,7 +709,7 @@
   }
 
   #project-details {
-    color: white;
+    color: var(--sec-text-col);
     text-align-last: center;
     text-align: -webkit-center;
 
@@ -722,12 +722,12 @@
     }
 
     .setDescription {
-      background: #1f3b6e;
-      color: white;
+      background: var(--bg-col);
+      color: var(--sec-text-col);
       max-width: calc(100vw - 2em);
       width: fit-content;
       display: block;
-      border: 2px solid #0095fa;
+      border: 2px solid var(--bg-border-col);
       padding: 5px 10px;
       margin-top: 10px;
 
@@ -757,14 +757,14 @@
       left: 50%;
       transform: translate(-50%, -50%);
       background: var(--bg-col);
-      color: white;
+      color: var(--sec-text-col);
       padding: 1em;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;
       gap: 15px;
-      border: 2px solid #0095fa;
+      border: 2px solid var(--bg-border-col);
     }
 
     p {
@@ -777,11 +777,11 @@
       font-size: smaller;
       width: 100%;
       text-align: center;
-      color: yellow;
+      color: var(--main-link-col);
     }
 
     span {
-      color: yellow;
+      color: var(--main-link-col);
     }
 
     button {
@@ -805,7 +805,7 @@
   }
 
   [contenteditable='true']:hover {
-    text-decoration-color: white;
+    text-decoration-color: var(--sec-text-col);
   }
 }
 
@@ -849,7 +849,7 @@
 
     .episode-marker {
       // display: inline-grid;
-      background: linear-gradient(#1f3b6e, #1f3b6e);
+      background: linear-gradient(var(--bg-col), var(--bg-col));
       border-color: transparent;
       outline: none;
     }
@@ -870,8 +870,8 @@
     span:is(.streakBound, .sessionBound) {
       position: absolute;
       margin-left: -2px;
-      border-color: white;
-      outline-color: white;
+      border-color: var(--sec-text-col);
+      outline-color: var(--sec-text-col);
       background-color: transparent;
       margin-top: -15px;
     }
@@ -882,7 +882,7 @@
   }
 
   #home div:nth-of-type(2n) div .episode-marker {
-    background: linear-gradient(#1f3b6e, #1f3b6e);
+    background: linear-gradient(var(--bg-col), var(--bg-col));
   }
 }
 
@@ -912,15 +912,15 @@
   height: 100px;
   border-radius: 50%;
   box-shadow:
-    0 0 20px 20px var(--bg-col) inset,
-    0 0 2px 2px var(--bg-col) inset;
-  outline: solid var(--bg-col) 10px;
+    0 0 20px 20px var(--dark-bg-col) inset,
+    0 0 2px 2px var(--dark-bg-col) inset;
+  outline: solid var(--dark-bg-col) 10px;
 
   div {
     margin-left: 10px;
     margin-top: 10px;
     position: absolute;
-    outline: 4px solid var(--odd-stripe-col);
+    outline: 4px solid var(--lav);
     opacity: 1;
     border-radius: 50%;
     animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
@@ -929,7 +929,7 @@
 
   div:nth-child(2) {
     animation-delay: -0.5s;
-    outline-color: var(--even-stripe-col);
+    outline-color: var(--dust-grey);
   }
 }
 

@@ -1,7 +1,32 @@
+// Will minimize, use variables, and create theme sets with different colors
+
 :root {
-  --even-stripe-col: rgb(150 150 110);
-  --odd-stripe-col: rgb(110 110 150);
+  --main-text-col: #000000;
+  --misc-col-1: #001122;
+  --dark-bg-col: #0d1626;
   --bg-col: #0a2553;
+  --light-col: #1f3b6e;
+  // --light-bg-col: #2c5aa0;
+  --bg-border-col: #0095fa;
+  --sec-hover-col: #30bfb3;
+  --main-hover-col: #00f2ea;
+  --misc-col-2: #223344;
+  --dark-lav: #444477;
+  --lav: #6e6e96;
+  // --lav: #36364a;
+  --light-lav: #8888bb;
+  --light-grey: #888888;
+  --dust-grey: #96966e;
+  --lav-white: #ccccff;
+  --sec-text-col: #ffffff;
+  --main-link-col: #ffff00;
+  --sec-link-col: #d7e300;
+  --tert-link-col: #bfbf30;
+  --button-yellow: #ffa500;
+  --button-sunset: #ff8f00;
+  --button-orange: #ff4500;
+  --button-tomato: #cb2600;
+  --button-red: #8b0000;
   --scale: 1;
   --layer-size: 16px;
   --height-mult: 1;
@@ -66,17 +91,17 @@
 }
 
 ::-webkit-scrollbar-track-piece {
-  background-color: #012;
+  background-color: var(--misc-col-1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #0095fa;
-  outline: 3px solid #012;
+  background-color: var(--bg-border-col);
+  outline: 3px solid var(--misc-col-1);
   outline-offset: -3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #00f2ea;
+  background-color: var(--sec-hover-col);
 }
 
 * {
@@ -85,7 +110,7 @@
 }
 
 html {
-  background: var(--bg-col);
+  background: var(--dark-bg-col);
   height: 100%;
 }
 

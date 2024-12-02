@@ -427,7 +427,7 @@ export function generateSchedule(
     .sort((a, b) => (a.indices as number[])[0] - (b.indices as number[])[0])
     .forEach((set, index) => {
       const color = allColors?.[index]
-      if (!color) return
+      if (color == undefined) return
       colors[set.type as keyof Colors][
         set.type == 'tv' ? (set.id as number) : (set.layer as number)
       ] = { ...set, color }

@@ -4,12 +4,12 @@
   align-items: center;
   justify-content: center;
   height: 100dvh;
-  background-color: #0a2553;
+  background-color: var(--dark-bg-col);
 
   #login-form {
-    border: #0095fa 2px solid;
-    color: white;
-    background-color: #1f3b6e;
+    border: var(--bg-border-col) 2px solid;
+    color: var(--sec-text-col);
+    background-color: var(--bg-col);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,7 +17,7 @@
   }
 
   span {
-    color: white;
+    color: var(--sec-text-col);
   }
 
   #logo {
@@ -36,25 +36,25 @@
     }
 
     span:first-child {
-      color: #bfbf30;
+      color: var(--tert-link-col);
     }
   
     span:last-child {
-      color: #30bfb3;
+      color: var(--sec-hover-col);
     }
   }
 
   legend {
-    background: #0a2553;
+    background: var(--dark-bg-col);
     line-height: 0;
     padding: inherit;
     text-align: center;
-    border: solid #2c5aa0 2px;
+    border: solid var(--light-bg-col) 2px;
     margin-bottom: 10px;
   }
 
   h2 {
-    color: white;
+    color: var(--sec-text-col);
     margin-bottom: 1rem;
     font-family: 'Fredoka One';
     font-weight: normal;
@@ -62,13 +62,13 @@
 
   input {
     padding: 0.5rem;
-    border: 2px solid #2c5aa0;
+    border: 2px solid var(--light-bg-col);
     border-top-width: 1px;
     border-bottom-width: 1px;
     border-radius: 5px;
     width: 300px;
-    color: #fff;
-    background-color: #0a2553;
+    color: var(--sec-text-col);
+    background-color: var(--dark-bg-col);
   }
 
   input:not(:first-of-type) {
@@ -92,8 +92,8 @@
 
   *:not(span) > button {
     padding: 0 1rem;
-    background-color: #8b0000;
-    color: white;
+    background-color: var(--button-red);
+    color: var(--sec-text-col);
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -105,7 +105,7 @@
   }
 
   *:not(span) > button:hover {
-    background-color: #cb2600;
+    background-color: var(--button-tomato);
   }
 
   .separator {
@@ -116,7 +116,8 @@
     
     .line {
       border: none;
-      border-top: 1px solid #ccc;
+      // border-top: 1px solid #ccc;
+      border-top: 1px solid var(--lav-white);
       margin: 0 10px;
       flex: 1;
       width: Min(50vw - 50px, 150px);
@@ -124,7 +125,7 @@
     
     .text {
       padding: 0 10px;
-      color: #ff0;
+      color: var(--main-link-col);
     }
   }
 
@@ -132,8 +133,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #0a2553;
-    border: 1px solid #2c5aa0;
+    background-color: var(--dark-bg-col);
+    border: 1px solid var(--light-bg-col);
     border-radius: 5px;
     padding: 0.5rem 1rem;
     cursor: pointer;
@@ -151,7 +152,7 @@
   }
 
   :is(.google-sign-in, input):is(:hover, :focus) {
-    background-color: #000;
+    background-color: var(--main-text-col);
   }
 
   input:focus {
@@ -159,7 +160,7 @@
   }
 
   .error-message {
-    color: #ff8f00;
+    color: var(--button-sunset);
     margin: 0;
     margin-bottom: 10px;
     font-style: italic;
@@ -170,7 +171,7 @@
   }
 
   a, span button {
-    color: #ff0;
+    color: var(--main-link-col);
     text-decoration: none;
     margin: 0;
     margin-left: 10px;
@@ -182,6 +183,6 @@
   }
 
   :is(a, span button):hover {
-    color: #00f2ea;
+    color: var(--main-hover-col);
   }
 }

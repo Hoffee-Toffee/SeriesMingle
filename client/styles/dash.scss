@@ -2,7 +2,7 @@
   margin: 0.5em;
 
   h1 {
-    color: white;
+    color: var(--sec-text-col);
     text-align: center;
     margin-top: 0;
     font-family: 'Fredoka One';
@@ -16,9 +16,9 @@
     border-radius: 0.3em;
     z-index: 1;
     position: relative;
-    color: #d7e300;
-    border: orangered 2px solid;
-    background-color: #8b0000;
+    color: var(--sec-link-col);
+    border: var(--button-orange) 2px solid;
+    background-color: var(--button-red);
     padding: 0.3em;
     margin: 0.25em;
     cursor: pointer;
@@ -29,9 +29,9 @@
 
   button:hover,
   a:hover {
-    color: #fff;
-    border: orange 2px solid;
-    background-color: #ff4500;
+    color: var(--sec-text-col);
+    border: var(--button-yellow) 2px solid;
+    background-color: var(--button-orange);
   }
 
   .projects-list {
@@ -53,9 +53,9 @@
     }
 
     > h2 {
-      color: white;
+      color: var(--sec-text-col);
       text-align: center;
-      background-color: var(--bg-col);
+      background-color: var(--dark-bg-col);
       padding: 0 0.5em;
       width: max-content;
       margin: 0 100%;
@@ -69,7 +69,7 @@
       display: block;
       width: 100%;
       height: 5px;
-      background-color: #0095fa;
+      background-color: var(--bg-border-col);
       margin: 0.5em 0;
       position: absolute;
       top: 5px;
@@ -78,7 +78,7 @@
     }
 
     > p {
-      color: white;
+      color: var(--sec-text-col);
     }
 
     #create-new {
@@ -101,7 +101,7 @@
   #contextMenu {
     opacity: 0;
     transition: all var(--transition-time);
-    outline: 1px solid #0095fa;
+    outline: 1px solid var(--bg-border-col);
     z-index: 2;
     position: absolute;
     background: var(--bg-col);
@@ -120,7 +120,7 @@
       margin: 0;
       border: none;
       background: none;
-      color: white;
+      color: var(--sec-text-col);
       user-select: none;
       transition: var(--transition-time);
       border-radius: 0;
@@ -128,7 +128,7 @@
     }
 
     button:hover {
-       color: #0095fa;
+       color: var(--bg-border-col);
        background: #00000055;
        transition: var(--transition-time);
      }
@@ -171,14 +171,14 @@
       left: 50%;
       transform: translate(-50%, -50%);
       background: var(--bg-col);
-      color: white;
+      color: var(--sec-text-col);
       padding: 1em;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;
       gap: 15px;
-      border: 2px solid #0095fa;
+      border: 2px solid var(--bg-border-col);
     }
 
     p {
@@ -188,7 +188,7 @@
     }
 
     span {
-      color: yellow;
+      color: var(--main-link-col);
     }
 
     button {

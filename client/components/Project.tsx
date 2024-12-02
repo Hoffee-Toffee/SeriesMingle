@@ -121,7 +121,7 @@ export default function Project() {
         ...project,
         ...(typeof project.state == 'object' ? project.state : {}),
         state: project?.state ? true : undefined,
-        layers: (typeof project.state == 'object' && 'layers' in project.state)
+        layers: (typeof project.state == 'object' && project.state !== null && 'layers' in project.state)
           ? project.state.layers
           : 'layers' in project
             ? (Object.values(project.layers).map((layer: { [key: number]: LayerEntry[] }, i: number) => layer[i]) as LayerEntry[][])
