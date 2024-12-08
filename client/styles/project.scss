@@ -50,9 +50,22 @@
   }
 }
 
-#project {
-  margin: 0.5em;
+#home #project > main {
+  margin: 0;
+  padding: 0;
+}
 
+#app #project {
+  overflow: hidden;
+  
+  > main {
+    overflow-y: scroll;
+    box-sizing: border-box;
+    padding: 0.5em;
+  }
+}
+
+#project {
   .layer {
     border: var(--bg-border-col) 2px solid;
     background-color: var(--bg-col);
@@ -234,6 +247,7 @@
     touch-action: none;
   }
 
+  > main {
   button,
   a {
     color: var(--sec-link-col);
@@ -264,6 +278,7 @@
     border: var(--button-yellow) 2px solid;
     background-color: var(--button-orange);
   }
+}
 
   .layer > details button:hover,
   .options div > :is(button, :is(select, input.value)):hover,
@@ -661,7 +676,7 @@
   }
 
   .episode-detail,
-  #key span {
+  #key > span {
     box-shadow: inset rgb(0 0 0 / 33%) 0em 0em 0px 1px;
   }
 

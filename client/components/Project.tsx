@@ -169,6 +169,11 @@ export default function Project() {
     })
   }, [bookmark])
 
+  useEffect(() => {
+    // Set title to '{title} - Project | SeriesMingle'
+    document.title = `${title} | SeriesMingle`
+  }, [title])
+
   const shown = tempLayers || layers
 
   useEffect(() => {
@@ -502,7 +507,7 @@ export default function Project() {
   return (
     <>
       {isPageLoaded && (hasAccess ? (
-        <div className='fadein'>
+        <main className='fadein'>
           <div id='removeWatchedPopup'>
             <div>
               <p>Are you sure you want to remove all watched content?</p>
@@ -546,9 +551,6 @@ export default function Project() {
             keys={keys}
             setKeys={setKeys}
           />
-          <Link to="../dashboard">
-            <i className="fas fa-arrow-left"></i> Back to Dashboard
-          </Link>
           {scheduleData.schedule.length > 0 && (
             <button
               onClick={() =>
@@ -802,7 +804,7 @@ export default function Project() {
             <Schedule scheduleData={scheduleData} user={user} />
           </>
           }
-        </div >
+        </main >
       )
         : <p>No Access</p>)
       }

@@ -1,5 +1,16 @@
-#dashboard {
-  margin: 0.5em;
+#app #dashboard {
+  overflow: hidden;
+  
+  > main {
+    overflow-y: scroll;
+    box-sizing: border-box;
+    padding: 0.5em;
+  }
+}
+
+#dashboard > main {
+  padding: 0.5em;
+  padding-top: 1em;
 
   h1 {
     color: var(--sec-text-col);

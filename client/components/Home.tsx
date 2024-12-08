@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react'
 import { UserContext, LoadingContext } from './App.tsx'
 import Example from './Example.tsx'
+import tmdb from '../../icons/tmdb.svg'
 
-import favicon from '../../favicon.ico'
 import '../styles/home.scss'
 import { Link } from 'react-router-dom'
 
@@ -19,43 +19,13 @@ export default function Home() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setRefresh((prev) => !prev)
-
-      const home = document.getElementById('home')
-
-      if (home) {
-        const height = Math.floor(home.clientHeight / 1.5)
-        home.style.setProperty('--scroll', Math.abs(home.scrollTop % (height * 2) / height - 1).toString())
-      }
     }, 50) // 20ms, time between re-renders
 
     return () => clearInterval(intervalId)
   }, [])
 
   return (
-    <>
-      <section id="nav-bar">
-        <header>
-          <img src={favicon} alt="SeriesMingle Logo" id="logo" />
-          <h1>
-            <span>Series</span>
-            <span>Mingle</span>
-          </h1>
-        </header>
-        <input type="checkbox" id="nav-toggle" />
-        <label htmlFor="nav-toggle" id="nav-toggle-label" aria-label="Toggle Navigation">
-          <span></span>
-          <span></span>
-          <span></span>
-        </label>
-        <nav>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-          {user ?
-            <Link to="/dashboard">Dashboard</Link> :
-            <Link to="/login">Login or Register</Link>
-          }
-        </nav>
-      </section>
+    <main>
       <span id="overlay">
         <Link to={user ? "/dashboard" : "/login"} className="button">
           <h3>
@@ -68,8 +38,12 @@ export default function Home() {
       </span>
       <div id="about">
         <div className="content">
+          <h1>
+            <span>Series</span>
+            <span>Mingle</span>
+          </h1>
           <h2>
-            Create your own TV and movie schedules with SeriesMingle!
+            Create your own TV and movie schedules.
           </h2>
           <Example id="main" />
         </div>
@@ -133,6 +107,7 @@ export default function Home() {
           </span>
           <footer>
             <p>
+              <img src={tmdb} alt="TMDB logo" />
               This website uses <a href="https://www.themoviedb.org/about" target="_blank" rel="noreferrer">TMDB</a> and the <a href="https://www.themoviedb.org/documentation/api" target="_blank" rel="noreferrer">TMDB APIs</a> but is not endorsed, certified, or otherwise approved by TMDB.
             </p>
             <p>
@@ -142,6 +117,6 @@ export default function Home() {
           </footer>
         </div>
       </div >
-    </>
+    </main>
   )
 }

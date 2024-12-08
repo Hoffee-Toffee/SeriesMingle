@@ -1,188 +1,195 @@
-#login {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100dvh;
-  background-color: var(--dark-bg-col);
+#app #login {
+  header {
+    display: none;
+  }
 
-  #login-form {
-    border: var(--bg-border-col) 2px solid;
-    color: var(--sec-text-col);
-    background-color: var(--bg-col);
+  width: min(calc(37.5dvw + 200px), 90vw);
+  margin: 1em auto;
+  height: calc(100dvh - 2em);
+  outline: 1px solid var(--light-bg-col);
+
+  > main {
+    margin-top: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  }
+    height: 100%;
+    background-color: var(--main-text-col);
 
-  span {
-    color: var(--sec-text-col);
-  }
-
-  #logo {
-    height: min(15vw, 15vh);
-    max-height: 200px;
-    margin-bottom: 10px;
-  }
-
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    #login-form {
+      border: var(--bg-border-col) 2px solid;
+      color: var(--sec-text-col);
+      background-color: var(--bg-col);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
 
     span {
+      color: var(--sec-text-col);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+
+      span {
+        font-family: 'Fredoka One';
+        font-weight: normal;
+      }
+
+      span:first-child {
+        color: var(--tert-link-col);
+      }
+
+      span:last-child {
+        color: var(--sec-hover-col);
+      }
+    }
+
+    legend {
+      background: var(--dark-bg-col);
+      line-height: 0;
+      padding: inherit;
+      text-align: center;
+      border: solid var(--light-bg-col) 2px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: var(--sec-text-col);
+      margin-bottom: 1rem;
       font-family: 'Fredoka One';
       font-weight: normal;
     }
 
-    span:first-child {
-      color: var(--tert-link-col);
+    input {
+      padding: 0.5rem;
+      border: 2px solid var(--light-bg-col);
+      border-top-width: 1px;
+      border-bottom-width: 1px;
+      border-radius: 5px;
+      width: min(50vw, 300px);
+      color: var(--sec-text-col);
+      background-color: var(--dark-bg-col);
     }
-  
-    span:last-child {
-      color: var(--sec-hover-col);
+
+    input:not(:first-of-type) {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
     }
-  }
 
-  legend {
-    background: var(--dark-bg-col);
-    line-height: 0;
-    padding: inherit;
-    text-align: center;
-    border: solid var(--light-bg-col) 2px;
-    margin-bottom: 10px;
-  }
-
-  h2 {
-    color: var(--sec-text-col);
-    margin-bottom: 1rem;
-    font-family: 'Fredoka One';
-    font-weight: normal;
-  }
-
-  input {
-    padding: 0.5rem;
-    border: 2px solid var(--light-bg-col);
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-    border-radius: 5px;
-    width: 300px;
-    color: var(--sec-text-col);
-    background-color: var(--dark-bg-col);
-  }
-
-  input:not(:first-of-type) {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-  }
-
-  input:not(:last-of-type) {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-
-  input:first-of-type {
-    border-top-width: 2px;
-  }
-
-  input:last-of-type {
-    border-bottom-width: 2px;
-    margin-bottom: 10px;
-  }
-
-  *:not(span) > button {
-    padding: 0 1rem;
-    background-color: var(--button-red);
-    color: var(--sec-text-col);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    * {
-      font-weight: normal;
+    input:not(:last-of-type) {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
     }
-  }
 
-  *:not(span) > button:hover {
-    background-color: var(--button-tomato);
-  }
+    input:first-of-type {
+      border-top-width: 2px;
+    }
 
-  .separator {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    margin: 10px 0;
-    
-    .line {
+    input:last-of-type {
+      border-bottom-width: 2px;
+      margin-bottom: 10px;
+    }
+
+    *:not(span) > button {
+      padding: 0 1rem;
+      background-color: var(--button-red);
+      color: var(--sec-text-col);
       border: none;
-      // border-top: 1px solid #ccc;
-      border-top: 1px solid var(--lav-white);
-      margin: 0 10px;
-      flex: 1;
-      width: Min(50vw - 50px, 150px);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      * {
+        font-weight: normal;
+      }
     }
-    
-    .text {
-      padding: 0 10px;
+
+    *:not(span) > button:hover {
+      background-color: var(--button-tomato);
+    }
+
+    .separator {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 10px 0;
+
+      .line {
+        border: none;
+        // border-top: 1px solid #ccc;
+        border-top: 1px solid var(--lav-white);
+        margin: 0 10px;
+        flex: 1;
+        width: min(20vw, 150px);
+      }
+
+      .text {
+        padding: 0 10px;
+        color: var(--main-link-col);
+      }
+    }
+
+    .google-sign-in {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--dark-bg-col);
+      border: 1px solid var(--light-bg-col);
+      border-radius: 5px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+
+      img {
+        width: 24px;
+        height: 24px;
+        margin-right: 0.5rem;
+      }
+    }
+
+    .google-sign-in,
+    input {
+      transition: background-color 0.3s ease;
+    }
+
+    :is(.google-sign-in, input):is(:hover, :focus) {
+      background-color: var(--main-text-col);
+    }
+
+    input:focus {
+      z-index: 1;
+    }
+
+    .error-message {
+      color: var(--button-sunset);
+      margin: 0;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    > span {
+      margin-top: 25px;
+    }
+
+    a,
+    span button {
       color: var(--main-link-col);
+      text-decoration: none;
+      margin: 0;
+      margin-left: 10px;
+      padding: 0;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
     }
-  }
 
-  .google-sign-in {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--dark-bg-col);
-    border: 1px solid var(--light-bg-col);
-    border-radius: 5px;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-
-    img {
-      width: 24px;
-      height: 24px;
-      margin-right: 0.5rem;
+    :is(a, span button):hover {
+      color: var(--main-hover-col);
     }
-  }
-
-  .google-sign-in,
-  input {
-    transition: background-color 0.3s ease;
-  }
-
-  :is(.google-sign-in, input):is(:hover, :focus) {
-    background-color: var(--main-text-col);
-  }
-
-  input:focus {
-    z-index: 1;
-  }
-
-  .error-message {
-    color: var(--button-sunset);
-    margin: 0;
-    margin-bottom: 10px;
-    font-style: italic;
-  }
-
-  > span {
-    margin-top: 25px;
-  }
-
-  a, span button {
-    color: var(--main-link-col);
-    text-decoration: none;
-    margin: 0;
-    margin-left: 10px;
-    padding: 0;
-    background: none;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-
-  :is(a, span button):hover {
-    color: var(--main-hover-col);
   }
 }

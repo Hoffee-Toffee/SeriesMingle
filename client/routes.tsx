@@ -18,6 +18,7 @@ export default createRoutesFromElements(
       <Route path="login" element={<ProtectedRoute ifLoggedIn={false} redirectTo="/dashboard">
         <Login />
       </ProtectedRoute>} />
+      <Route path="logout" element={<Login logout />} />
       <Route path="dashboard" element={<ProtectedRoute>
         <Dashboard />
       </ProtectedRoute>} />

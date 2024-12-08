@@ -1,8 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
 import { UserContext, LoadingContext } from './App.tsx';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
-import { auth } from '../../server/firebase.ts';
 import ProjectCard from '../components/ProjectCard.tsx';
 import '../styles/dash.scss';
 import createProject from '../apis/createProject.ts';
@@ -74,8 +72,7 @@ export default function Dashboard() {
   }, [user, db, setIsPageLoaded]);
 
   return (
-    <div>
-      <button onClick={() => signOut(auth)}>Sign Out</button>
+    <main>
       <h1>Dashboard</h1>
       <div id='contextMenu'>
         <button id="deleteProjectButton" onClick={() => document.getElementById('deletePopup')?.classList.add('show')}>Delete Project</button>
@@ -128,6 +125,6 @@ export default function Dashboard() {
           ) : <p>No Shared Projects</p>}
         </div>
       </>}
-    </div>
+    </main>
   );
 }

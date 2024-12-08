@@ -1,12 +1,12 @@
 // Will minimize, use variables, and create theme sets with different colors
 
 :root {
-  --main-text-col: #000000;
+  --main-text-col: #0a0f1a;
   --misc-col-1: #001122;
   --dark-bg-col: #0d1626;
   --bg-col: #0a2553;
   --light-col: #1f3b6e;
-  // --light-bg-col: #2c5aa0;
+  --light-bg-col: #2c5aa0;
   --bg-border-col: #0095fa;
   --sec-hover-col: #30bfb3;
   --main-hover-col: #00f2ea;
@@ -37,17 +37,23 @@
 // @import url(https://db.onlinewebfonts.com/c/ed8b4476ce0cbdba6869859c2fd4ee44?family=Screener+W01+Regular);
 // @import url(https://db.onlinewebfonts.com/c/e36d832babb06da18be3bfd2adfddbd9?family=MagdaClean-Black);
 // @import url(https://db.onlinewebfonts.com/c/5165c0facbfede7afe6c9ef3fd635f11?family=Fredoka+One);
-@font-face{
-  font-family: "Aber Mono";
-  src: url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.eot");
-  src: url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.eot?#iefix")format("embedded-opentype"),
-      url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.woff")format("woff"),
-      url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.woff2")format("woff2"),
-      url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.ttf")format("truetype"),
-      url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.svg#Aber Mono")format("svg");
-  font-weight:normal;
-  font-style:normal;
-  font-display:swap;
+@font-face {
+  font-family: 'Aber Mono';
+  src: url('https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.eot');
+  src:
+    url('https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.eot?#iefix')
+      format('embedded-opentype'),
+    url('https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.woff')
+      format('woff'),
+    url('https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.woff2')
+      format('woff2'),
+    url('https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.ttf')
+      format('truetype'),
+    url('https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.svg#Aber Mono')
+      format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 // @font-face{
 //   font-family: "Screener W01 Regular";
@@ -73,17 +79,23 @@
 //   font-style:normal;
 //   font-display:swap;
 // }
-@font-face{
-  font-family: "Fredoka One";
-  src: url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.eot");
-  src: url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.eot?#iefix")format("embedded-opentype"),
-      url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.woff")format("woff"),
-      url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.woff2")format("woff2"),
-      url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.ttf")format("truetype"),
-      url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.svg#Fredoka One")format("svg");
-  font-weight:normal;
-  font-style:normal;
-  font-display:swap;
+@font-face {
+  font-family: 'Fredoka One';
+  src: url('https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.eot');
+  src:
+    url('https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.eot?#iefix')
+      format('embedded-opentype'),
+    url('https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.woff')
+      format('woff'),
+    url('https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.woff2')
+      format('woff2'),
+    url('https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.ttf')
+      format('truetype'),
+    url('https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.svg#Fredoka One')
+      format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 ::-webkit-scrollbar {
@@ -112,9 +124,189 @@
 html {
   background: var(--dark-bg-col);
   height: 100%;
+  overflow: hidden;
 }
 
 body {
   margin: 0;
-  overflow-x: hidden;
+  overflow: hidden;
+}
+
+header {
+  position: fixed;
+  display: flex;
+  height: min(5vh, 5vw);
+  max-height: 100px;
+  width: calc(100% - 2em);
+  flex-direction: row;
+  padding: 0.5em 1em;
+  outline: 2px solid var(--bg-border-col);
+  background: var(--main-text-col);
+  justify-content: space-between;
+  z-index: 3;
+  top: 0;
+
+  #home-link {
+    align-self: normal !important;
+
+    #logo {
+      height: min(5vh, 5vw);
+      max-height: 100px;
+    }
+  }
+
+  nav {
+    display: flex;
+    flex-direction: row;
+    gap: calc(50% / 10);
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    justify-content: flex-end;
+
+    a {
+      color: var(--tert-link-col);
+      text-decoration: none;
+      align-self: center;
+    }
+
+    a:hover {
+      color: var(--sec-hover-col);
+    }
+  }
+
+  #nav-toggle {
+    display: none;
+  }
+
+  #nav-toggle-label {
+    height: 100%;
+    display: none;
+
+    span {
+      display: block;
+      width: 2em;
+      background: var(--sec-text-col);
+      padding: 1px;
+      transition: 0.25s ease-out;
+    }
+  }
+}
+
+#app main:not(#home) {
+  margin-top: calc(min(5vh, 5vw, 100px) + 18px);
+  height: calc(100dvh - min(5vh, 5vw, 100px) - 18px);
+}
+
+@media (max-width: 650px) {
+  #app main:not(#home) {
+    margin-top: calc(max(min(10vh, 10vw, 100px), 60px) + 18px);
+    height: calc(100dvh - max(min(10vh, 10vw, 100px), 60px) - 18px);
+  }
+
+  header {
+    flex-direction: column;
+    height: min(10vh, 10vw);
+    min-height: 60px;
+
+    #home-link {
+      align-self: center !important;
+
+      #logo {
+        height: min(4vh, 4vw);
+        max-height: 60px;
+      }
+    }
+
+    h1 {
+      font-size: 0.75rem;
+    }
+
+    nav {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 420px) {
+  #app main:not(#home) {
+    margin-top: calc(max(min(7vh, 7vw, 100px), 50px) + 18px);
+    height: calc(100dvh - max(min(7vh, 7vw, 100px), 50px) - 18px);
+  }
+
+  header {
+    height: min(7vh, 7vw);
+    min-height: 50px;
+    align-items: flex-start;
+    align-content: center;
+    flex-direction: row;
+
+    #home-link #logo {
+      height: min(7vh, 7vw);
+      max-height: 50px;
+    }
+
+    h1 {
+      font-size: 1rem;
+    }
+
+    #nav-toggle-label {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      justify-content: space-evenly;
+      z-index: 1;
+    }
+
+    nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+      position: absolute;
+      top: 0;
+      right: -50%;
+      background: var(--bg-col);
+      width: 50%;
+      padding-left: 0.75em;
+      padding-top: 75px;
+      padding-right: 1.5em;
+      padding-bottom: 2em;
+      margin-right: -2.5em;
+      transition: 0.25s ease-out;
+      align-items: flex-end;
+      border-bottom-left-radius: 1em;
+      outline: 2px solid var(--bg-border-col);
+      opacity: 0;
+
+      a {
+        text-wrap: nowrap;
+        align-self: flex-end !important;
+      }
+    }
+
+    #nav-toggle:checked {
+      + * + nav {
+        right: 0;
+        margin-right: 0;
+        outline: 2px solid var(--bg-border-col);
+        opacity: 1;
+      }
+
+      + #nav-toggle-label {
+        span:nth-child(1) {
+          transform: rotate(45deg);
+        }
+
+        span:nth-child(2) {
+          opacity: 0;
+          margin: -75%;
+        }
+
+        span:nth-child(3) {
+          transform: rotate(-45deg);
+        }
+      }
+    }
+  }
 }

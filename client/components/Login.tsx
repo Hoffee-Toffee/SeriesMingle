@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import '../styles/login.scss'
 import {
   GoogleAuthProvider,
@@ -8,13 +8,25 @@ import {
   signInWithPopup,
 } from 'firebase/auth'
 
-import favicon from '../../favicon.ico'
+import icon from '../../icons/icon.png'
 import { useContext } from 'react';
 import { LoadingContext, UserContext } from './App.tsx';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../server/firebase.ts';
+import { Navigate } from 'react-router-dom';
 
-export default function LogIn() {
-  const { setUser } = useContext(UserContext)
+export default function LogIn({ logout = false }) {
+  const { user, setUser } = useContext(UserContext)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (logout) {
+      signOut(auth)
+      setUser(null)
+      // navigate to login
+
+    }
+  }, [logout, setUser])
 
   const [creatingEmail, setCreatingEmail] = useState(false)
   const emailRef = useRef<HTMLInputElement>(null)
@@ -103,9 +115,9 @@ export default function LogIn() {
     return googleAuth
   }
 
-  return (
-    <>
-      <img src={favicon} alt="Series Mingle logo" id="logo" />
+  return (logout && !user ? <Navigate to="/login" /> :
+    <main>
+      <img src={icon} alt="Series Mingle logo" id="logo" />
       <h1>
         <span>Series</span>
         <span>Mingle</span>
@@ -174,6 +186,6 @@ export default function LogIn() {
           {creatingEmail ? 'Sign In' : 'Create Account'}
         </button>
       </span>
-    </>
+    </main>
   )
 }
