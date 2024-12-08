@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useOutlet } from 'react-router-dom'
+import { Link, Outlet, useLocation, useOutlet } from 'react-router-dom'
 import { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { auth } from '../../server/firebase.ts'
 import Nav from './Nav.tsx'
@@ -73,9 +73,9 @@ export default function App() {
           <LoadingContext.Provider value={{ isPageLoaded, setIsPageLoaded }}>
             <div id={page}>
               <header id="nav-bar">
-                <a href="/" id="home-link" aria-label="Home Page">
+                <Link to="/" id="home-link" aria-label="Home Page">
                   <img src={icon} alt="SeriesMingle Logo" id="logo" />
-                </a>
+                </Link>
                 <input type="checkbox" id="nav-toggle" />
                 <label htmlFor="nav-toggle" id="nav-toggle-label" aria-label="Toggle Navigation">
                   <span></span>
