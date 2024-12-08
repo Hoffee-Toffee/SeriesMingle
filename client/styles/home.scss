@@ -147,28 +147,34 @@
   }
 
   main > div:nth-of-type(1) .bg { // Blue
-    background: rgba(0, 191, 255, var(--bg-alpha));
+    --custom-col: rgba(0, 191, 255, var(--bg-alpha));
+    background: var(--custom-col);
   }
 
   main > div:nth-of-type(2) .bg { // Purple
-    background: rgba(159, 0, 191, var(--bg-alpha));
+    --custom-col: rgba(159, 0, 191, var(--bg-alpha));
+    background: var(--custom-col);
   }
 
   main > div:nth-of-type(3) .bg { // Red
-    background: rgba(191, 0, 45, var(--bg-alpha));
+    --custom-col: rgba(191, 0, 45, var(--bg-alpha));
+    background: var(--custom-col);
   }
 
   main > div:nth-of-type(4) .bg { // Orange
-    background: rgba(191, 134, 0, var(--bg-alpha));
+    --custom-col: rgba(191, 134, 0, var(--bg-alpha));
+    background: var(--custom-col);
   }
 
   main > div:nth-of-type(5) .bg { // Green
-    background: rgba(70, 191, 0, var(--bg-alpha));
+    --custom-col: rgba(70, 191, 0, var(--bg-alpha));
+    background: var(--custom-col);
   }
 
   main > div:nth-of-type(6) { // Teal
     .bg {
-      background: rgba(0, 191, 108, var(--bg-alpha));
+      --custom-col: rgba(0, 191, 108, var(--bg-alpha));
+      background: var(--custom-col);
     }
     
     ~ div {
@@ -188,7 +194,8 @@
   }
 
   main > div:nth-of-type(8) { // Blue
-    background: linear-gradient(to left, transparent 0%, rgba(0, 191, 255, calc(var(--bg-alpha) / 2)) 0%) var(--dark-bg-col);
+    --custom-col: rgba(0, 191, 255, calc(var(--bg-alpha) / 2));
+    background: linear-gradient(var(--custom-col), var(--custom-col)), var(--dark-bg-col);
   }
 
   .bg {

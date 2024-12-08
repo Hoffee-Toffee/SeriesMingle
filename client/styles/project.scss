@@ -863,7 +863,6 @@
     }
 
     .episode-marker {
-      // display: inline-grid;
       background: linear-gradient(var(--bg-col), var(--bg-col));
       border-color: transparent;
       outline: none;
@@ -891,14 +890,11 @@
       margin-top: -15px;
     }
   }
+  @media screen and (max-width: 500px) {
 
   #home div .episode-marker {
-    background: linear-gradient(var(--bg-col), var(--bg-col));
-  }
-
-  #home div:nth-of-type(2n) div .episode-marker {
-    background: linear-gradient(var(--bg-col), var(--bg-col));
-  }
+    background: linear-gradient(var(--custom-col), var(--custom-col)), linear-gradient(var(--dark-bg-col), var(--dark-bg-col));
+  }}
 }
 
 .loading,
