@@ -4,7 +4,8 @@ import { auth } from '../../server/firebase.ts'
 import Nav from './Nav.tsx'
 import icon from '../../icons/icon.png'
 import '../styles/app.scss'
-
+import CacheBuster from 'react-cache-buster'
+import { version } from '../../package.json'
 import { User as FirebaseUser, UserInfo } from 'firebase/auth';
 
 interface User extends FirebaseUser {
@@ -50,16 +51,23 @@ export default function App() {
     if (page !== 'home') document.title = `${page.charAt(0).toUpperCase()}${page.slice(1)} | ${document.title}`
   }
 
+  const loading = (hasLoaded: boolean) => <div id="loading" className={hasLoaded ? 'loaded' : 'loading'}>
+    <div className="lds-ripple">
+      <div></div>
+      <div></div>
+    </div>
+    <span className="scanline"></span>
+  </div>
+
   return (
-    <>
-      {showLoading &&
-        <div id="loading" className={hasLoaded ? 'loaded' : 'loading'}>
-          <div className="lds-ripple">
-            <div></div>
-            <div></div>
-          </div>
-          <span className="scanline"></span>
-        </div>}
+    <CacheBuster
+      currentVersion={version}
+      isEnabled={process.env.NODE_ENV === 'production'}
+      reloadOnDowngrade={true}
+      isVerboseMode={true}
+      loadingComponent={loading(hasLoaded)}
+    >
+      {showLoading && loading(hasLoaded)}
       {isAuthLoaded &&
         <UserContext.Provider value={{ user, setUser }}>
           <LoadingContext.Provider value={{ isPageLoaded, setIsPageLoaded }}>
@@ -80,7 +88,7 @@ export default function App() {
             </div>
           </LoadingContext.Provider>
         </UserContext.Provider>}
-    </>
+    </CacheBuster>
   )
 }
 
