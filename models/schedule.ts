@@ -172,3 +172,7 @@ export interface SeasonResult {
   season_number: number
   episodes: MediaResult[]
 }
+
+export interface IDsResult {
+  imdb_id: string
+}

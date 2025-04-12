@@ -1,4 +1,5 @@
 import { Barrier, Colors, CustomDetails, EntryDetails, MediaDetails } from "../../models/schedule"
+import IMDb_Logo from '../../icons/imdb.png'
 
 export default function EpisodeDetails(props: {
   entry: MediaDetails | Barrier
@@ -123,6 +124,34 @@ export default function EpisodeDetails(props: {
               :
               entry.userTitle || entry.title}
             {entry.runtime && <span className="spoiler">{`${entry.runtime > 59 ? `${Math.floor(entry.runtime / 60)}h` : ''}${entry.runtime > 59 && entry.runtime % 60 ? ' ' : ''}${entry.runtime % 60 ? `${entry.runtime % 60}m` : ''}`}</span>}
+            {entry.type == 'movie' &&
+              <a
+                className="spoiler"
+                href={`https://letterboxd.com/tmdb/${entry.id}/`}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="View on Letterboxd"
+                title="View on Letterboxd"
+              >
+                {/* https://a.ltrbxd.com/logos/letterboxd-decal-dots-pos-rgb-500px.png */}
+                <img
+                  src="https://a.ltrbxd.com/logos/letterboxd-decal-dots-pos-rgb-500px.png"
+                  alt="Letterboxd Logo"
+                />
+              </a>}
+            {entry.imdb_id && <a
+              className="spoiler"
+              href={`https://www.imdb.com/title/${entry.imdb_id}/`}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="View on IMDb"
+              title="View on IMDb"
+            >
+              <img
+                src={IMDb_Logo}
+                alt="IMDb Logo"
+              />
+            </a>}
           </span>
           <span className="spoiler">
             {entry.type !== 'custom' ? ('overview' in entry && entry.overview) || 'No Description Available' :

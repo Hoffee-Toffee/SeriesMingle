@@ -3,16 +3,24 @@ import fs from 'fs'
 import * as Path from 'node:path'
 import { fileURLToPath } from 'url'
 import { join } from 'node:path'
+import { config } from 'dotenv'
+config()
 
 // Get the directory name of the current module file
 const __filename = fileURLToPath(import.meta.url)
-const __dirname = join(__filename, '../../server/eastereggs')
+// If running locally, go up 3 directories, otherwise only 2
+const __dirname = join(
+  __filename,
+  '../'.repeat(process.env.NODE_ENV === 'production' ? 2 : 3) +
+    'server/eastereggs',
+)
 
 export default function decrypt(passphrase = 'test123') {
   // Must try it on all txt files in the directory, and return the one that works
   const encodedFiles = fs.readdirSync(Path.resolve(__dirname))
   for (const file of encodedFiles) {
     if (file.endsWith('.txt')) {
+      console.log(`Trying to decrypt ${file}...`)
       try {
         return decryptFile(file.split('.')[0], passphrase)
       } catch (e) {

@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import fetch from 'node-fetch'
 import dotenv from 'dotenv'
-import { MediaResult, SeasonResult } from '../../models/schedule'
+import { MediaResult, SeasonResult, IDsResult } from '../../models/schedule'
 dotenv.config()
 
 const router = Router()
@@ -30,7 +30,9 @@ router.get('/search', async (req, res) => {
 
 router.get('/movie', async (req, res) => {
   const url =
-    'https://api.themoviedb.org/3/movie/' + req.query.id + '?language=en-US'
+    'https://api.themoviedb.org/3/movie/' +
+    req.query.id +
+    '?append_to_response=external_ids&language=en-US'
   await fetch(url, api)
     .then((response) => response.json() as Promise<MediaResult>)
     .then((movie) =>
@@ -41,6 +43,7 @@ router.get('/movie', async (req, res) => {
         year: (movie.release_date || '').split('-')[0],
         runtime: movie.runtime,
         overview: movie.overview,
+        imdb_id: movie.external_ids.imdb_id,
       }),
     )
     .catch((error) =>
@@ -68,16 +71,29 @@ router.get('/tv', async (req, res) => {
               api,
             )
             const seasonData = (await seasonRes.json()) as SeasonResult
+
+            const episodes = await Promise.all(
+              seasonData.episodes.map(async (episode) => {
+                const idsRes = await fetch(
+                  `https://api.themoviedb.org/3/tv/${show.id}/season/${season + 1}/episode/${episode.episode_number}/external_ids`,
+                  api,
+                )
+                const ids = (await idsRes.json()) as IDsResult
+
+                return {
+                  id: episode.id,
+                  type: 'episode',
+                  title: episode.name,
+                  runtime: episode.runtime,
+                  episode: episode.episode_number,
+                  overview: episode.overview,
+                  imdb_id: ids.imdb_id,
+                }
+              }),
+            )
             return {
               season: seasonData.season_number,
-              episodes: seasonData.episodes.map((episode) => ({
-                id: episode.id,
-                type: 'episode',
-                title: episode.name,
-                runtime: episode.runtime,
-                episode: episode.episode_number,
-                overview: episode.overview,
-              })),
+              episodes,
             }
           }),
       )

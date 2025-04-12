@@ -27,7 +27,9 @@ server.get('/api/v1/secret', (req, res) => {
   if (typeof req.query.passphrase !== 'string') {
     return res.status(400).send('Invalid passphrase')
   }
-  res.send(decrypt(req.query.passphrase))
+  const decryption = decrypt(req.query.passphrase)
+  console.log(decryption)
+  res.send(decryption)
 })
 
 if (process.env.NODE_ENV === 'production') {

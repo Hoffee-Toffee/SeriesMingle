@@ -18,7 +18,7 @@ import example from '../files/example.json'
 import setProject from '../apis/setProject.ts'
 import Entry from './Entry.tsx'
 import Terminal from './Terminal.tsx'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { doc, getFirestore, onSnapshot } from 'firebase/firestore'
 import fetchSecret from '../apis/fetchSecret.ts'
 import { MediaDetails, LayerEntry, ScheduleState, ProjectData } from '../../models/schedule.ts'
@@ -77,7 +77,7 @@ export default function Project() {
     description: 'No Description',
     keys: [],
     lastModified: Date.now(),
-    user: uid,
+    user: uid || '',
     permissions: {}
   } as ScheduleState
   // Layers as a state
@@ -200,6 +200,9 @@ export default function Project() {
         title,
         description,
         keys,
+        lastModified: Date.now(),
+        user: uid || '',
+        permissions: state.permissions,
       })
     }
   }, [
@@ -235,7 +238,7 @@ export default function Project() {
   function setCustom(newData: string | MediaDetails | null = null, layer = null, id = null) {
     if (readOnly) return
     const defaultData = {
-      title: typeof newData === 'string' ? newData : 'Custom Set',
+      title: typeof newData === 'string' && newData.trim() ? newData : 'Custom Set',
       type: 'custom',
       id: data.custom ? Object.keys(data.custom).length + 1 : 1,
       runtime: 30,
@@ -243,36 +246,17 @@ export default function Project() {
       offset: 0,
       term: 'Part',
     }
-    if (!layer && newData && typeof newData == 'object') {
-      data.custom = data.custom || {}
-      data.custom[newData.id] = newData
-      setState({ ...state, data, force: true })
-      setChangedProps([...changedProps, 'data'])
-    } else if (layer && id && newData) {
-      addData(typeof newData == 'string' ? { ...defaultData, type: 'custom' } : newData, layer, id)
+
+    if (id == null && newData && typeof newData == 'object') {
+      data.custom = data.custom || {};
+      data.custom[newData.id] = newData;
+      setState({ ...state, data, force: true });
+      setChangedProps([...changedProps, 'data']);
+    } else if (layer !== null && id !== null) {
+      console.log('Adding custom data to a specific layer and entry:', { layer, id, newData });
+      addData(typeof newData == 'string' && newData.trim() ? { ...defaultData, title: newData } : defaultData, layer, id);
     }
   }
-
-  // function setBarrier(layer = null, id = null) {
-  //   if (readOnly) return
-  //   const defaultData = {
-  //     title: newData || 'Custom Set',
-  //     type: 'custom',
-  //     id: data.custom ? Object.keys(data.custom).length + 1 : 1,
-  //     runtime: 30,
-  //     repeat: 1,
-  //     offset: 0,
-  //     term: 'Part',
-  //   }
-  //   if (!layer) {
-  //     data.custom = data.custom || {}
-  //     data.custom[newData.id] = newData
-  //     setState({ ...state, data, force: true })
-  //     setChangedProps([...changedProps, 'data'])
-  //   } else {
-  //     addData(typeof newData == 'string' ? defaultData : newData, layer, id)
-  //   }
-  // }
 
   function setBookmark(newBookmark: string | null) {
     if (readOnly) return

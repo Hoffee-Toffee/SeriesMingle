@@ -57,7 +57,7 @@
 
 #app #project {
   overflow: hidden;
-  
+
   > main {
     overflow-y: scroll;
     box-sizing: border-box;
@@ -185,8 +185,8 @@
   .options div select,
   .overlay select {
     max-width: Max(15vw, 10em);
-    overflow: hidden; 
-    white-space: nowrap; 
+    overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
   }
 
@@ -248,37 +248,37 @@
   }
 
   > main {
-  button,
-  a {
-    color: var(--sec-link-col);
-    border: var(--button-orange) 2px solid;
-    background-color: var(--button-red);
-    padding: 0.3em;
-    margin: 0.25em;
-    cursor: pointer;
-    font-size: smaller;
-    text-decoration: none;
-    display: inline-block;
-  }
+    button,
+    a {
+      color: var(--sec-link-col);
+      border: var(--button-orange) 2px solid;
+      background-color: var(--button-red);
+      padding: 0.3em;
+      margin: 0.25em;
+      cursor: pointer;
+      font-size: smaller;
+      text-decoration: none;
+      display: inline-block;
+    }
 
-  button,
-  a,
-  select {
-    transition: var(--transition-time);
-    outline: solid transparent 2px;
-    border-radius: 0.3em;
-    z-index: 1;
-    position: relative;
-  }
+    button,
+    a,
+    select {
+      transition: var(--transition-time);
+      outline: solid transparent 2px;
+      border-radius: 0.3em;
+      z-index: 1;
+      position: relative;
+    }
 
-  button:hover,
-  .options button:hover,
-  a:hover {
-    color: var(--sec-text-col);
-    border: var(--button-yellow) 2px solid;
-    background-color: var(--button-orange);
+    button:hover,
+    .options button:hover,
+    a:hover {
+      color: var(--sec-text-col);
+      border: var(--button-yellow) 2px solid;
+      background-color: var(--button-orange);
+    }
   }
-}
 
   .layer > details button:hover,
   .options div > :is(button, :is(select, input.value)):hover,
@@ -293,9 +293,6 @@
   }
 
   .fa-grip-vertical {
-    position: absolute;
-    transform: translate(-10px, -50%);
-    top: 50%;
     cursor: grab;
     font-size: x-small;
   }
@@ -455,7 +452,7 @@
       margin-left: 20px;
       width: 0;
       white-space: nowrap;
-      
+
       > legend {
         width: fit-content;
         padding-left: 20px;
@@ -606,10 +603,15 @@
     }
 
     .title {
-      width: fit-content;
+      width: calc(100% - 1em);
       color: var(--sec-link-col);
       padding: 2px;
       margin: -2px;
+      column-gap: 0.75em;
+      row-gap: 5px;
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
     input {
@@ -635,6 +637,11 @@
       }
     }
 
+    .spoiler:not(.title .spoiler) {
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+    }
+
     .spoiler {
       opacity: 0;
       line-height: 0;
@@ -642,28 +649,50 @@
         opacity var(--transition-time),
         line-height var(--transition-time) var(--transition-time),
         margin-top var(--transition-time) var(--transition-time);
-      overflow-y: auto;
-      scrollbar-gutter: stable;
       font-size: 95%;
-      padding-right: 5px;
     }
 
-    .title .spoiler::before {
+    .title span.spoiler::before {
       content: '-';
       position: absolute;
-      margin-left: -1em;
+      margin-left: -1.25em;
       transform: translateX(-50%);
       color: var(--light-lav);
     }
 
     .title .spoiler {
+      margin-left: 0.75em;
       color: var(--lav-white);
       font-size: 0.8em;
       background: var(--bg-col);
-      margin-left: 1.25em;
-      padding: 0.2em 0.3em;
+      padding: 0.1em 0.3em;
       border-radius: 0.5em;
       outline: 1px solid var(--dark-lav);
+      margin-top: -2px;
+    }
+
+    .title a.spoiler {
+      opacity: 0;
+      margin: 0em;
+      padding: 0;
+      border: none;
+      line-height: 0;
+      background-color: #202830;
+      scrollbar-gutter: auto;
+      border-radius: 0em;
+      width: calc(2em - 5px);
+      height: calc(2em - 5px);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    a:hover {
+      opacity: 1;
+      transition: var(--transition-time);
     }
 
     ::-webkit-scrollbar-track-piece {
@@ -699,8 +728,8 @@
     opacity: 1;
   }
 
-  .episode-marker:hover div * :not(.title, .spoiler, label, i),
-  .highlighted.episode-marker div * :not(.title, .spoiler, label, i) {
+  .episode-marker:hover div div > :not(.title, .spoiler, label, i, a),
+  .highlighted.episode-marker div div > :not(.title, .spoiler, label, i, a) {
     opacity: 0;
     line-height: 0%;
     transition: var(--transition-time);
@@ -710,17 +739,44 @@
   .episode-marker:hover .episode-detail,
   .highlighted.episode-marker .episode-detail {
     transition: var(--transition-time) var(--transition-time);
+
+    .spoiler:not(.title .spoiler) {
+      margin-top: 5px;
+    }
+
+    .spoiler {
+      opacity: 1;
+      line-height: 1.5;
+      transition:
+        opacity var(--transition-time) var(--transition-time),
+        line-height var(--transition-time),
+        margin-top var(--transition-time);
+    }
   }
 
-  .episode-marker:hover .episode-detail .spoiler,
-  .highlighted.episode-marker .episode-detail .spoiler {
-    margin-top: 5px;
-    opacity: 1;
-    line-height: 1.5;
+  .left-icons {
+    display: flex;
+    position: absolute;
+    transform: translate(-15px, -50%);
+    top: 50%;
+    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .refetch-icon {
+    font-size: 0.8em;
+    opacity: 0.5;
+    cursor: pointer;
     transition:
-      opacity var(--transition-time) var(--transition-time),
-      line-height var(--transition-time),
-      margin-top var(--transition-time);
+      opacity 0.2s ease,
+      transform 0.2s ease;
+    z-index: 2;
+  }
+
+  .refetch-icon:hover {
+    opacity: 1;
+    transform: scale(1.1);
   }
 
   #project-details {
@@ -891,10 +947,11 @@
     }
   }
   @media screen and (max-width: 500px) {
-
-  #home div .episode-marker {
-    background: linear-gradient(var(--custom-col), var(--custom-col)), linear-gradient(var(--dark-bg-col), var(--dark-bg-col));
-  }}
+    #home div .episode-marker {
+      background: linear-gradient(var(--custom-col), var(--custom-col)),
+        linear-gradient(var(--dark-bg-col), var(--dark-bg-col));
+    }
+  }
 }
 
 .loading,

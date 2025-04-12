@@ -47,8 +47,8 @@ export default function Entry({
         .catch((err) => console.log(err))
   }
 
-  function getMedia(type: keyof Data, mid: number) {
-    if (data[type][mid]) {
+  function getMedia(type: keyof Data, mid: number, resync = false) {
+    if (!resync && data[type][mid]) {
       entries[id] = { ref: [type, mid] }
       setEntries([...entries], true)
     } else {
@@ -263,7 +263,7 @@ export default function Entry({
                       ))}
                   </select>
                 ),
-              },
+              }
             ]
             : entryData.type == 'custom'
               ? [
@@ -332,26 +332,36 @@ export default function Entry({
 
         options = (
           <div ref={setNodeRef} className={className}>
-            <i
-              className="handle fa-solid fa-grip-vertical"
-              {...(bookmark ? { onDragStart: () => runAfterConfirm(() => { }) } : { ...attributes, ...listeners })}
-            />
-            {entryData.type !== 'movie' && (
-              <span className="setting">
-                <button className="setting-label"
-                  onClick={() => {
-                    if (settings) {
-                      setSetting((setting + 1) % settings.length)
-                      setValue(null)
-                    }
-                  }}
-                >
-                  <i className="fa-solid fa-sort"></i>
-                  {settings && settings[setting].title}:
-                </button>
-                {settings && settings[setting].content}
-              </span>
-            )
+            <span className="left-icons">
+              {['tv', 'movie'].includes(entryData.type) && (
+                <i
+                  className="refetch-icon fa-solid fa-rotate"
+                  onClick={() => runAfterConfirm(() => getMedia(entryData.type, entryData.id, true))}
+                  title="Refetch Media"
+                />
+              )}
+              <i
+                className="handle fa-solid fa-grip-vertical"
+                {...(bookmark ? { onDragStart: () => runAfterConfirm(() => { }) } : { ...attributes, ...listeners })}
+              />
+            </span>
+            {
+              entryData.type !== 'movie' && (
+                <span className="setting">
+                  <button className="setting-label"
+                    onClick={() => {
+                      if (settings) {
+                        setSetting((setting + 1) % settings.length)
+                        setValue(null)
+                      }
+                    }}
+                  >
+                    <i className="fa-solid fa-sort"></i>
+                    {settings && settings[setting].title}:
+                  </button>
+                  {settings && settings[setting].content}
+                </span>
+              )
             }
             <div className="option">
               <div
