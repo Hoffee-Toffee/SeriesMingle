@@ -166,6 +166,7 @@ export interface MediaResult {
   runtime?: number
   number_of_seasons?: number
   episode_number?: number
+  still_path?: string
 }
 
 export interface SeasonResult {

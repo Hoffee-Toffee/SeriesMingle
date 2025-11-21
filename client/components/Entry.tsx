@@ -36,27 +36,33 @@ export default function Entry({
   let entryData: MediaDetails
   const [setting, setSetting] = useState(0)
   const [value, setValue] = useState<string | number | null>(null)
+  const [isSearching, setIsSearching] = useState(false)
+  const [isFetching, setIsFetching] = useState(false)
 
   function handleSearch() {
-    typeof entry === 'string' &&
-      search(entry)
-        .then((res) => {
-          entries[id] = res
-          setEntries([...entries])
-        })
-        .catch((err) => console.log(err))
+    if (typeof entry !== 'string') return;
+    setIsSearching(true);
+    search(entry)
+      .then((res) => {
+        entries[id] = res;
+        setEntries([...entries]);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setIsSearching(false));
   }
 
   function getMedia(type: keyof Data, mid: number, resync = false) {
     if (!resync && data[type][mid]) {
-      entries[id] = { ref: [type, mid] }
-      setEntries([...entries], true)
+      entries[id] = { ref: [type, mid] };
+      setEntries([...entries], true);
     } else {
+      setIsFetching(true);
       fetchMedia(type, mid)
         .then((res) => {
-          addData(res, layer, id)
+          addData(res, layer, id);
         })
         .catch((err) => console.log(err))
+        .finally(() => setIsFetching(false));
     }
   }
 
@@ -90,14 +96,16 @@ export default function Entry({
               })
             }}
             onKeyDown={(e) => runAfterConfirm(() => e.key === 'Enter' && handleSearch())}
+            disabled={isSearching}
           />
-          <button onClick={() => runAfterConfirm(handleSearch)}>Search</button>
-          <button onClick={() => runAfterConfirm(() => setCustom(entry as string, layer, id))}>
+          <button onClick={() => runAfterConfirm(handleSearch)} disabled={isSearching}>Search</button>
+          <button onClick={() => runAfterConfirm(() => setCustom(entry as string, layer, id))} disabled={isSearching}>
             Create Custom
           </button>
-          <button onClick={() => runAfterConfirm(() => addBarrier(id))}>
+          <button onClick={() => runAfterConfirm(() => addBarrier(id))} disabled={isSearching}>
             Add Barrier
           </button>
+          {isSearching && <span className="loading">Searching...</span>}
         </div>
       )
       break
@@ -121,6 +129,7 @@ export default function Entry({
                   runAfterConfirm(() => { })
                 }
                 }
+                disabled={isFetching}
               >
                 {(entry as MediaResult[]).map((option: MediaResult, index: number) => {
                   if (!index) return
@@ -147,6 +156,7 @@ export default function Entry({
                     (entry as MediaResult[]).find((option: MediaResult) => option.selected) || (entry as MediaResult[])[1]
                   getMedia(selected.media_type, selected.id)
                 })}
+                disabled={isFetching}
               >
                 Add
               </button>
@@ -157,9 +167,11 @@ export default function Entry({
               entries[id] = (entry as MediaResult[])[0] as unknown as string
               setEntries([...entries])
             })}
+            disabled={isFetching}
           >
             Back
           </button>
+          {isFetching && <span className="loading">Fetching...</span>}
         </div>
       )
       break

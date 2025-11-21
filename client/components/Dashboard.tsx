@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import { UserContext, LoadingContext } from './App.tsx';
 import { useNavigate } from 'react-router-dom';
 import ProjectCard from '../components/ProjectCard.tsx';
@@ -18,8 +18,21 @@ export default function Dashboard() {
   };
 
   const { isPageLoaded, setIsPageLoaded } = useContext(LoadingContext) as { isPageLoaded: boolean, setIsPageLoaded: React.Dispatch<React.SetStateAction<boolean>> };
-  const [ownedProjects, setOwnedProjects] = useState<ProjectData[]>([]);
-  const [joinedProjects, setJoinedProjects] = useState<ProjectData[]>([]);
+  // Load cached state for instant UI
+  const [ownedProjects, setOwnedProjects] = useState<ProjectData[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('ownedProjects') || '[]');
+    } catch {
+      return [];
+    }
+  });
+  const [joinedProjects, setJoinedProjects] = useState<ProjectData[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('joinedProjects') || '[]');
+    } catch {
+      return [];
+    }
+  });
 
   const navigate = useNavigate();
   const db = getFirestore();
@@ -43,16 +56,28 @@ export default function Dashboard() {
     setJoinedProjects(joinedProjects.filter((p: { id: string }) => p.id !== projectId));
   }
 
+  // On mount, load from cache instantly, then update in background
   useEffect(() => {
+    setIsPageLoaded(true);
+
     const ownedProjectsQuery = query(collection(db, 'projects'), where('user', '==', user.uid));
     const joinedProjectsQuery = query(collection(db, 'projects'), where(`permissions.${user.uid}`, '>=', 1));
+
+    // Helper to compare arrays of projects
+    function projectsChanged(a: ProjectData[], b: ProjectData[]) {
+      return JSON.stringify(a) !== JSON.stringify(b);
+    }
 
     const ownedProjectsListener = onSnapshot(ownedProjectsQuery, (querySnapshot) => {
       const projectsArray: ProjectData[] = [];
       querySnapshot.forEach((doc) => {
         projectsArray.push({ ...doc.data() as ScheduleStored, id: doc.id });
       });
-      setOwnedProjects(projectsArray.sort((a, b) => (b.lastModified || 0) - (a.lastModified || 0)))
+      const sorted = projectsArray.sort((a, b) => (b.lastModified || 0) - (a.lastModified || 0));
+      if (projectsChanged(sorted, ownedProjects)) {
+        setOwnedProjects(sorted);
+        localStorage.setItem('ownedProjects', JSON.stringify(sorted));
+      }
     });
 
     const joinedProjectsListener = onSnapshot(joinedProjectsQuery, (querySnapshot) => {
@@ -60,16 +85,19 @@ export default function Dashboard() {
       querySnapshot.forEach((doc) => {
         projectsArray.push({ ...doc.data() as ScheduleStored, id: doc.id });
       });
-      setJoinedProjects(projectsArray.sort((a, b) => (b.lastModified || 0) - (a.lastModified || 0)))
+      const sorted = projectsArray.sort((a, b) => (b.lastModified || 0) - (a.lastModified || 0));
+      if (projectsChanged(sorted, joinedProjects)) {
+        setJoinedProjects(sorted);
+        localStorage.setItem('joinedProjects', JSON.stringify(sorted));
+      }
     });
-
-    setIsPageLoaded(true);
 
     return () => {
       ownedProjectsListener();
       joinedProjectsListener();
     };
-  }, [user, db, setIsPageLoaded]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, db]);
 
   return (
     <main>
