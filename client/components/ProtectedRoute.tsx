@@ -4,7 +4,7 @@ import { UserContext } from './App.tsx';
 
 import { ReactNode } from 'react';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../server/firebase.ts';
+import { auth } from '../firebase.ts';
 
 export default function ProtectedRoute({ children, ifLoggedIn = true, redirectTo = '/login', includeRedirect = false }: { children?: ReactNode, ifLoggedIn?: boolean, redirectTo?: string, includeRedirect?: boolean }) {
   const { user } = useContext(UserContext)

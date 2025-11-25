@@ -1,21 +1,8 @@
-import dotenv from 'dotenv'
-dotenv.config()
 import { initializeApp } from 'firebase/app'
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  addDoc,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-  getDoc,
-} from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
+  apiKey: import.meta.env.FIREBASE_API_KEY,
   authDomain: 'series-mingle.firebaseapp.com',
   projectId: 'series-mingle',
   storageBucket: 'series-mingle.appspot.com',
@@ -25,18 +12,6 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
-const firestore = getFirestore(app)
 const auth = getAuth(app)
 
-export {
-  firestore,
-  auth,
-  collection,
-  getDocs,
-  doc,
-  addDoc,
-  setDoc,
-  updateDoc,
-  deleteDoc,
-  getDoc,
-}
+export { auth }

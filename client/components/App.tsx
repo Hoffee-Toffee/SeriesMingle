@@ -1,12 +1,12 @@
 import { Link, Outlet, useLocation, useOutlet } from 'react-router-dom'
 import { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { auth } from '../../server/firebase.ts'
+import { auth } from '../firebase.ts'
 import Nav from './Nav.tsx'
 import icon from '../../icons/icon.png'
 import '../styles/app.scss'
 import CacheBuster from 'react-cache-buster'
 import { version } from '../../package.json'
-import { User as FirebaseUser, UserInfo } from 'firebase/auth';
+import { getRedirectResult, User as FirebaseUser, UserInfo } from 'firebase/auth';
 
 interface User extends FirebaseUser {
   providerData: UserInfo[];
@@ -15,24 +15,39 @@ interface User extends FirebaseUser {
 export default function App() {
   const location = useLocation().key
 
-  const [user, setUser] = useState(auth.currentUser)
-  const [isAuthLoaded, setIsAuthLoaded] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const [isAuthReady, setIsAuthReady] = useState(false)
   const [isPageLoaded, setIsPageLoaded] = useState(false)
 
   const [showLoading, setShowLoading] = useState(false)
-  const hasLoaded = isAuthLoaded && isPageLoaded
-
-  const loader = hasLoaded ? null : setTimeout(() => {
-    setShowLoading(true)
-  }, 2000)
+  const hasLoaded = isAuthReady && isPageLoaded
 
   useEffect(() => {
-    return auth.onAuthStateChanged((user) => {
-      setUser(user || null)
-      setIsAuthLoaded(true)
-      if (!showLoading && typeof loader == "number") clearTimeout(loader)
-    })
-  }, [loader, showLoading])
+    let loader: NodeJS.Timeout | null = null;
+    if (!hasLoaded) {
+      loader = setTimeout(() => {
+        setShowLoading(true);
+      }, 2000);
+    } else {
+      setShowLoading(false);
+    }
+
+    return () => {
+      if (loader) {
+        clearTimeout(loader);
+      }
+    };
+  }, [hasLoaded]);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      console.log('[AuthStateChanged] user:', user);
+      setUser(user);
+      setIsAuthReady(true);
+      console.log('[AuthStateChanged] isAuthReady set to true');
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Reset the loading on location change
   useEffect(() => {
@@ -44,6 +59,7 @@ export default function App() {
   // Log the outlet component element name
   let page = useOutlet()?.props.children.props.routeContext.matches.at(-1).pathname.split('/')[1] || 'home'
   if (page == 'logout') page = 'login'
+  console.log('[App Render] user:', user, 'isAuthReady:', isAuthReady, 'page:', page);
 
   if (!(isPageLoaded && page == "project")) {
     // Set the page title
@@ -68,7 +84,7 @@ export default function App() {
       loadingComponent={loading(hasLoaded)}
     >
       {showLoading && loading(hasLoaded)}
-      {isAuthLoaded &&
+      {isAuthReady &&
         <UserContext.Provider value={{ user, setUser }}>
           <LoadingContext.Provider value={{ isPageLoaded, setIsPageLoaded }}>
             <div id={page}>
