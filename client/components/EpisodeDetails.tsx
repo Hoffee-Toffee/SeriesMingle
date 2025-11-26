@@ -84,75 +84,77 @@ export default function EpisodeDetails(props: {
             maxHeight: `calc(var(--scale) * ${Math.max(minHeight, entry.runtime || ('average_run_time' in entry && entry.average_run_time) || 0) - 5}px + var(--height-mult) * ${(schedule[i + 1] ? Math.max(minHeight, ((nextEntry: MediaDetails | Barrier) => (('runtime' in nextEntry && nextEntry.runtime) || 'average_run_time' in nextEntry && nextEntry.average_run_time) || 0)(schedule[i + 1])) : 40) - 2}px)`,
           }}
         >
-          <label htmlFor={`bookmark-${i}`}>
-            <i
-              className={`fa-${bookmark == posId ? 'solid' : 'regular'} fa-bookmark`}
-              aria-label="Bookmark this entry"
+          <div className="top-bar">
+            <label htmlFor={`bookmark-${i}`}>
+              <i
+                className={`fa-${bookmark == posId ? 'solid' : 'regular'} fa-bookmark`}
+                aria-label="Bookmark this entry"
+              />
+            </label>
+            <input
+              type="checkbox"
+              id={`bookmark-${i}`}
+              checked={bookmark == posId}
+              onChange={() => {
+                setBookmark(bookmark == posId ? null : posId)
+              }}
             />
-          </label>
-          <input
-            type="checkbox"
-            id={`bookmark-${i}`}
-            checked={bookmark == posId}
-            onChange={() => {
-              setBookmark(bookmark == posId ? null : posId)
-            }}
-          />
-          {'show_id' in entry ? (
-            <span>
-              {colors.tv[entry.show_id as number].userTitle || entry.show_title} (S
-              {(entry as EntryDetails).season}E{(entry as EntryDetails).episode})
-            </span>
-          ) : (
-            entry.type == 'movie' ? (
-              colors.movie[entry.layer as number].userTitle &&
-              (colors.movie[entry.layer as number].indices || []).length > 1 && (
-                <span>
-                  {`${colors.movie[entry.layer as number].userTitle} (${(colors.movie[entry.layer as number].indices || []).findIndex((e: number) => e == i) + 1} of ${(colors.movie[entry.layer as number].indices || []).length})`}
-                </span>
-              ))
-              :
-              (colors.custom[(entry as CustomDetails).set as number].indices || []).length > 1 || (('offset' in (entry as CustomDetails) && (entry as CustomDetails).offset || 0) > 0) ? (
-                <span>
-                  {colors.custom[(entry as CustomDetails).set as number].userTitle || colors.custom[(entry as CustomDetails).set as number].title}
-                </span>
-              ) : null
-          )}
-          <span className="title">
-            {entry.type == 'custom' ?
-              (colors.custom[(entry as CustomDetails).set as number].indices || []).length > 1 || (entry.offset && entry.offset > 0) ? `${entry.term} ${(colors.custom[(entry as CustomDetails).set as number].indices || []).findIndex((e: number) => e == i) + 1 + (entry.offset || 0)}` : colors.custom[(entry as CustomDetails).set as number].userTitle || colors.custom[(entry as CustomDetails).set as number].title
-              :
-              entry.userTitle || entry.title}
-            {entry.runtime && <span className="spoiler">{`${entry.runtime > 59 ? `${Math.floor(entry.runtime / 60)}h` : ''}${entry.runtime > 59 && entry.runtime % 60 ? ' ' : ''}${entry.runtime % 60 ? `${entry.runtime % 60}m` : ''}`}</span>}
-            {entry.type == 'movie' &&
-              <a
+            {'show_id' in entry ? (
+              <span>
+                {colors.tv[entry.show_id as number].userTitle || entry.show_title} (S
+                {(entry as EntryDetails).season}E{(entry as EntryDetails).episode})
+              </span>
+            ) : (
+              entry.type == 'movie' ? (
+                colors.movie[entry.layer as number].userTitle &&
+                (colors.movie[entry.layer as number].indices || []).length > 1 && (
+                  <span>
+                    {`${colors.movie[entry.layer as number].userTitle} (${(colors.movie[entry.layer as number].indices || []).findIndex((e: number) => e == i) + 1} of ${(colors.movie[entry.layer as number].indices || []).length})`}
+                  </span>
+                ))
+                :
+                (colors.custom[(entry as CustomDetails).set as number].indices || []).length > 1 || (('offset' in (entry as CustomDetails) && (entry as CustomDetails).offset || 0) > 0) ? (
+                  <span>
+                    {colors.custom[(entry as CustomDetails).set as number].userTitle || colors.custom[(entry as CustomDetails).set as number].title}
+                  </span>
+                ) : null
+            )}
+            <span className="title">
+              {entry.type == 'custom' ?
+                (colors.custom[(entry as CustomDetails).set as number].indices || []).length > 1 || (entry.offset && entry.offset > 0) ? `${entry.term} ${(colors.custom[(entry as CustomDetails).set as number].indices || []).findIndex((e: number) => e == i) + 1 + (entry.offset || 0)}` : colors.custom[(entry as CustomDetails).set as number].userTitle || colors.custom[(entry as CustomDetails).set as number].title
+                :
+                entry.userTitle || entry.title}
+              {entry.runtime && <span className="spoiler">{`${entry.runtime > 59 ? `${Math.floor(entry.runtime / 60)}h` : ''}${entry.runtime > 59 && entry.runtime % 60 ? ' ' : ''}${entry.runtime % 60 ? `${entry.runtime % 60}m` : ''}`}</span>}
+              {entry.type == 'movie' &&
+                <a
+                  className="spoiler"
+                  href={`https://letterboxd.com/tmdb/${entry.id}/`}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="View on Letterboxd"
+                  title="View on Letterboxd"
+                >
+                  {/* https://a.ltrbxd.com/logos/letterboxd-decal-dots-pos-rgb-500px.png */}
+                  <img
+                    src="https://a.ltrbxd.com/logos/letterboxd-decal-dots-pos-rgb-500px.png"
+                    alt="Letterboxd Logo"
+                  />
+                </a>}
+              {entry.imdb_id && <a
                 className="spoiler"
-                href={`https://letterboxd.com/tmdb/${entry.id}/`}
+                href={`https://www.imdb.com/title/${entry.imdb_id}/`}
                 target="_blank"
                 rel="noreferrer"
-                aria-label="View on Letterboxd"
-                title="View on Letterboxd"
+                aria-label="View on IMDb"
+                title="View on IMDb"
               >
-                {/* https://a.ltrbxd.com/logos/letterboxd-decal-dots-pos-rgb-500px.png */}
                 <img
-                  src="https://a.ltrbxd.com/logos/letterboxd-decal-dots-pos-rgb-500px.png"
-                  alt="Letterboxd Logo"
+                  src={IMDb_Logo}
+                  alt="IMDb Logo"
                 />
               </a>}
-            {entry.imdb_id && <a
-              className="spoiler"
-              href={`https://www.imdb.com/title/${entry.imdb_id}/`}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="View on IMDb"
-              title="View on IMDb"
-            >
-              <img
-                src={IMDb_Logo}
-                alt="IMDb Logo"
-              />
-            </a>}
-          </span>
+            </span>
+          </div>
           <span className="spoiler">
             {entry.type !== 'custom' ? ('overview' in entry && entry.overview) || 'No Description Available' :
               (colors.custom[(entry as CustomDetails).set as number].indices || []).length > 1 || (entry.offset && entry.offset > 0) ? `From '${colors.custom[(entry as CustomDetails).set as number].userTitle || colors.custom[(entry as CustomDetails).set as number].title}', a custom entry` : 'A custom entry'}
