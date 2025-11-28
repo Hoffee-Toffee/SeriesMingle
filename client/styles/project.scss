@@ -596,19 +596,23 @@
 
     > div {
       display: flex;
-      height: calc(100% - 16px);
-      width: calc(100% - 22px);
-      margin: 3px;
-      border: 8px solid var(--main-text-col);
+      width: calc(100% - 6px);
       font-size: smaller;
       flex-direction: column;
-      border-radius: 1em;
+      border-radius: calc(1em + 3px);
+      border: transparent solid 3px;
+      overflow: hidden;
+
+      flex-direction: column;
+      height: 100%;
     }
 
     div.top-bar {
+      padding: 8px;
       background: var(--main-text-col);
       width: 100%;
       flex-grow: 1;
+      flex: 1 1 100%;
     }
     
     .title {
@@ -646,11 +650,6 @@
       }
     }
 
-    .spoiler:not(.title .spoiler) {
-      overflow-y: auto;
-      scrollbar-gutter: stable;
-    }
-
     .spoiler {
       opacity: 0;
       line-height: 0;
@@ -678,6 +677,23 @@
       border-radius: 0.5em;
       outline: 1px solid var(--dark-lav);
       margin-top: -2px;
+    }
+
+    .episode-description {
+      scrollbar-gutter: stable;
+      background: var(--main-text-col);
+      overflow: hidden;
+      padding: 0 8px;
+      opacity: 1;
+      color: transparent;
+      flex: 1 0 0%;
+
+      transition: 
+        color var(--transition-time),
+        line-height var(--transition-time) var(--transition-time),
+        padding var(--transition-time) var(--transition-time),
+        overflow 0s var(--transition-time),
+        background var(--transition-time) var(--transition-time);
     }
 
     .title a.spoiler {
@@ -713,13 +729,19 @@
     }
   }
 
+  .episode-marker:hover .top-bar,
+  .highlighted.episode-marker .top-bar {
+    border-radius: 1em 1em 0 0;
+    padding: 8px 8px 4px;
+  }
+
   .episode-detail,
   #key > span {
     box-shadow: inset rgb(0 0 0 / 33%) 0em 0em 0px 1.5px;
   }
 
-  .part .episode-detail div {
-    outline: 3px dashed var(--main-text-col);
+  .part .episode-detail > div {
+    border: 3px dashed var(--main-text-col);
   }
 
   .episode-detail.odd {
@@ -747,6 +769,7 @@
 
   .episode-marker:hover div.top-bar,
   .highlighted.episode-marker div.top-bar {
+    flex: 0 0 auto;
     line-height: 0%;
     transition: var(--transition-time);
   }
@@ -755,10 +778,6 @@
   .highlighted.episode-marker .episode-detail {
     transition: var(--transition-time) var(--transition-time);
 
-    .spoiler:not(.title .spoiler) {
-      margin-top: 5px;
-    }
-
     .spoiler {
       opacity: 1;
       line-height: 1.5;
@@ -766,6 +785,20 @@
         opacity var(--transition-time) var(--transition-time),
         line-height var(--transition-time),
         margin-top var(--transition-time);
+    }
+
+    .episode-description {
+      flex: 1 1 70%;
+      overflow-y: auto;
+      color: var(--text-col);
+      background: #000000BB;
+      padding: 4px 8px;
+      transition:
+        color var(--transition-time) var(--transition-time),
+        line-height var(--transition-time),
+        padding var(--transition-time),
+        overflow 0s var(--transition-time),
+        background var(--transition-time);
     }
   }
 

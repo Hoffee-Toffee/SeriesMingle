@@ -22,7 +22,20 @@ export default function EpisodeDetails(props: {
     className,
   } = props
 
-  const minHeight = 30
+  const minHeight = 60;
+
+  // Height calculations for episode-detail and inner div
+  const entryRuntime = entry.runtime || ('average_run_time' in entry && entry.average_run_time) || 0;
+  const nextEntry = schedule[i + 1];
+  const nextEntryRuntime = nextEntry ? ((nextEntry: MediaDetails | Barrier) => (('runtime' in nextEntry && nextEntry.runtime) || ('average_run_time' in nextEntry && nextEntry.average_run_time) || 0))(nextEntry) : 0;
+
+  // For .episode-detail
+  const episodeDetailMinHeight = Math.max(minHeight, entryRuntime) + 4;
+  const episodeDetailMaxHeight = Math.max(minHeight, entryRuntime) + (nextEntry ? Math.max(minHeight, nextEntryRuntime) : minHeight) + 28;
+
+  // For inner div
+  const innerMinHeight = Math.max(minHeight, entryRuntime) - 2;
+  const innerMaxHeight = `calc(var(--scale) * ${Math.max(minHeight, entryRuntime) - 5}px + var(--height-mult) * ${(nextEntry ? Math.max(minHeight, nextEntryRuntime) : 40) - 2}px)`;
 
   if ("barrier" in entry) return (
     <div
@@ -73,15 +86,15 @@ export default function EpisodeDetails(props: {
       <div
         className={['episode-detail', i % 2 && 'odd'].filter(Boolean).join(' ')}
         style={{
-          minHeight: `${Math.max(minHeight, entry.runtime || ('average_run_time' in entry && entry.average_run_time) || 0) + 4}px`,
-          maxHeight: `${Math.max(minHeight, entry.runtime || ('average_run_time' in entry && entry.average_run_time) || 0) + (schedule[i + 1] && Math.max(minHeight, ((nextEntry: MediaDetails | Barrier) => (('runtime' in nextEntry && nextEntry.runtime) || 'average_run_time' in nextEntry && nextEntry.average_run_time) || 0)(schedule[i + 1]))) + 22}px`,
+          minHeight: `${episodeDetailMinHeight}px`,
+          maxHeight: `${episodeDetailMaxHeight}px`,
           width: `calc(50% * var(--scale) - ${numberOfLayers} * var(--layer-size) * var(--scale) - 5px)`,
         }}
       >
         <div
           style={{
-            minHeight: `${Math.max(minHeight, entry.runtime || ('average_run_time' in entry && entry.average_run_time) || 0) - 12}px`,
-            maxHeight: `calc(var(--scale) * ${Math.max(minHeight, entry.runtime || ('average_run_time' in entry && entry.average_run_time) || 0) - 5}px + var(--height-mult) * ${(schedule[i + 1] ? Math.max(minHeight, ((nextEntry: MediaDetails | Barrier) => (('runtime' in nextEntry && nextEntry.runtime) || 'average_run_time' in nextEntry && nextEntry.average_run_time) || 0)(schedule[i + 1])) : 40) - 2}px)`,
+            minHeight: `${innerMinHeight}px`,
+            maxHeight: innerMaxHeight,
           }}
         >
           <div className="top-bar">
@@ -102,7 +115,7 @@ export default function EpisodeDetails(props: {
             {'show_id' in entry ? (
               <span>
                 {colors.tv[entry.show_id as number].userTitle || entry.show_title} (S
-                {(entry as EntryDetails).season}E{(entry as EntryDetails).episode})
+                {(entry as EntryDetails).season}E{String((entry as EntryDetails).episode).padStart(2, '0')})
               </span>
             ) : (
               entry.type == 'movie' ? (
@@ -155,7 +168,7 @@ export default function EpisodeDetails(props: {
               </a>}
             </span>
           </div>
-          <span className="spoiler">
+          <span className="spoiler episode-description">
             {entry.type !== 'custom' ? ('overview' in entry && entry.overview) || 'No Description Available' :
               (colors.custom[(entry as CustomDetails).set as number].indices || []).length > 1 || (entry.offset && entry.offset > 0) ? `From '${colors.custom[(entry as CustomDetails).set as number].userTitle || colors.custom[(entry as CustomDetails).set as number].title}', a custom entry` : 'A custom entry'}
           </span>
