@@ -380,7 +380,6 @@
     text-align: center;
     vertical-align: top;
     font-size: small;
-
     .setTitle {
       line-height: 300%;
       outline: none;
@@ -397,14 +396,29 @@
       color: transparent;
     }
 
-    span {
+    span > span {
       transition:
         var(--transition-time) var(--transition-time),
         color var(--transition-time);
       padding: 0 10px;
       background-color: var(--main-text-col);
-      border: 1px solid var(--main-text-col);
     }
+  }
+
+  #key > span {
+    border-radius: calc(1em);
+
+    > span {
+      border-radius: calc(1em - 3px);
+      overflow: hidden;
+      padding: 0;
+      background-color: inherit;
+
+      > span + span {
+        background: #000000BB;
+      }
+    }
+
   }
 
   #key span:hover span {

@@ -168,13 +168,15 @@ export default function Schedule({ scheduleData }: { scheduleData: ScheduleData 
               key={(color.indices as number[])[0]}
               style={{ backgroundColor: `hwb(${color.color} 0% 25%)` }}
             >
-              <span className="setTitle">
-                {(color.indices as number[]).length > 1
-                  ? color.userTitle || color.title
-                  : color.title}
-              </span>
-              <span className="setWatched">
-                {`(${Math.round(((color.watched || 0) / (color.span || 0)) * 10000) / 100}% watched)`}
+              <span>
+                <span className="setTitle">
+                  {(color.indices as number[]).length > 1
+                    ? color.userTitle || color.title
+                    : color.title}
+                </span>
+                <span className="setWatched">
+                  {`(${Math.round(((color.watched || 0) / (color.span || 0)) * 10000) / 100}% watched)`}
+                </span>
               </span>
             </span>
           ))}
