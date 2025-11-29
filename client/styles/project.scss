@@ -50,6 +50,17 @@
   }
 }
 
+@keyframes overflowChange {
+  // Switch from hidden to auto on the last frame
+  0%,
+  99.9% {
+    overflow-y: hidden;
+  }
+  100% {
+    overflow-y: auto;
+  }
+}
+
 #home #project > main {
   margin: 0;
   padding: 0;
@@ -372,6 +383,7 @@
     content: '';
     display: block;
     width: 100%;
+    margin-left: 2px;
   }
 
   #key span {
@@ -733,7 +745,6 @@
     .episode-description {
       scrollbar-gutter: stable;
       background: var(--main-text-col);
-      overflow: hidden;
       padding: 0 8px;
       opacity: 1;
       color: transparent;
@@ -743,7 +754,6 @@
         color var(--transition-time),
         line-height var(--transition-time) var(--transition-time),
         padding var(--transition-time) var(--transition-time),
-        overflow 0s var(--transition-time),
         background var(--transition-time) var(--transition-time);
     }
 
@@ -840,7 +850,7 @@
 
     .episode-description {
       flex: 1 1 70%;
-      overflow-y: auto;
+      animation: overflowChange var(--transition-time) forwards;
       color: var(--text-col);
       background: #000000BB;
       padding: 4px 8px;
@@ -848,7 +858,6 @@
         color var(--transition-time) var(--transition-time),
         line-height var(--transition-time),
         padding var(--transition-time),
-        overflow 0s var(--transition-time),
         background var(--transition-time);
     }
   }
@@ -861,6 +870,10 @@
     justify-content: space-evenly;
     flex-direction: column;
     align-items: center;
+  }
+
+  .barrier .left-icons {
+    padding-left: 3px;
   }
 
   .refetch-icon {

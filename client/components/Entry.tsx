@@ -406,10 +406,12 @@ export default function Entry({
         // Barrier
         options = (
           <div ref={setNodeRef} className={[className, 'barrier'].filter(Boolean).join(' ')}>
-            <i
-              className="handle fa-solid fa-grip-vertical"
-              {...(bookmark ? { onDragStart: () => runAfterConfirm(() => { }) } : { ...attributes, ...listeners })}
-            />
+            <span className="left-icons">
+              <i
+                className="handle fa-solid fa-grip-vertical"
+                {...(bookmark ? { onDragStart: () => runAfterConfirm(() => { }) } : { ...attributes, ...listeners })}
+              />
+            </span>
             <span className="setting">
               <label htmlFor={`barrier-${id}`}>
                 Position (Percentage):
