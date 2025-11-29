@@ -33,7 +33,13 @@ server.get('/api/v1/secret', (req, res) => {
 })
 
 if (process.env.NODE_ENV === 'production') {
-  server.use(express.static(Path.resolve('public')))
+  server.use(
+    express.static(Path.resolve('public'), {
+      maxAge: '1y',
+      immutable: true,
+    }),
+  )
+
   server.use('/assets', express.static(Path.resolve(__dirname, 'assets')))
   server.use(
     '/icons/:icon',
@@ -41,19 +47,17 @@ if (process.env.NODE_ENV === 'production') {
       ['512.png', '192.png'].includes(req.params.icon) &&
       res.sendFile(Path.resolve(__dirname, 'icons', req.params.icon)),
   )
-  ;[
-    'favicon.ico',
-    'manifest.json',
-    'robots.txt',
-    'service-worker.js',
-    'sitemap.xml',
-  ].forEach((file) =>
+  ;['favicon.ico', 'robots.txt', 'sitemap.xml'].forEach((file) =>
     server.get(`/${file}`, (_, res) =>
       res.sendFile(Path.resolve(__dirname, file)),
     ),
   )
 
   server.get('*', (req, res) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private')
+    res.set('Pragma', 'no-cache')
+    res.set('Expires', '0')
+
     const index = fs.readFileSync(
       Path.resolve(__dirname, 'index.html'),
       'utf-8',
