@@ -529,12 +529,59 @@
     transition: var(--transition-time);
     scroll-margin-top: 5px;
     scroll-margin-right: 2px;
-    outline: 2px solid var(--dust-grey);
     box-shadow: inset rgb(0 0 0 / 33%) 0em 0em 0px 1.5px;
     border-radius: 5px;
   }
 
-  .episode-marker.odd {
+  .episode-marker.barrier {
+    background: repeating-linear-gradient(
+      45deg,
+      var(--main-text-col) 0px,
+      var(--main-text-col) 3px,
+      transparent 3px,
+      transparent 7px
+    );
+  }
+
+  .barrier.join-l {
+    border-left: none;
+    border-radius: 0 5px 5px 0;
+  }
+
+  .barrier.join-r {
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent 0px,
+      transparent 2px,
+      var(--main-text-col) 2px,
+      var(--main-text-col) 5px,
+      transparent 5px,
+      transparent 7px
+    );
+  }
+
+  .barrier:is(.join-l, .join-r) {
+    padding: 0 3px;
+  }
+
+  .barrier.join-lr {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    padding: 0 6px;
+  }
+
+  .episode-marker:not(.barrier) {
+    outline: 2px solid var(--dust-grey);
+  }
+
+  .episode-marker.barrier +.barrier {
+    margin-top: calc(var(--scale) * -15px - 4px) !important;
+  }
+
+  .episode-marker.odd:not(.barrier) {
     outline-color: var(--lav);
   }
 
@@ -582,16 +629,6 @@
 
   .premier.episode-marker .episode-detail {
     margin-top: -10px;
-  }
-
-  .episode-marker.barrier {
-    background: repeating-linear-gradient(
-      45deg,
-      var(--main-text-col) 0px,
-      var(--main-text-col) 3px,
-      transparent 3px,
-      transparent 7px
-    );
   }
 
   .episode-detail {

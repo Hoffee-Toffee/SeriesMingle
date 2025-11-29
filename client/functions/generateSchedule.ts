@@ -440,12 +440,28 @@ export function generateSchedule(
   const streakEnds: number[] = []
 
   processed = processed.flatMap((entry, i: number) => {
-    if ('barrier' in entry)
+    if ('barrier' in entry) {
+      let className = ''
+      const prev = processed[i - 1]
+      const next = processed[i + 1]
+      const isPrevBarrier =
+        prev && 'barrier' in prev && prev.layer === entry.layer - 1
+      const isNextBarrier =
+        next && 'barrier' in next && next.layer === entry.layer + 1
+      if (isPrevBarrier && isNextBarrier) {
+        className = 'join-lr'
+      } else if (isPrevBarrier) {
+        className = 'join-l'
+      } else if (isNextBarrier) {
+        className = 'join-r'
+      }
       return {
         ...entry,
         posIndex: i,
         show: showing,
+        className,
       }
+    }
 
     const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (['episode', 'multiple'].includes(entry.type || '') ? entry.id : (colors.custom[(entry as CustomDetails).set as number].indices || []).findIndex((e) => e == i))}`
 
@@ -491,6 +507,7 @@ export function generateSchedule(
     }
   })
 
+  console.log({ processed })
   return {
     schedule: processed,
     colors,

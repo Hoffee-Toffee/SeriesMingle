@@ -44,12 +44,13 @@ export default function EpisodeDetails(props: {
         'barrier',
         !entry.show && 'fade',
         (entry.layer || 0) % 2 && 'odd',
+        entry.className,
       ]
         .filter(Boolean)
         .join(' ')}
       style={{
         height: `calc(var(--scale) * 10px)`,
-        marginLeft: `${((entry.layer || 0) * 30) + 4}px`,
+        marginLeft: `${((entry.layer || 0) * 30) + (['join-l', 'join-lr'].includes(entry.className) ? 0 : 4)}px`,
         marginTop: `calc(var(--scale) * 10px / 2)`,
         marginBottom: `calc(var(--scale) * 10px / 2)`,
       }}
