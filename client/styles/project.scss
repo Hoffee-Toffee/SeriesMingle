@@ -1033,7 +1033,8 @@
     .episode-marker {
       background: linear-gradient(var(--bg-col), var(--bg-col));
       border-color: transparent;
-      outline: none;
+      outline: none !important;
+      box-shadow: none !important;
     }
 
     .episode-marker:before,

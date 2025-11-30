@@ -22,7 +22,7 @@ export default function EpisodeDetails(props: {
     className,
   } = props
 
-  const minHeight = 60;
+  const minHeight = 30;
 
   // Height calculations for episode-detail and inner div
   const entryRuntime = entry.runtime || ('average_run_time' in entry && entry.average_run_time) || 0;
@@ -35,7 +35,7 @@ export default function EpisodeDetails(props: {
 
   // For inner div
   const innerMinHeight = Math.max(minHeight, entryRuntime) - 2;
-  const innerMaxHeight = `calc(var(--scale) * ${Math.max(minHeight, entryRuntime) - 5}px + var(--height-mult) * ${(nextEntry ? Math.max(minHeight, nextEntryRuntime) : 40) - 2}px)`;
+  const innerMaxHeight = `calc(var(--scale) * ${Math.max(minHeight, entryRuntime) + 8}px + var(--height-mult) * ${(nextEntry ? Math.max(minHeight, nextEntryRuntime) : 40) - 2}px)`;
 
   if ("barrier" in entry) return (
     <div
@@ -88,7 +88,7 @@ export default function EpisodeDetails(props: {
         className={['episode-detail', i % 2 && 'odd'].filter(Boolean).join(' ')}
         style={{
           minHeight: `${episodeDetailMinHeight}px`,
-          maxHeight: `${episodeDetailMaxHeight}px`,
+          maxHeight: `calc(var(--scale) * ${episodeDetailMaxHeight}px)`,
           width: `calc(50% * var(--scale) - ${numberOfLayers} * var(--layer-size) * var(--scale) - 5px)`,
         }}
       >

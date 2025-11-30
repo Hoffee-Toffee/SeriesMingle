@@ -37,8 +37,12 @@ export default function Example({ id }: { id: string }) {
 
   const viewHeight = window.outerHeight * (2 / 3)
   const bodyHeight = schedule.reduce(
-    (acc, cur) => acc + (scale * (Math.max(10, ('runtime' in cur && cur.runtime) || ('average_run_time' in cur && cur.average_run_time) || 0) + 0.5 * (Math.max(0, 30 - (('runtime' in cur && cur.runtime) || ('average_run_time' in cur && cur.average_run_time) || 0)) + 15))) + 4, viewHeight / 2,
-  )
+    (acc, cur) => {
+      const height = scale * Math.max(10, ("runtime" in cur && cur.runtime) || ("average_run_time" in cur && cur.average_run_time) || 0) + 4;
+      const margin = scale * Math.max(0, 30 - (("runtime" in cur && cur.runtime) || ("average_run_time" in cur && cur.average_run_time) || 0)) / 2 + (scale * 15);
+      return acc + height + margin;
+    }, viewHeight / 2,
+  );
 
   const entryPositions = (offset: number, top = 0) => {
     let isFirst = true
@@ -77,7 +81,7 @@ export default function Example({ id }: { id: string }) {
     }).filter(Boolean).flat()
   }
 
-  const offset = ((Date.now()) % loopTime) * ((bodyHeight) / loopTime) - viewHeight / 2
+  const offset = ((Date.now() + 850000) % loopTime) * ((bodyHeight) / loopTime) - viewHeight / 2
   // const offset = bodyHeight - viewHeight / 2
 
   // 0 - viewHeight / 3 to 0,
