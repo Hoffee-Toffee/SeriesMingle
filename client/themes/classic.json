@@ -1,0 +1,29 @@
+{
+  "name": "Classic",
+  "default": true,
+  "dark": true,
+  "colors": {
+    "textMain": "#0a0f1a",
+    "textSec": "#ffffff",
+    "textTert": "#c7d2ee",
+    "bgMain": "#0a2553",
+    "bgSec": "#0d1626",
+    "bgTert": "#2c5aa0",
+    "bgBorder": "#0095fa",
+    "linkMain": "#ffff00",
+    "linkSec": "#d7e300",
+    "linkTert": "#bfbf30",
+    "buttonBg": "#8b0000",
+    "buttonSec": "#ff4500",
+    "buttonBorder": "#ffa500",
+    "buttonHoverBg": "#ff8f00",
+    "buttonBorderHover": "#cb2600",
+    "laneOdd": "#c7c7f0",
+    "laneEven": "#ece6c7",
+    "hoverMain": "#00f2ea",
+    "hoverSec": "#30bfb3",
+    "divider": "#888888",
+    "misc1": "#001122",
+    "misc2": "#223344"
+  }
+}

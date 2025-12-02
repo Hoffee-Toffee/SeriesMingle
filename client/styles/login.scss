@@ -6,7 +6,7 @@
   width: min(calc(37.5dvw + 200px), 90vw);
   margin: 1em auto;
   height: calc(100dvh - 2em);
-  outline: 1px solid var(--light-bg-col);
+  outline: 1px solid var(--bgTert);
 
   > main {
     margin-top: 0;
@@ -15,12 +15,12 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    background-color: var(--main-text-col);
+    background-color: var(--textMain);
 
     #login-form {
-      border: var(--bg-border-col) 2px solid;
-      color: var(--sec-text-col);
-      background-color: var(--bg-col);
+      border: var(--bgBorder) 2px solid;
+      color: var(--textSec);
+      background-color: var(--bgMain);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -28,7 +28,7 @@
     }
 
     span {
-      color: var(--sec-text-col);
+      color: var(--textSec);
     }
 
     h1 {
@@ -41,25 +41,25 @@
       }
 
       span:first-child {
-        color: var(--tert-link-col);
+        color: var(--linkTert);
       }
 
       span:last-child {
-        color: var(--sec-hover-col);
+        color: var(--hoverSec);
       }
     }
 
     legend {
-      background: var(--dark-bg-col);
+      background: var(--bgSec);
       line-height: 0;
       padding: inherit;
       text-align: center;
-      border: solid var(--light-bg-col) 2px;
+      border: solid var(--bgTert) 2px;
       margin-bottom: 10px;
     }
 
     h2 {
-      color: var(--sec-text-col);
+      color: var(--textSec);
       margin-bottom: 1rem;
       font-family: 'Fredoka One';
       font-weight: normal;
@@ -67,13 +67,13 @@
 
     input {
       padding: 0.5rem;
-      border: 2px solid var(--light-bg-col);
+      border: 2px solid var(--bgTert);
       border-top-width: 1px;
       border-bottom-width: 1px;
       border-radius: 5px;
       width: min(50vw, 300px);
-      color: var(--sec-text-col);
-      background-color: var(--dark-bg-col);
+      color: var(--textSec);
+      background-color: var(--bgSec);
     }
 
     input:not(:first-of-type) {
@@ -97,8 +97,8 @@
 
     *:not(span) > button {
       padding: 0 1rem;
-      background-color: var(--button-red);
-      color: var(--sec-text-col);
+      background-color: var(--buttonBg);
+      color: var(--textSec);
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -110,7 +110,7 @@
     }
 
     *:not(span) > button:hover {
-      background-color: var(--button-tomato);
+      background-color: var(--buttonBorderHover);
     }
 
     .separator {
@@ -122,7 +122,7 @@
       .line {
         border: none;
         // border-top: 1px solid #ccc;
-        border-top: 1px solid var(--lav-white);
+        border-top: 1px solid var(--textTert);
         margin: 0 10px;
         flex: 1;
         width: min(20vw, 150px);
@@ -130,7 +130,7 @@
 
       .text {
         padding: 0 10px;
-        color: var(--main-link-col);
+        color: var(--linkMain);
       }
     }
 
@@ -138,8 +138,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: var(--dark-bg-col);
-      border: 1px solid var(--light-bg-col);
+      background-color: var(--bgSec);
+      border: 1px solid var(--bgTert);
       border-radius: 5px;
       padding: 0.5rem 1rem;
       cursor: pointer;
@@ -157,7 +157,7 @@
     }
 
     :is(.google-sign-in, input):is(:hover, :focus) {
-      background-color: var(--main-text-col);
+      background-color: var(--textMain);
     }
 
     input:focus {
@@ -165,7 +165,7 @@
     }
 
     .error-message {
-      color: var(--button-sunset);
+      color: var(--buttonHoverBg);
       margin: 0;
       margin-bottom: 10px;
       font-style: italic;
@@ -177,7 +177,7 @@
 
     a,
     span button {
-      color: var(--main-link-col);
+      color: var(--linkMain);
       text-decoration: none;
       margin: 0;
       margin-left: 10px;
@@ -189,7 +189,7 @@
     }
 
     :is(a, span button):hover {
-      color: var(--main-hover-col);
+      color: var(--hoverMain);
     }
   }
 }

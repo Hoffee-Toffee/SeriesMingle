@@ -78,8 +78,8 @@
 
 #project {
   .layer {
-    border: var(--bg-border-col) 2px solid;
-    background-color: var(--bg-col);
+    border: var(--bgBorder) 2px solid;
+    background-color: var(--bgMain);
     padding: 0.5em;
     margin: 0.5em 0.1em;
     position: relative;
@@ -118,10 +118,10 @@
   fieldset input[type='number'],
   .layer > details button,
   .overlay {
-    border: var(--button-orange) 2px solid;
+    border: var(--buttonSec) 2px solid;
     border-radius: 0.3em;
-    background-color: var(--button-red);
-    color: var(--sec-text-col);
+    background-color: var(--buttonBg);
+    color: var(--textSec);
     padding: 0.3em;
     display: inline-block;
   }
@@ -160,8 +160,8 @@
   .new input,
   fieldset input[type='number'] {
     margin: 0.25em;
-    color: var(--button-orange);
-    background-color: var(--sec-text-col);
+    color: var(--buttonSec);
+    background-color: var(--textSec);
     margin-left: calc(0.25em - 10px);
   }
 
@@ -171,26 +171,26 @@
   }
 
   .new input::placeholder {
-    color: var(--light-grey);
+    color: var(--divider);
   }
 
   .options div :is(select, input.value),
   .overlay :is(select, input.value) {
     cursor: pointer;
     border: none;
-    background-color: var(--button-red);
+    background-color: var(--buttonBg);
     appearance: none;
     padding: 0 0.3em;
     margin: 0 0.3em;
-    color: var(--sec-link-col);
+    color: var(--linkSec);
     width: auto;
     opacity: 1;
   }
 
   .options div select *,
   .overlay select optgroup {
-    color: var(--sec-link-col);
-    background-color: var(--button-red);
+    color: var(--linkSec);
+    background-color: var(--buttonBg);
   }
 
   .options div select,
@@ -217,7 +217,7 @@
     }
 
     button {
-      color: var(--sec-text-col) !important;
+      color: var(--textSec) !important;
       margin: 0 !important;
     }
   }
@@ -233,7 +233,7 @@
   .options div button,
   .layer > details button,
   .overlay button {
-    color: var(--sec-link-col);
+    color: var(--linkSec);
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -261,9 +261,9 @@
   > main {
     button,
     a {
-      color: var(--sec-link-col);
-      border: var(--button-orange) 2px solid;
-      background-color: var(--button-red);
+      color: var(--linkSec);
+      border: var(--buttonSec) 2px solid;
+      background-color: var(--buttonBg);
       padding: 0.3em;
       margin: 0.25em;
       cursor: pointer;
@@ -285,9 +285,9 @@
     button:hover,
     .options button:hover,
     a:hover {
-      color: var(--sec-text-col);
-      border: var(--button-yellow) 2px solid;
-      background-color: var(--button-orange);
+      color: var(--textSec);
+      border: var(--borderHover) 2px solid;
+      background-color: var(--buttonSec);
     }
   }
 
@@ -296,7 +296,7 @@
   .options div > :is(button, :is(select, input.value)):focus,
   .options div span > :hover:is(.setting-label, .value, select),
   .options div span > :focus:is(.setting-label, .value, select) {
-    color: var(--main-hover-col);
+    color: var(--hoverMain);
     background: #00000040;
     border: none;
     outline: #ffffff88 solid 2px;
@@ -309,24 +309,24 @@
   }
 
   fieldset {
-    border: var(--bg-border-col) 2px solid;
-    color: var(--sec-text-col);
-    background-color: var(--bg-col);
+    border: var(--bgBorder) 2px solid;
+    color: var(--textSec);
+    background-color: var(--bgMain);
     padding: 6px;
   }
 
   legend {
-    background-color: var(--dark-bg-col);
+    background-color: var(--bgSec);
     padding: 5px 10px;
   }
 
   input[type='radio'] {
-    accent-color: var(--button-red);
+    accent-color: var(--buttonBg);
   }
 
   #timelineContainer {
-    border: var(--bg-border-col) 2px solid;
-    background-color: var(--bg-col);
+    border: var(--bgBorder) 2px solid;
+    background-color: var(--bgMain);
     max-height: calc(75dvh - 20px);
     overflow-y: scroll;
     display: flex;
@@ -345,8 +345,8 @@
         writing-mode: vertical-rl;
         white-space: nowrap;
         line-height: 28px;
-        background-color: var(--dust-grey);
-        outline: var(--dark-bg-col) solid 2px;
+        background-color: var(--laneEven);
+        outline: var(--bgSec) solid 2px;
         height: 100%;
         top: 0em;
         width: 28px;
@@ -356,7 +356,7 @@
       }
 
       span:nth-of-type(2n) {
-        background-color: var(--lav);
+        background-color: var(--laneOdd);
       }
     }
   }
@@ -369,12 +369,12 @@
   }
 
   #scheduleVisualization::before {
-    background: linear-gradient(var(--bg-col), transparent);
+    background: linear-gradient(var(--bgMain), transparent);
     height: 38px;
   }
 
   #scheduleVisualization::after {
-    background: linear-gradient(transparent, var(--bg-col));
+    background: linear-gradient(transparent, var(--bgMain));
     height: 53px;
   }
 
@@ -413,7 +413,7 @@
         var(--transition-time) var(--transition-time),
         color var(--transition-time);
       padding: 0 10px;
-      background-color: var(--main-text-col);
+      background-color: var(--textMain);
     }
   }
 
@@ -440,7 +440,7 @@
       color var(--transition-time) var(--transition-time);
   }
   #key span:hover .setWatched {
-    color: var(--sec-text-col);
+    color: var(--textSec);
   }
 
   #key,
@@ -452,14 +452,14 @@
 
   span:is(.streakBound, .sessionBound) {
     display: block;
-    border-top: var(--bg-col) dashed 2px;
+    border-top: var(--bgMain) dashed 2px;
     width: calc(100% - 5px);
     margin-left: 3px;
   }
 
   span.sessionBound {
-    background: var(--light-grey);
-    outline: var(--bg-col) solid 3px;
+    background: var(--divider);
+    outline: var(--bgMain) solid 3px;
   }
 
   span:is(.streakBound, .sessionBound).fade {
@@ -493,17 +493,17 @@
     }
 
     summary::marker {
-      background-color: var(--bg-col);
+      background-color: var(--bgMain);
       padding-left: 30px;
     }
 
     fieldset {
-      background-color: var(--dark-bg-col);
+      background-color: var(--bgSec);
       padding: 0.5em;
       margin: 0.5em 0.1em;
 
       legend {
-        background-color: var(--bg-col);
+        background-color: var(--bgMain);
       }
     }
   }
@@ -523,7 +523,7 @@
 
   :is(.options, .overlay) span :is(select, input.value) {
     font-size: small !important;
-    color: var(--sec-link-col);
+    color: var(--linkSec);
   }
 
   :is(.options, .overlay) label,
@@ -537,7 +537,7 @@
     margin-top: 8px;
     width: 20px;
     margin-right: 3px;
-    border: 2px solid var(--main-text-col);
+    border: 2px solid var(--textMain);
     transition: var(--transition-time);
     scroll-margin-top: 5px;
     scroll-margin-right: 2px;
@@ -548,8 +548,8 @@
   .episode-marker.barrier {
     background: repeating-linear-gradient(
       45deg,
-      var(--main-text-col) 0px,
-      var(--main-text-col) 3px,
+      var(--textMain) 0px,
+      var(--textMain) 3px,
       transparent 3px,
       transparent 7px
     );
@@ -567,8 +567,8 @@
       45deg,
       transparent 0px,
       transparent 2px,
-      var(--main-text-col) 2px,
-      var(--main-text-col) 5px,
+      var(--textMain) 2px,
+      var(--textMain) 5px,
       transparent 5px,
       transparent 7px
     );
@@ -586,7 +586,7 @@
   }
 
   .episode-marker:not(.barrier) {
-    outline: 2px solid var(--dust-grey);
+    outline: 2px solid var(--laneEven);
   }
 
   .episode-marker.barrier +.barrier {
@@ -594,7 +594,7 @@
   }
 
   .episode-marker.odd:not(.barrier) {
-    outline-color: var(--lav);
+    outline-color: var(--laneOdd);
   }
 
   .episode-marker.fade:not(:hover, .highlighted) {
@@ -605,19 +605,19 @@
   .episode-marker.premier:before,
   .episode-marker.finale:after {
     content: '';
-    background-color: var(--dust-grey);
+    background-color: var(--laneEven);
     display: block;
     width: 10px;
     height: 5px;
     position: relative;
     border-radius: 10px;
-    border: var(--main-text-col) solid 2px;
+    border: var(--textMain) solid 2px;
     left: 3px;
   }
 
   .episode-marker.odd:after,
   .episode-marker.odd:before {
-    background-color: var(--lav);
+    background-color: var(--laneOdd);
   }
 
   .finale.premier.episode-marker:after {
@@ -647,7 +647,7 @@
     position: absolute;
     left: 4px;
     background-color: inherit;
-    color: var(--sec-text-col);
+    color: var(--textSec);
     margin-top: -2px;
     border-radius: 1em;
 
@@ -672,7 +672,7 @@
 
     div.top-bar {
       padding: 8px;
-      background: var(--main-text-col);
+      background: var(--textMain);
       width: 100%;
       flex-grow: 1;
       flex: 1 1 100%;
@@ -680,7 +680,7 @@
     
     .title {
       width: calc(100% - 1em);
-      color: var(--sec-link-col);
+      color: var(--linkSec);
       padding: 2px;
       margin: -2px;
       column-gap: 0.75em;
@@ -705,11 +705,11 @@
 
       i.fa-regular {
         opacity: 0;
-        color: var(--light-grey);
+        color: var(--divider);
       }
 
       i.fa-solid:before {
-        color: var(--sec-link-col);
+        color: var(--linkSec);
       }
     }
 
@@ -728,23 +728,23 @@
       position: absolute;
       margin-left: -1.25em;
       transform: translateX(-50%);
-      color: var(--light-lav);
+      color: var(--textTert);
     }
 
     .title .spoiler {
       margin-left: 0.75em;
-      color: var(--lav-white);
+      color: var(--textTert);
       font-size: 0.8em;
-      background: var(--bg-col);
+      background: var(--bgMain);
       padding: 0.1em 0.3em;
       border-radius: 0.5em;
-      outline: 1px solid var(--dark-lav);
+      outline: 1px solid var(--bgTert);
       margin-top: -2px;
     }
 
     .episode-description {
       scrollbar-gutter: stable;
-      background: var(--main-text-col);
+      background: var(--textMain);
       padding: 0 8px;
       opacity: 1;
       color: transparent;
@@ -782,11 +782,11 @@
     }
 
     ::-webkit-scrollbar-track-piece {
-      background-color: var(--misc-col-2);
+      background-color: var(--misc2);
     }
 
     ::-webkit-scrollbar-thumb {
-      outline-color: var(--misc-col-2);
+      outline-color: var(--misc2);
     }
   }
 
@@ -802,7 +802,7 @@
   }
 
   .part .episode-detail > div {
-    border: 3px dashed var(--main-text-col);
+    border: 3px dashed var(--textMain);
   }
 
   .episode-detail.odd {
@@ -812,7 +812,7 @@
 
   .episode-detail label i:hover:before,
   .highlighted.episode-detail label i:before {
-    color: var(--sec-text-col);
+    color: var(--textSec);
   }
 
   .episode-marker:hover .episode-detail label i.fa-regular,
@@ -851,7 +851,7 @@
     .episode-description {
       flex: 1 1 70%;
       animation: overflowChange var(--transition-time) forwards;
-      color: var(--text-col);
+      color: var(--textSec);
       background: #000000BB;
       padding: 4px 8px;
       transition:
@@ -892,7 +892,7 @@
   }
 
   #project-details {
-    color: var(--sec-text-col);
+    color: var(--textSec);
     text-align-last: center;
     text-align: -webkit-center;
 
@@ -905,12 +905,12 @@
     }
 
     .setDescription {
-      background: var(--bg-col);
-      color: var(--sec-text-col);
+      background: var(--bgMain);
+      color: var(--textSec);
       max-width: calc(100vw - 2em);
       width: fit-content;
       display: block;
-      border: 2px solid var(--bg-border-col);
+      border: 2px solid var(--bgBorder);
       padding: 5px 10px;
       margin-top: 10px;
 
@@ -939,15 +939,15 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: var(--bg-col);
-      color: var(--sec-text-col);
+      background: var(--bgMain);
+      color: var(--textSec);
       padding: 1em;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;
       gap: 15px;
-      border: 2px solid var(--bg-border-col);
+      border: 2px solid var(--bgBorder);
     }
 
     p {
@@ -960,11 +960,11 @@
       font-size: smaller;
       width: 100%;
       text-align: center;
-      color: var(--main-link-col);
+      color: var(--linkMain);
     }
 
     span {
-      color: var(--main-link-col);
+      color: var(--linkMain);
     }
 
     button {
@@ -988,7 +988,7 @@
   }
 
   [contenteditable='true']:hover {
-    text-decoration-color: var(--sec-text-col);
+    text-decoration-color: var(--textSec);
   }
 }
 
@@ -1031,7 +1031,7 @@
     }
 
     .episode-marker {
-      background: linear-gradient(var(--bg-col), var(--bg-col));
+      background: linear-gradient(var(--bgMain), var(--bgMain));
       border-color: transparent;
       outline: none !important;
       box-shadow: none !important;
@@ -1053,8 +1053,8 @@
     span:is(.streakBound, .sessionBound) {
       position: absolute;
       margin-left: -2px;
-      border-color: var(--sec-text-col);
-      outline-color: var(--sec-text-col);
+      border-color: var(--textSec);
+      outline-color: var(--textSec);
       background-color: transparent;
       margin-top: -15px;
     }
@@ -1062,7 +1062,7 @@
   @media screen and (max-width: 500px) {
     #home div .episode-marker {
       background: linear-gradient(var(--custom-col), var(--custom-col)),
-        linear-gradient(var(--dark-bg-col), var(--dark-bg-col));
+        linear-gradient(var(--bgSec), var(--bgSec));
     }
   }
 }
@@ -1093,15 +1093,15 @@
   height: 100px;
   border-radius: 50%;
   box-shadow:
-    0 0 20px 20px var(--dark-bg-col) inset,
-    0 0 2px 2px var(--dark-bg-col) inset;
-  outline: solid var(--dark-bg-col) 10px;
+    0 0 20px 20px var(--bgSec) inset,
+    0 0 2px 2px var(--bgSec) inset;
+  outline: solid var(--bgSec) 10px;
 
   div {
     margin-left: 10px;
     margin-top: 10px;
     position: absolute;
-    outline: 4px solid var(--lav);
+    outline: 4px solid var(--laneOdd);
     opacity: 1;
     border-radius: 50%;
     animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
@@ -1110,7 +1110,7 @@
 
   div:nth-child(2) {
     animation-delay: -0.5s;
-    outline-color: var(--dust-grey);
+    outline-color: var(--laneEven);
   }
 }
 

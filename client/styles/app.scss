@@ -1,32 +1,27 @@
 // Will minimize, use variables, and create theme sets with different colors
 
 :root {
-  --main-text-col: #0a0f1a;
-  --misc-col-1: #001122;
-  --dark-bg-col: #0d1626;
-  --bg-col: #0a2553;
-  --light-col: #1f3b6e;
-  --light-bg-col: #2c5aa0;
-  --bg-border-col: #0095fa;
-  --sec-hover-col: #30bfb3;
-  --main-hover-col: #00f2ea;
-  --misc-col-2: #223344;
-  --dark-lav: #444477;
-  --lav: #6e6e96;
-  // --lav: #36364a;
-  --light-lav: #8888bb;
-  --light-grey: #888888;
-  --dust-grey: #96966e;
-  --lav-white: #ccccff;
-  --sec-text-col: #ffffff;
-  --main-link-col: #ffff00;
-  --sec-link-col: #d7e300;
-  --tert-link-col: #bfbf30;
-  --button-yellow: #ffa500;
-  --button-sunset: #ff8f00;
-  --button-orange: #ff4500;
-  --button-tomato: #cb2600;
-  --button-red: #8b0000;
+  --textMain: #0a0f1a; // 20
+  --textSec: #ffffff; // 20
+  --bgMain: #0a2553; // 20
+  --bgSec: #0d1626; // 16
+  --bgBorder: #0095fa; // 15
+  --linkSec: #d7e300; // 10
+  --buttonBg: #8b0000; // 9
+  --buttonSec: #ff4500; // 9
+  --laneOdd: #c7c7f0; // 9
+  --linkMain: #ffff00; // 6
+  --linkTert: #bfbf30; // 6
+  --hoverSec: #30bfb3; // 6
+  --bgTert: #2c5aa0; // 5
+  --divider: #888888; // 5
+  --laneEven: #ece6c7; // 5
+  --borderHover: #ffa500; // 4
+  --misc2: #223344; // 3
+  --hoverMain: #00f2ea; // 3
+  --misc1: #001122; // 3
+  --buttonHoverBg: #ff8f00; // 2
+  --buttonBorderHover: #cb2600; // 2
   --scale: 1;
   --layer-size: 16px;
   --height-mult: 1;
@@ -103,17 +98,17 @@
 }
 
 ::-webkit-scrollbar-track-piece {
-  background-color: var(--misc-col-1);
+  background-color: var(--misc1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--bg-border-col);
-  outline: 3px solid var(--misc-col-1);
+  background-color: var(--bgBorder);
+  outline: 3px solid var(--misc1);
   outline-offset: -3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--sec-hover-col);
+  background-color: var(--hoverSec);
 }
 
 * {
@@ -122,7 +117,7 @@
 }
 
 html {
-  background: var(--dark-bg-col);
+  background: var(--bgSec);
   height: 100%;
   overflow: hidden;
 }
@@ -140,8 +135,8 @@ header {
   width: calc(100% - 2em);
   flex-direction: row;
   padding: 0.5em 1em;
-  outline: 2px solid var(--bg-border-col);
-  background: var(--main-text-col);
+  outline: 2px solid var(--bgBorder);
+  background: var(--textMain);
   justify-content: space-between;
   z-index: 3;
   top: 0;
@@ -165,13 +160,13 @@ header {
     justify-content: flex-end;
 
     a {
-      color: var(--tert-link-col);
+      color: var(--linkTert);
       text-decoration: none;
       align-self: center;
     }
 
     a:hover {
-      color: var(--sec-hover-col);
+      color: var(--hoverSec);
     }
   }
 
@@ -186,7 +181,7 @@ header {
     span {
       display: block;
       width: 2em;
-      background: var(--sec-text-col);
+      background: var(--textSec);
       padding: 1px;
       transition: 0.25s ease-out;
     }
@@ -266,7 +261,7 @@ header {
       position: absolute;
       top: 0;
       right: -50%;
-      background: var(--bg-col);
+      background: var(--bgMain);
       width: 50%;
       padding-left: 0.75em;
       padding-top: 75px;
@@ -276,7 +271,7 @@ header {
       transition: 0.25s ease-out;
       align-items: flex-end;
       border-bottom-left-radius: 1em;
-      outline: 2px solid var(--bg-border-col);
+      outline: 2px solid var(--bgBorder);
       opacity: 0;
 
       a {
@@ -289,7 +284,7 @@ header {
       + * + nav {
         right: 0;
         margin-right: 0;
-        outline: 2px solid var(--bg-border-col);
+        outline: 2px solid var(--bgBorder);
         opacity: 1;
       }
 

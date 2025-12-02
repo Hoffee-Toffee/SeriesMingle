@@ -41,9 +41,9 @@
     margin-top: -2rem;
     margin-bottom: 2rem;
     text-shadow:
-      0 0 5px var(--main-text-col),
-      0 0 10px var(--main-text-col),
-      0 0 15px var(--main-text-col);
+      0 0 5px var(--textMain),
+      0 0 10px var(--textMain),
+      0 0 15px var(--textMain);
     
     span {
       font-family: 'Fredoka One';
@@ -51,22 +51,22 @@
     }
 
     span:first-child {
-      color: var(--tert-link-col);
+      color: var(--linkTert);
     }
 
     span:last-child {
-      color: var(--sec-hover-col);
+      color: var(--hoverSec);
     }
   }
 
   a {
-    color: var(--tert-link-col);
+    color: var(--linkTert);
     text-decoration: none;
     align-self: center;
   }
 
   a:hover {
-    color: var(--sec-hover-col);
+    color: var(--hoverSec);
   }
 
   p {
@@ -76,9 +76,9 @@
   #overlay {
     a.button {
       padding: 0 1rem;
-      background-color: var(--button-red);
-      color: var(--sec-link-col);
-      border: var(--button-orange) 2px solid;
+      background-color: var(--buttonBg);
+      color: var(--linkSec);
+      border: var(--buttonSec) 2px solid;
       border-radius: 0.3em;
       cursor: pointer;
       transition: background-color 0.3s ease;
@@ -90,9 +90,9 @@
     }
 
     a.button:hover {
-      color: var(--sec-text-col);
-      background-color: var(--button-orange);
-      border-color: var(--button-yellow);
+      color: var(--textSec);
+      background-color: var(--buttonSec);
+      border-color: var(--borderHover);
     }
 
     .scroll-indicator {
@@ -107,7 +107,7 @@
         top: 50%;
         left: 50%;
         font-size: 1.5em;
-        color: var(--tert-link-col);
+        color: var(--linkTert);
         animation: scroll-indicator 5s infinite ease-in-out;
       }
     }
@@ -120,10 +120,10 @@
     scroll-snap-align: center;
     text-align: center;
     align-content: center;
-    color: var(--sec-text-col);
+    color: var(--textSec);
     position: sticky;
     z-index: -1;
-    background: var(--dark-bg-col);
+    background: var(--bgSec);
     clip-path: view-box;
 
     > div {
@@ -135,9 +135,9 @@
     div h2 {
       font-family: 'Aber Mono';
       text-shadow:
-        0 0 5px var(--main-text-col),
-        0 0 10px var(--main-text-col),
-        0 0 15px var(--main-text-col);
+        0 0 5px var(--textMain),
+        0 0 10px var(--textMain),
+        0 0 15px var(--textMain);
       position: absolute;
       font-size: 2rem;
       margin: 0em 1em;
@@ -195,7 +195,7 @@
 
   main > div:nth-of-type(8) { // Blue
     --custom-col: rgba(0, 191, 255, calc(var(--bg-alpha) / 2));
-    background: linear-gradient(var(--custom-col), var(--custom-col)), var(--dark-bg-col);
+    background: linear-gradient(var(--custom-col), var(--custom-col)), var(--bgSec);
   }
 
   .bg {
@@ -208,10 +208,10 @@
     margin: 0;
     height: calc(200dvh / 3 - 3px);
     z-index: -10;
-    border: 2px solid var(--bg-col);
+    border: 2px solid var(--bgMain);
     border-left: none;
     border-right: none;
-    border-color: var(--bg-col);
+    border-color: var(--bgMain);
 
     #timelineContainer {
       text-align: left;
@@ -224,7 +224,7 @@
     }
 
     #layerTitles span {
-      outline-color: var(--bg-col) !important;
+      outline-color: var(--bgMain) !important;
     }
 
     #scheduleVisualization::before,
@@ -267,13 +267,13 @@
     bottom: 0;
     width: 100%;
     background: #00000044;
-    color: var(--sec-text-col);
+    color: var(--textSec);
     text-align: center;
     z-index: 3;
 
     p:nth-of-type(1) {
       font-size: 0.6rem;
-      color: var(--light-grey);
+      color: var(--divider);
       display: flex;
       flex-wrap: wrap;
       align-items: center;

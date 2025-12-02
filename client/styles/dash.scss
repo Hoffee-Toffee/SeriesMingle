@@ -13,7 +13,7 @@
   padding-top: 1em;
 
   h1 {
-    color: var(--sec-text-col);
+    color: var(--textSec);
     text-align: center;
     margin-top: 0;
     font-family: 'Fredoka One';
@@ -27,9 +27,9 @@
     border-radius: 0.3em;
     z-index: 1;
     position: relative;
-    color: var(--sec-link-col);
-    border: var(--button-orange) 2px solid;
-    background-color: var(--button-red);
+    color: var(--linkSec);
+    border: var(--buttonSec) 2px solid;
+    background-color: var(--buttonBg);
     padding: 0.3em;
     margin: 0.25em;
     cursor: pointer;
@@ -40,9 +40,9 @@
 
   button:hover,
   a:hover {
-    color: var(--sec-text-col);
-    border: var(--button-yellow) 2px solid;
-    background-color: var(--button-orange);
+    color: var(--textSec);
+    border: var(--borderHover) 2px solid;
+    background-color: var(--buttonSec);
   }
 
   .projects-list {
@@ -64,9 +64,9 @@
     }
 
     > h2 {
-      color: var(--sec-text-col);
+      color: var(--textSec);
       text-align: center;
-      background-color: var(--dark-bg-col);
+      background-color: var(--bgSec);
       padding: 0 0.5em;
       width: max-content;
       margin: 0 100%;
@@ -80,7 +80,7 @@
       display: block;
       width: 100%;
       height: 5px;
-      background-color: var(--bg-border-col);
+      background-color: var(--bgBorder);
       margin: 0.5em 0;
       position: absolute;
       top: 5px;
@@ -89,7 +89,7 @@
     }
 
     > p {
-      color: var(--sec-text-col);
+      color: var(--textSec);
     }
 
     #create-new {
@@ -112,10 +112,10 @@
   #contextMenu {
     opacity: 0;
     transition: all var(--transition-time);
-    outline: 1px solid var(--bg-border-col);
+    outline: 1px solid var(--bgBorder);
     z-index: 2;
     position: absolute;
-    background: var(--bg-col);
+    background: var(--bgMain);
     border-radius: 8px;
     padding: 8px 0;
     font-size: 0.75em;
@@ -131,7 +131,7 @@
       margin: 0;
       border: none;
       background: none;
-      color: var(--sec-text-col);
+      color: var(--textSec);
       user-select: none;
       transition: var(--transition-time);
       border-radius: 0;
@@ -139,7 +139,7 @@
     }
 
     button:hover {
-       color: var(--bg-border-col);
+       color: var(--bgBorder);
        background: #00000055;
        transition: var(--transition-time);
      }
@@ -181,15 +181,15 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: var(--bg-col);
-      color: var(--sec-text-col);
+      background: var(--bgMain);
+      color: var(--textSec);
       padding: 1em;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;
       gap: 15px;
-      border: 2px solid var(--bg-border-col);
+      border: 2px solid var(--bgBorder);
     }
 
     p {
@@ -199,7 +199,7 @@
     }
 
     span {
-      color: var(--main-link-col);
+      color: var(--linkMain);
     }
 
     button {

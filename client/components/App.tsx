@@ -2,6 +2,7 @@ import { Link, Outlet, useLocation, useOutlet } from 'react-router-dom'
 import { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { auth } from '../../server/firebase.ts'
 import Nav from './Nav.tsx'
+import { ThemeProvider } from './ThemeProvider.tsx'
 import icon from '../../icons/icon.png'
 import '../styles/app.scss'
 import CacheBuster from 'react-cache-buster'
@@ -69,25 +70,27 @@ export default function App() {
     >
       {showLoading && loading(hasLoaded)}
       {isAuthLoaded &&
-        <UserContext.Provider value={{ user, setUser }}>
-          <LoadingContext.Provider value={{ isPageLoaded, setIsPageLoaded }}>
-            <div id={page}>
-              <header id="nav-bar">
-                <Link to="/" id="home-link" aria-label="Home Page">
-                  <img src={icon} alt="SeriesMingle Logo" id="logo" />
-                </Link>
-                <input type="checkbox" id="nav-toggle" />
-                <label htmlFor="nav-toggle" id="nav-toggle-label" aria-label="Toggle Navigation">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </label>
-                <Nav page={page} user={user} />
-              </header>
-              <Outlet />
-            </div>
-          </LoadingContext.Provider>
-        </UserContext.Provider>}
+        <ThemeProvider>
+          <UserContext.Provider value={{ user, setUser }}>
+            <LoadingContext.Provider value={{ isPageLoaded, setIsPageLoaded }}>
+              <div id={page}>
+                <header id="nav-bar">
+                  <Link to="/" id="home-link" aria-label="Home Page">
+                    <img src={icon} alt="SeriesMingle Logo" id="logo" />
+                  </Link>
+                  <input type="checkbox" id="nav-toggle" />
+                  <label htmlFor="nav-toggle" id="nav-toggle-label" aria-label="Toggle Navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </label>
+                  <Nav page={page} user={user} />
+                </header>
+                <Outlet />
+              </div>
+            </LoadingContext.Provider>
+          </UserContext.Provider>
+        </ThemeProvider>}
     </CacheBuster>
   )
 }

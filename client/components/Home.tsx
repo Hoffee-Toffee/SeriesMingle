@@ -112,7 +112,7 @@ export default function Home() {
             </p>
             <p>
               &copy; <a href="https://github.com/Hoffee-Toffee"
-                target="_blank" rel="noreferrer">Tristan Bulmer</a>, 2024.
+                target="_blank" rel="noreferrer">Tristan Bulmer</a>, 2025.
             </p>
           </footer>
         </div>
