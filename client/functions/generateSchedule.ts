@@ -33,60 +33,79 @@ export function generateSchedule(
     // Loop over each entry, collapsing and removing some episodes
     return entries
       .map((entryRef: LayerEntry, i: number) => {
-        if (i === entries.length - 1) return undefined
-
-        // Return those where entryRef.barrier is defined
-        if ('barrier' in (entryRef as object)) return entryRef as Barrier
-        const entry =
-          data[(entryRef as LayerMedia).ref[0]][(entryRef as LayerMedia).ref[1]]
-
-        // If a movie, simply return it
-        if (entry.type == 'movie') return { ...entry, average_run_time: 30 }
-        // If custom, give it 'n' entries
-        else if (entry.type == 'custom')
+        // For books, do not skip the last entry
+        if (typeof entryRef === 'object' && entryRef !== null && 'ref' in entryRef) {
+          const [type, refId] = (entryRef as LayerMedia).ref;
+          const entry = data[type]?.[refId];
+          console.log(`[generateSchedule] Found entry for type=${type}, refId=${refId}:`, entry);
+          if (!entry) {
+            console.log('[generateSchedule] Entry not found in data:', type, refId, entryRef);
+            return undefined;
+          }
+          if (type === 'movie') {
+            console.log('[generateSchedule] Processing movie entry:', entry);
+            return { ...entry, average_run_time: 30 };
+          }
+          if (type === 'custom') {
+            console.log('[generateSchedule] Processing custom entry:', entry);
+            return {
+              ...entry,
+              entries: Array((entry as CustomDetails).repeat)
+                .fill(0)
+                .map(() => ({ ...entry })),
+            };
+          }
+          if (type === 'book') {
+            console.log('[generateSchedule] Processing book entry:', entry);
+            // Estimate duration: (pageCount * wordsPerPage) / readingSpeed (minutes)
+            const wordsPerPage = entry.density || 250;
+            const readingSpeed = 250; // words per minute
+            const duration = ((entry.pageCount || 200) * wordsPerPage) / readingSpeed;
+            console.log(`[generateSchedule] Book duration calculated: ${duration} minutes`);
+            return { ...entry, runtime: duration, average_run_time: duration };
+          }
+          // Otherwise, its a show and needs its episodes returned
+          let inRange = !(entryRef as LayerMedia).start;
+          console.log('[generateSchedule] Processing show entry:', entry);
           return {
             ...entry,
-            entries: Array((entry as CustomDetails).repeat)
-              .fill(0)
-              .map(() => ({
-                ...entry,
-              })),
-          }
-
-        // Otherwise, its a show and needs it's episodes returned
-        let inRange = !(entryRef as LayerMedia).start
-
-        return {
-          ...entry,
-          seasons: undefined,
-          episodes: ((entry as ShowDetails).seasons || [])
-            .flatMap((season: Season) =>
-              season.episodes.map((episode: EntryDetails, num: number) => {
-                if (
-                  !inRange &&
-                  (entryRef as LayerMedia).start !==
-                    `${season.season}:${episode.episode}`
-                )
-                  return undefined
-                inRange =
-                  (entryRef as LayerMedia).end !==
-                  `${season.season}:${episode.episode}`
-                return {
-                  ...episode,
-                  average_run_time:
-                    data.tv[(entryRef as LayerMedia).ref[1]].episode_run_time ||
-                    30,
-                  season: season.season,
-                  show_id: entry.id,
-                  show_title: entry.userTitle || entry.title,
-                  // Set 'premier' and 'finale' depending on if first/last of this season
-                  premier: !num,
-                  finale: num === season.episodes.length - 1,
-                }
-              }),
-            )
-            .filter((entry: EntryDetails | undefined) => entry !== undefined),
+            seasons: undefined,
+            episodes: ((entry as ShowDetails).seasons || [])
+              .flatMap((season: Season) =>
+                season.episodes.map((episode: EntryDetails, num: number) => {
+                  if (
+                    !inRange &&
+                    (entryRef as LayerMedia).start !==
+                      `${season.season}:${episode.episode}`
+                  )
+                    return undefined;
+                  inRange =
+                    (entryRef as LayerMedia).end !==
+                    `${season.season}:${episode.episode}`;
+                  return {
+                    ...episode,
+                    average_run_time:
+                      data.tv[(entryRef as LayerMedia).ref[1]].episode_run_time ||
+                      30,
+                    season: season.season,
+                    show_id: entry.id,
+                    show_title: entry.userTitle || entry.title,
+                    // Set 'premier' and 'finale' depending on if first/last of this season
+                    premier: !num,
+                    finale: num === season.episodes.length - 1,
+                  };
+                }),
+              )
+              .filter((entry: EntryDetails | undefined) => entry !== undefined),
+          };
         }
+        // Return those where entryRef.barrier is defined
+        if (typeof entryRef === 'object' && entryRef !== null && 'barrier' in entryRef) {
+          console.log('[generateSchedule] Processing barrier entry:', entryRef);
+          return entryRef as Barrier;
+        }
+        console.log('[generateSchedule] Entry missing ref and barrier:', entryRef);
+        return undefined;
       })
       .filter((layer) => layer !== undefined)
   })
@@ -130,10 +149,12 @@ export function generateSchedule(
         .map((entry, layer_id: number) =>
           !('barrier' in entry) && entry.type !== 'movie' && entry !== undefined
             ? (
-                (entry.type == 'tv'
+                entry.type == 'tv'
                   ? entry.episodes
-                  : 'entries' in entry && entry.entries) || []
-              ).map((episode: CustomDetails | EntryDetails | undefined) => ({
+                  : entry.type == 'book'
+                    ? [entry] // Directly include book entry
+                    : 'entries' in entry && entry.entries || []
+              ).map((episode: CustomDetails | EntryDetails | BookDetails | undefined) => ({
                 ...episode,
                 layer_id,
                 layer: i,
@@ -352,12 +373,11 @@ export function generateSchedule(
     tv: {},
     movie: {},
     custom: {},
-  } as Data
+    book: {},
+  } as Data & { book: Record<string, any> };
 
   processed.forEach((entry, index) => {
-    // If a barrier, ignore
-    if ('barrier' in entry) return
-    // Each show and custom entry gets a unique color
+    if ('barrier' in entry) return;
     if ('show_id' in entry && entry.show_id && !sets.tv[entry.show_id]) {
       sets.tv[entry.show_id] = {
         id: entry.show_id,
@@ -365,7 +385,7 @@ export function generateSchedule(
         userTitle: data.tv[entry.show_id].userTitle,
         indices: [index],
         type: 'tv',
-      }
+      };
     } else if (entry.type == 'custom') {
       if (!sets.custom[entry.id as keyof Data['custom']])
         sets.custom[entry.id as keyof Data['custom']] = {
@@ -373,11 +393,23 @@ export function generateSchedule(
           indices: [index],
           type: 'custom',
           layer: entry.id,
-        }
-      else sets.custom[entry.id as keyof Data['custom']].indices?.push(index)
-    }
-    // Each layer gets a unique movie color
-    else if (
+        };
+      else sets.custom[entry.id as keyof Data['custom']].indices?.push(index);
+    } else if (entry.type == 'book') {
+      // Treat books like movies: group by layer
+      if (!sets.book[entry.layer]) {
+        sets.book[entry.layer] = {
+          id: entry.layer,
+          title: entry.userTitle || entry.title,
+          userTitle: titles[entry.layer as number] || undefined,
+          indices: [index],
+          layer: entry.layer,
+          type: 'book',
+        };
+      } else {
+        sets.book[entry.layer].indices?.push(index);
+      }
+    } else if (
       entry.type == 'movie' &&
       !sets.movie[entry.layer as keyof Data['movie']]
     ) {
@@ -387,33 +419,33 @@ export function generateSchedule(
         indices: [index],
         layer: entry.layer,
         type: 'movie',
-      }
-    }
-    // Add ' and others' if there are multiple, but only do so once
-    else if (
+      };
+    } else if (
       entry.type == 'movie' &&
       sets.movie[entry.layer as keyof Data['movie']] &&
       sets.movie[entry.layer as keyof Data['movie']].title?.endsWith("'")
     ) {
       sets.movie[entry.layer as keyof Data['movie']].title =
-        sets.movie[entry.layer as keyof Data['movie']].title + ' & other movies'
-      sets.movie[entry.layer as keyof Data['movie']].indices?.push(index)
+        sets.movie[entry.layer as keyof Data['movie']].title + ' & other movies';
+      sets.movie[entry.layer as keyof Data['movie']].indices?.push(index);
     } else if (entry.type == 'movie') {
-      sets.movie[entry.layer as keyof Data['movie']].indices?.push(index)
+      sets.movie[entry.layer as keyof Data['movie']].indices?.push(index);
     }
-  })
+  });
 
   const colors = {
     tv: {},
     movie: {},
     custom: {},
+    book: {},
   } as Colors
 
   // Calculate the step size based on the number of shows and movies
   const numOfColors =
     Object.values(sets.tv).length +
     Object.values(sets.movie).length +
-    Object.values(sets.custom).length
+    Object.values(sets.custom).length +
+    Object.values(sets.book).length
 
   const allColors = generateColors(numOfColors)
 
@@ -422,15 +454,20 @@ export function generateSchedule(
     Object.values(sets.movie),
     Object.values(sets.tv),
     Object.values(sets.custom),
+    Object.values(sets.book),
   ]
     .flat()
     .sort((a, b) => (a.indices as number[])[0] - (b.indices as number[])[0])
     .forEach((set, index) => {
       const color = allColors?.[index]
       if (color == undefined) return
-      colors[set.type as keyof Colors][
-        set.type == 'tv' ? (set.id as number) : (set.layer as number)
-      ] = { ...set, color }
+      if (set.type === 'book') {
+        colors.book[set.layer as number] = { ...set, color }
+      } else {
+        colors[set.type as keyof Colors][
+          set.type == 'tv' ? (set.id as number) : (set.layer as number)
+        ] = { ...set, color }
+      }
     })
 
   let showing = !bookmark
@@ -463,7 +500,20 @@ export function generateSchedule(
       }
     }
 
-    const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (['episode', 'multiple'].includes(entry.type || '') ? entry.id : (colors.custom[(entry as CustomDetails).set as number].indices || []).findIndex((e) => e == i))}`
+    const posId = `${entry.layer}-${entry.layer_id}` + (
+      entry.type == 'movie'
+        ? ''
+        : entry.type == 'book'
+          ? '-' + entry.id
+          : '-' + (['episode', 'multiple'].includes(entry.type || '')
+            ? entry.id
+            : ((entry.type == 'custom'
+                ? colors.custom[(entry as CustomDetails).set as number]?.indices
+                : entry.type == 'book'
+                  ? colors.book[entry.id]?.indices
+                  : colors[entry.type as keyof Colors][index]?.indices
+              ) || []).findIndex((e) => e == i))
+    );
 
     const show = (showing = Boolean(showing || (bookmark && posId == bookmark)))
     const span =
@@ -477,16 +527,26 @@ export function generateSchedule(
         ? entry.layer
         : (entry as CustomDetails).set) as number)
 
-    if (!colors[type as keyof Colors][index].span) {
-      colors[type as keyof Colors][index].span = 0
-      colors[type as keyof Colors][index].watched = 0
-    }
-
-    if (colors) (colors[type as keyof Colors][index].span as number) += span
-
-    if (!showing) {
-      seenSpan += span
-      ;(colors[type as keyof Colors][index].watched as number) += span
+    // Book color assignment
+    if (type === 'book') {
+      if (!colors.book[index]) {
+        colors.book[index] = { color: '#888', indices: [index], type: 'book', id: index }
+      }
+      if (colors) colors.book[index].span = (colors.book[index].span || 0) + span
+      if (!showing) {
+        seenSpan += span
+        colors.book[index].watched = (colors.book[index].watched || 0) + span
+      }
+    } else {
+      if (!colors[type as keyof Colors][index].span) {
+        colors[type as keyof Colors][index].span = 0
+        colors[type as keyof Colors][index].watched = 0
+      }
+      if (colors) (colors[type as keyof Colors][index].span as number) += span
+      if (!showing) {
+        seenSpan += span
+        ;(colors[type as keyof Colors][index].watched as number) += span
+      }
     }
 
     if (streak) {

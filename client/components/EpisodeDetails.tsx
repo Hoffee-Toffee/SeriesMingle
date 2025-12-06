@@ -58,7 +58,15 @@ export default function EpisodeDetails(props: {
     </div>
   )
 
-  const posId = `${entry.layer}-${entry.layer_id}${entry.type == 'movie' ? '' : '-' + (entry.type == 'episode' ? entry.id : (colors.custom[(entry as CustomDetails).set as number].indices || []).findIndex((e: number) => e == i))}`
+  const posId = `${entry.layer}-${entry.layer_id}` + (
+    entry.type == 'movie'
+      ? ''
+      : entry.type == 'book'
+        ? '-' + entry.id
+        : '-' + (entry.type == 'episode'
+          ? entry.id
+          : (colors.custom[(entry as CustomDetails).set as number]?.indices || []).findIndex((e: number) => e == i))
+  );
 
   return (
     <div
@@ -76,7 +84,13 @@ export default function EpisodeDetails(props: {
       style={{
         height: `calc(var(--scale) * ${Math.max(10, entry.runtime || ('average_run_time' in entry && entry.average_run_time) || 0)}px)`,
         marginLeft: `${((entry.layer || 0) * 30) + 4}px`,
-        backgroundColor: `hwb(${'show_id' in entry ? colors.tv[entry.show_id as number].color : entry.type == 'movie' ? colors.movie[entry.layer as number].color : colors.custom[(entry as CustomDetails).set as number].color} 0% 25%)`,
+        backgroundColor: `hwb(${'show_id' in entry
+          ? colors.tv[entry.show_id as number].color
+          : entry.type == 'movie'
+            ? colors.movie[entry.layer as number].color
+            : entry.type == 'book'
+              ? colors.book[entry.layer as number]?.color
+              : colors.custom[(entry as CustomDetails).set as number]?.color} 0% 25%)`,
         marginTop: `calc(var(--scale) * ${Math.max(0, minHeight - (entry.runtime || ('average_run_time' in entry && entry.average_run_time) || 0)) + 30}px / 2)`,
         marginBottom: `calc(var(--scale) * ${Math.max(0, minHeight - (entry.runtime || ('average_run_time' in entry && entry.average_run_time) || 0)) + 30}px / 2)`,
       }}
@@ -119,25 +133,44 @@ export default function EpisodeDetails(props: {
                 {(entry as EntryDetails).season}E{String((entry as EntryDetails).episode).padStart(2, '0')})
               </span>
             ) : (
-              entry.type == 'movie' ? (
-                colors.movie[entry.layer as number].userTitle &&
-                (colors.movie[entry.layer as number].indices || []).length > 1 && (
-                  <span>
-                    {`${colors.movie[entry.layer as number].userTitle} (${(colors.movie[entry.layer as number].indices || []).findIndex((e: number) => e == i) + 1} of ${(colors.movie[entry.layer as number].indices || []).length})`}
-                  </span>
-                ))
-                :
-                (colors.custom[(entry as CustomDetails).set as number].indices || []).length > 1 || (('offset' in (entry as CustomDetails) && (entry as CustomDetails).offset || 0) > 0) ? (
-                  <span>
-                    {colors.custom[(entry as CustomDetails).set as number].userTitle || colors.custom[(entry as CustomDetails).set as number].title}
-                  </span>
-                ) : null
+              (() => {
+                // Determine if both movies and books exist in this layer
+                const movieLayer = colors.movie[entry.layer as number];
+                const bookLayer = colors.book[entry.layer as number];
+                const hasMovies = movieLayer && (movieLayer.indices || []).length > 1;
+                const hasBooks = bookLayer && (bookLayer.indices || []).length > 1;
+                const bothKinds = hasMovies && hasBooks;
+                if (entry.type === 'movie' && movieLayer && (movieLayer.indices || []).length > 1) {
+                  return (
+                    <span>
+                      {`${movieLayer.userTitle}${bothKinds ? ' Movies' : ''} (${(movieLayer.indices || []).findIndex((e: number) => e == i) + 1} of ${(movieLayer.indices || []).length})`}
+                    </span>
+                  );
+                } else if (entry.type === 'book' && bookLayer && (bookLayer.indices || []).length > 1) {
+                  return (
+                    <span>
+                      {`${bookLayer.userTitle}${bothKinds ? ' Books' : ''} (${(bookLayer.indices || []).findIndex((e: number) => e == i) + 1} of ${(bookLayer.indices || []).length})`}
+                    </span>
+                  );
+                } else if (entry.type === 'custom' && ((colors.custom[(entry as CustomDetails).set as number]?.indices || []).length > 1 || (('offset' in (entry as CustomDetails) && (entry as CustomDetails).offset || 0) > 0))) {
+                  return (
+                    <span>
+                      {colors.custom[(entry as CustomDetails).set as number].userTitle || colors.custom[(entry as CustomDetails).set as number].title}
+                    </span>
+                  );
+                }
+                return null;
+              })()
             )}
             <span className="title">
               {entry.type == 'custom' ?
-                (colors.custom[(entry as CustomDetails).set as number].indices || []).length > 1 || (entry.offset && entry.offset > 0) ? `${entry.term} ${(colors.custom[(entry as CustomDetails).set as number].indices || []).findIndex((e: number) => e == i) + 1 + (entry.offset || 0)}` : colors.custom[(entry as CustomDetails).set as number].userTitle || colors.custom[(entry as CustomDetails).set as number].title
+                (colors.custom[(entry as CustomDetails).set as number]?.indices || []).length > 1 || (entry.offset && entry.offset > 0)
+                  ? `${entry.term} ${(colors.custom[(entry as CustomDetails).set as number]?.indices || []).findIndex((e) => e == i) + 1 + (entry.offset || 0)}`
+                  : colors.custom[(entry as CustomDetails).set as number]?.userTitle || colors.custom[(entry as CustomDetails).set as number]?.title
+                : entry.type == 'book' ?
+                  entry.userTitle || entry.title
                 :
-                entry.userTitle || entry.title}
+                  entry.userTitle || entry.title}
               {entry.runtime && <span className="spoiler">{`${entry.runtime > 59 ? `${Math.floor(entry.runtime / 60)}h` : ''}${entry.runtime > 59 && entry.runtime % 60 ? ' ' : ''}${entry.runtime % 60 ? `${entry.runtime % 60}m` : ''}`}</span>}
               {entry.type == 'movie' &&
                 <a
@@ -170,8 +203,13 @@ export default function EpisodeDetails(props: {
             </span>
           </div>
           <span className="spoiler episode-description">
-            {entry.type !== 'custom' ? ('overview' in entry && entry.overview) || 'No Description Available' :
-              (colors.custom[(entry as CustomDetails).set as number].indices || []).length > 1 || (entry.offset && entry.offset > 0) ? `From '${colors.custom[(entry as CustomDetails).set as number].userTitle || colors.custom[(entry as CustomDetails).set as number].title}', a custom entry` : 'A custom entry'}
+            {entry.type === 'custom'
+              ? (colors.custom[(entry as CustomDetails).set as number]?.indices || []).length > 1 || (entry.offset && entry.offset > 0)
+                ? `From '${colors.custom[(entry as CustomDetails).set as number]?.userTitle || colors.custom[(entry as CustomDetails).set as number]?.title}', a custom entry`
+                : 'A custom entry'
+              : entry.type === 'book'
+                ? entry.description || 'No Description Available'
+                : ('overview' in entry && entry.overview) || 'No Description Available'}
           </span>
         </div>
       </div>

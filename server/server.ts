@@ -12,17 +12,20 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 import dotenv from 'dotenv'
 dotenv.config()
 
-import tmdbRoutes from './routes/tmdb.ts'
-import projectRoutes from './routes/projects.ts'
-import decrypt from './eastereggs/decrypt.ts'
+
+import tmdbRoutes from './routes/tmdb.ts';
+import projectRoutes from './routes/projects.ts';
+import booksApi from './apis/books.ts';
+import decrypt from './eastereggs/decrypt.ts';
 
 const server = express()
 
 server.use(express.json({ limit: '50mb' }))
 server.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
-server.use('/api/v1', tmdbRoutes)
-server.use('/api/v1/projects', projectRoutes)
+server.use('/api/v1', tmdbRoutes);
+server.use('/api/v1', booksApi);
+server.use('/api/v1/projects', projectRoutes);
 server.get('/api/v1/secret', (req, res) => {
   if (typeof req.query.passphrase !== 'string') {
     return res.status(400).send('Invalid passphrase')

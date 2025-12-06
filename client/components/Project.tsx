@@ -227,12 +227,14 @@ export default function Project() {
   ])
 
   function addData(entry: MediaDetails, layerId: number, entryId: number) {
-    if (readOnly) return
-    data[entry.type] = data[entry.type] || {}
-    data[entry.type][entry.id] = entry
-    layers[layerId][entryId] = { ref: [entry.type, entry.id] }
-    setState({ ...state, layers, data, force: true })
-    setChangedProps([...changedProps, 'data', 'layers'])
+    if (readOnly) return;
+    data[entry.type] = data[entry.type] || {};
+    data[entry.type][entry.id] = entry;
+    if (!layers[layerId]) layers[layerId] = [];
+    // Always add at the end, never replace
+    layers[layerId].push({ ref: [entry.type, entry.id] });
+    setState({ ...state, layers, data, force: true });
+    setChangedProps([...changedProps, 'data', 'layers']);
   }
 
   function setCustom(newData: string | MediaDetails | null = null, layer = null, id = null) {

@@ -994,8 +994,8 @@
 
 @media screen and (max-width: 800px) {
   :root {
-    --scale: 2;
-    --height-mult: 0;
+    --scale: 2 !important;
+    --height-mult: 0 !important;
   }
 
   #project {

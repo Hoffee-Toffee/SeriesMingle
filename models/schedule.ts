@@ -34,7 +34,7 @@ export interface Permissions {
 }
 
 export interface LayerMedia {
-  ref: ['tv' | 'movie' | 'custom', number] // Reference to location in stored data
+  ref: ['tv' | 'movie' | 'custom', number] | ['book', string] // Reference to location in stored data
   start?: string
   end?: string
 }
@@ -52,6 +52,20 @@ export interface Data {
   tv: { [key: string]: ShowDetails }
   movie: { [key: string]: EntryDetails }
   custom: { [key: string]: CustomDetails }
+  book?: { [key: string]: BookDetails }
+}
+
+export interface BookDetails extends DetailsBase {
+  type: 'book';
+  description?: string;
+  authors?: string[];
+  thumbnail?: string;
+  pageCount?: number | null;
+  categories?: string[];
+  density?: number;
+  selfLink?: string;
+  year?: string;
+}
 }
 
 export interface DetailsBase {

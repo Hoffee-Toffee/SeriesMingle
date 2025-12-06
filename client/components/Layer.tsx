@@ -58,17 +58,36 @@ export default function Layer({
         if (isNaN(mediaId)) throw new Error('Invalid media id');
         const res = await fetchMedia(result.media_type, mediaId);
         addData(res, id, entries.length - 1); // Add to last (blank) entry
+      } else if (result.media_type === 'book') {
+        // Add book using addData, matching TV/Movie logic
+        const bookId = typeof result.id === 'string' ? result.id : String(result.id);
+        const bookObj = {
+          ref: ['book', bookId] as ['book', string],
+          id: bookId,
+          type: 'book',
+          title: result.title,
+          description: result.description,
+          authors: result.authors,
+          thumbnail: result.thumbnail || result.image,
+          pageCount: result.pageCount,
+          categories: result.categories,
+          density: result.density,
+          selfLink: result.selfLink,
+          year: result.year || result.publishedYear,
+        };
+        addData(bookObj, id, entries.length - 1);
       } else if (result.media_type === 'custom') {
-        // Only pass as CustomDetails if id is a number
-        if (typeof result.id === 'number') {
-          setCustom(result as any, id, entries.length - 1);
-        } else {
-          setCustom(result.title, id, entries.length - 1);
-        }
+        // Always add a custom entry with default title and 5 parts
+        setCustom({
+          title: 'Custom Entry',
+          type: 'custom',
+          repeat: 5,
+          offset: 0,
+          term: 'Part',
+        }, id, entries.length);
       } else if (result.barrier !== undefined) {
-        // Barrier logic: add a barrier entry
-        const newEntries = [...entries];
-        newEntries[entries.length - 1] = { barrier: null };
+        // Barrier logic: always append with 0 percent
+        const newEntries = [...entries, { barrier: 0 }];
         setEntries(newEntries, true);
       } else {
         // Fallback: treat as custom string
@@ -116,14 +135,13 @@ export default function Layer({
   }, [ref])
 
 
-  // Filter out legacy entry types (string search, dropdown array)
+  // Filter to only entries with a 'ref' property (media, book, custom, etc)
+  // Filter to entries with a 'ref' property (media, book, custom, etc) or a 'barrier' property
   const filteredEntries = entries.filter(
-    (entry) => typeof entry === 'object' && !Array.isArray(entry)
+    (entry) =>
+      typeof entry === 'object' && entry !== null &&
+      ('ref' in entry || 'barrier' in entry)
   );
-  // If no valid entries, add a blank entry (to allow AddEntryButton to work)
-  if (filteredEntries.length === 0) {
-    filteredEntries.push({ barrier: null }); // Add a dummy barrier to keep structure
-  }
 
   return (
     <fieldset className="layer" id={`layer-${id}`}>

@@ -23,7 +23,7 @@ export default function Schedule({ scheduleData }: { scheduleData: ScheduleData 
   let { streakEnds } = scheduleData
 
   const numOfLayers = layers.reduce(
-    (acc, layer) => (acc += layer.length > 1 ? 1 : 0),
+    (acc, layer) => (acc += layer.length > 0 ? 1 : 0),
     0,
   )
 
