@@ -81,7 +81,7 @@ export default function Example({ id }: { id: string }) {
     }).filter(Boolean).flat()
   }
 
-  const offset = ((Date.now() + 850000) % loopTime) * ((bodyHeight) / loopTime) - viewHeight / 2
+  const offset = ((Date.now()) % loopTime) * ((bodyHeight) / loopTime) - viewHeight / 2
   // const offset = bodyHeight - viewHeight / 2
 
   // 0 - viewHeight / 3 to 0,

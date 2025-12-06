@@ -1,0 +1,160 @@
+.results {
+  min-height: 350px;
+  max-height: 350px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.result-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem;
+  min-height: 100px;
+  border-radius: 6px;
+  background: var(--bgSec);
+  border: 2px solid var(--bgBorder);
+  cursor: pointer;
+  transition: background 0.15s, border 0.15s;
+}
+
+.result-item img {
+  width: 66px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #eee;
+  flex-shrink: 0;
+}
+
+.result-description {
+  max-height: 4.5em;
+  overflow-y: auto;
+  padding-right: 0.5em;
+  word-break: break-word;
+}
+
+.result-item:hover {
+  background: var(--main-link-col);
+  border: 2px solid var(--borderHover);
+}
+
+.result-item img {
+  width: 66px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #eee;
+  flex-shrink: 0;
+}
+
+@import '../styles/app.scss';
+
+.search-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: brightness(0.25) blur(10px) grayscale(1);
+}
+
+.search-modal {
+  background: var(--bgMain);
+  color: var(--textSec);
+  border: 2px solid var(--bgBorder);
+  border-radius: 8px;
+  padding: 2rem;
+  min-width: 350px;
+  max-width: 600px;
+  width: 66vw;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.2);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .no-search-message {
+    text-align: center;
+    color: var(--textSec);
+    font-size: 1.15rem;
+    opacity: 0.7;
+    margin: 2.5em 0 2em 0;
+  }
+}
+
+.search-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  flex: 1;
+  margin-right: 1rem;
+  font-size: 1.3rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 2px solid var(--bgBorder);
+  background: var(--bgSec);
+  color: var(--textSec);
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 4rem;
+  color: var(--linkSec);
+  cursor: pointer;
+  z-index: 1100;
+  margin-left: 1rem;
+  line-height: 1;
+  position: relative;
+}
+
+.tabs {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  gap: 0.5rem;
+  background: var(--bgSec);
+  overflow-x: auto;
+}
+
+#project .layer .tabs button {
+  background: var(--bgSec);
+  border: none;
+  border-radius: 0%;
+  color: var(--linkSec);
+  padding: 0.7em;
+  width: 100%;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-bottom 0.15s;
+  border-bottom: 2px solid var(--bgBorder);
+  white-space: nowrap;
+}
+
+#project .layer .tabs button:hover {
+  border-radius: 0;
+  outline: none;
+  background: var(--bgTert);
+  border-bottom: 2px solid var(--bgBorder);
+}
+
+#project .layer .tabs button.active {
+  color: var(--textSec);
+  background: var(--textMain);
+  border-bottom: 2px solid var(--borderHover);
+  z-index: 1;
+  pointer-events: none;
+}

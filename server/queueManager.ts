@@ -44,14 +44,23 @@ class QueueManager {
       const highs = this.queue.filter(q => q.priority === 'high');
       const lows = this.queue.filter(q => q.priority === 'low');
       const toProcess: QueueItem[] = [];
-      // First 4 slots: high priority if available, else low
+      let lowsUsed = 0;
+      // First 4 slots: high priority if available, else low (max 3 lows per batch)
       for (let i = 0; i < 4; i++) {
-        if (highs.length) toProcess.push(highs.shift()!);
-        else if (lows.length) toProcess.push(lows.shift()!);
+        if (highs.length) {
+          toProcess.push(highs.shift()!);
+        } else if (lows.length && lowsUsed < 3) {
+          toProcess.push(lows.shift()!);
+          lowsUsed++;
+        }
       }
-      // 5th slot: prefer oldest low, else next high
-      if (lows.length) toProcess.push(lows.shift()!);
-      else if (highs.length) toProcess.push(highs.shift()!);
+      // 5th slot: prefer oldest low (if not already 3), else next high
+      if (lows.length && lowsUsed < 3) {
+        toProcess.push(lows.shift()!);
+        lowsUsed++;
+      } else if (highs.length) {
+        toProcess.push(highs.shift()!);
+      }
       // Remove processed from queue
       this.queue = this.queue.filter(q => !toProcess.includes(q));
       // Run all
