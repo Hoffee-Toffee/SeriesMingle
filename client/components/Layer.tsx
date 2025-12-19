@@ -20,6 +20,7 @@ export default function Layer({
   setTitles,
   setShow,
   setMovie,
+  setBook,
   runAfterConfirm,
   bookmark,
 }: {
@@ -35,6 +36,7 @@ export default function Layer({
   setTitles: (id: number, title: string | null) => void,
   setShow: () => void,
   setMovie: () => void,
+  setBook: () => void,
   runAfterConfirm: (func: () => void) => void
   bookmark?: string | null
 }) {
@@ -172,7 +174,17 @@ export default function Layer({
                 data={data}
                 addData={addData}
                 setCustom={setCustom}
-                setTitle={typeof entry === 'object' && 'ref' in entry && entry.ref ? entry.ref[0] == 'tv' ? setShow : setMovie : undefined}
+                setTitle={(() => {
+                  if (typeof entry === 'object' && 'ref' in entry && entry.ref) {
+                    switch (entry.ref[0]) {
+                      case 'tv': return setShow;
+                      case 'movie': return setMovie;
+                      case 'book': return setBook;
+                      default: return undefined;
+                    }
+                  }
+                  return undefined;
+                })()}
                 runAfterConfirm={runAfterConfirm}
                 bookmark={bookmark}
                 className={outlinePos == `${id}-${index}` ? 'outline' : ''}

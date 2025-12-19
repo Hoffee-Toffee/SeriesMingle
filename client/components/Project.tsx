@@ -407,6 +407,29 @@ export default function Project() {
     setChangedProps([...changedProps, 'data'])
   }
 
+  function setBook(bookId: string, newData: MediaDetails | string | null) {
+    if (readOnly) return
+
+    if (typeof newData === 'string' || newData == null) {
+      data.book[bookId].userTitle = newData
+      setState({
+        ...state,
+        data,
+
+        force: true,
+      })
+    } else {
+      data.book[bookId] = newData
+      setState({
+        ...state,
+        data,
+
+        force: true,
+      })
+    }
+    setChangedProps([...changedProps, 'data'])
+  }
+
   function setTitle(newTitle: string) {
     if (readOnly) return
     setState({ ...state, title: newTitle, force: true })
@@ -496,12 +519,12 @@ export default function Project() {
         <main className='fadein'>
           <div id='removeWatchedPopup'>
             <div>
-              <p>Are you sure you want to remove all watched content?</p>
+              <p>Are you sure you want to remove all completed content?</p>
               <strong>This action cannot be undone.</strong>
               <button onClick={() => {
                 removeWatched()
                 document.getElementById('removeWatchedPopup')?.classList.remove('show');
-              }}>Remove Watched</button>
+              }}>Remove Completed</button>
               <button onClick={() => document.getElementById('removeWatchedPopup')?.classList.remove('show')}>Cancel</button>
             </div>
           </div>
@@ -522,12 +545,12 @@ export default function Project() {
           </div>
           <div id='rippleActionPopup'>
             <div>
-              <p>Remove watched content to perform this action?</p>
+              <p>Remove completed content to perform this action?</p>
               <strong>This action cannot be undone.</strong>
               <button onClick={() => {
                 removeWatched()
                 document.getElementById('rippleActionPopup')?.classList.remove('show')
-              }}>Remove Watched</button>
+              }}>Remove Completed</button>
               <button onClick={() => {
                 document.getElementById('rippleActionPopup')?.classList.remove('show')
               }}>Cancel</button>
@@ -610,6 +633,7 @@ export default function Project() {
                       setTitles={setTitles}
                       setShow={setShow}
                       setMovie={setMovie}
+                      setBook={setBook}
                       runAfterConfirm={runAfterConfirm}
                       bookmark={bookmark}
                     />
@@ -762,7 +786,7 @@ export default function Project() {
                       </>
                       : ''
                     }
-                    watched ({Math.round(scheduleData.seenSpan / scheduleData.totalSpan * 10000) / 100}%) out of {scheduleData.totalSpan ? <>
+                    completed ({Math.round(scheduleData.seenSpan / scheduleData.totalSpan * 10000) / 100}%) out of {scheduleData.totalSpan ? <>
                       {Math.floor(scheduleData.totalSpan / 60) ?
                         <>
                           <span className="yellow">

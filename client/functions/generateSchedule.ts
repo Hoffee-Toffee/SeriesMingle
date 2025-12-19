@@ -395,43 +395,33 @@ export function generateSchedule(
           layer: entry.id,
         };
       else sets.custom[entry.id as keyof Data['custom']].indices?.push(index);
-    } else if (entry.type == 'book') {
-      // Treat books like movies: group by layer
-      if (!sets.book[entry.layer]) {
-        sets.book[entry.layer] = {
-          id: entry.layer,
-          title: entry.userTitle || entry.title,
-          userTitle: titles[entry.layer as number] || undefined,
-          indices: [index],
-          layer: entry.layer,
-          type: 'book',
-        };
-      } else {
-        sets.book[entry.layer].indices?.push(index);
-      }
     } else if (
-      entry.type == 'movie' &&
-      !sets.movie[entry.layer as keyof Data['movie']]
+      ['movie', 'book'].includes(entry.type || '') &&
+      !sets[entry.type as keyof Data][entry.layer as keyof Data['movie'] ]
     ) {
-      sets.movie[entry.layer as keyof Data['movie']] = {
+      sets[entry.type as keyof Data][entry.layer as keyof Data['movie']] = {
         title: `'${entry.userTitle || entry.title}'`,
         userTitle: titles[entry.layer as number] || undefined,
         indices: [index],
         layer: entry.layer,
-        type: 'movie',
+        type: entry.type as 'movie' | 'book',
       };
     } else if (
-      entry.type == 'movie' &&
-      sets.movie[entry.layer as keyof Data['movie']] &&
-      sets.movie[entry.layer as keyof Data['movie']].title?.endsWith("'")
+      ['movie', 'book'].includes(entry.type || '') &&
+      sets[entry.type as keyof Data][entry.layer as keyof Data['movie']] &&
+      sets[entry.type as keyof Data][entry.layer as keyof Data['movie']].title?.endsWith("'")
     ) {
-      sets.movie[entry.layer as keyof Data['movie']].title =
-        sets.movie[entry.layer as keyof Data['movie']].title + ' & other movies';
-      sets.movie[entry.layer as keyof Data['movie']].indices?.push(index);
-    } else if (entry.type == 'movie') {
-      sets.movie[entry.layer as keyof Data['movie']].indices?.push(index);
+      sets[entry.type as keyof Data][entry.layer as keyof Data['movie']].title =
+        sets[entry.type as keyof Data][entry.layer as keyof Data['movie']].title + ' & other ' + entry.type + 's';
+      sets[entry.type as keyof Data][entry.layer as keyof Data['movie']].indices?.push(index);
+    } else if (
+      ['movie', 'book'].includes(entry.type || '')
+    ) {
+      sets[entry.type as keyof Data][entry.layer as keyof Data['movie']].indices?.push(index);
     }
   });
+
+  console.log(JSON.stringify(sets, null, 2));
 
   const colors = {
     tv: {},
@@ -523,31 +513,19 @@ export function generateSchedule(
     const type = 'show_id' in entry ? 'tv' : entry.type
     const index =
       ('show_id' in entry && entry.show_id) ||
-      ((entry.type == 'movie'
+      ((['movie', 'book'].includes(entry.type || '')
         ? entry.layer
-        : (entry as CustomDetails).set) as number)
+        : (entry as CustomDetails).set) as number);
 
-    // Book color assignment
-    if (type === 'book') {
-      if (!colors.book[index]) {
-        colors.book[index] = { color: '#888', indices: [index], type: 'book', id: index }
-      }
-      if (colors) colors.book[index].span = (colors.book[index].span || 0) + span
-      if (!showing) {
-        seenSpan += span
-        colors.book[index].watched = (colors.book[index].watched || 0) + span
-      }
-    } else {
       if (!colors[type as keyof Colors][index].span) {
         colors[type as keyof Colors][index].span = 0
         colors[type as keyof Colors][index].watched = 0
       }
       if (colors) (colors[type as keyof Colors][index].span as number) += span
       if (!showing) {
-        seenSpan += span
-        ;(colors[type as keyof Colors][index].watched as number) += span
+        seenSpan += span;
+        (colors[type as keyof Colors][index].watched as number) += span
       }
-    }
 
     if (streak) {
       if (lastStreak == null) lastStreak = `${entry.mid}-${entry.layer_id}`
@@ -567,7 +545,7 @@ export function generateSchedule(
     }
   })
 
-  console.log({ processed })
+  console.log({ colors, sets })
   return {
     schedule: processed,
     colors,

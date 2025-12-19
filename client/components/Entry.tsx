@@ -331,7 +331,9 @@ export default function Entry({
               if (!e.target.innerText.trim()) e.target.innerText = entryData.title || '';
               else if (entryData.type == 'custom') {
                 setCustom({ ...entryData, title: e.target.innerText });
-              } else setTitle && setTitle(((entryData as ShowDetails).show_id || entryData.id) as number, e.target.innerText, true);
+              } else if (['tv', 'movie', 'book'].includes(entryData.type) && setTitle) {
+                setTitle(((entryData as ShowDetails).show_id || entryData.id) as number, e.target.innerText, true);
+              }
             }}
           >
             {(entryData as ShowDetails | EntryDetails).userTitle || entryData.title}

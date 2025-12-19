@@ -167,10 +167,7 @@ export default function EpisodeDetails(props: {
                 (colors.custom[(entry as CustomDetails).set as number]?.indices || []).length > 1 || (entry.offset && entry.offset > 0)
                   ? `${entry.term} ${(colors.custom[(entry as CustomDetails).set as number]?.indices || []).findIndex((e) => e == i) + 1 + (entry.offset || 0)}`
                   : colors.custom[(entry as CustomDetails).set as number]?.userTitle || colors.custom[(entry as CustomDetails).set as number]?.title
-                : entry.type == 'book' ?
-                  entry.userTitle || entry.title
-                :
-                  entry.userTitle || entry.title}
+                : entry.userTitle || entry.title}
               {entry.runtime && <span className="spoiler">{`${entry.runtime > 59 ? `${Math.floor(entry.runtime / 60)}h` : ''}${entry.runtime > 59 && entry.runtime % 60 ? ' ' : ''}${entry.runtime % 60 ? `${entry.runtime % 60}m` : ''}`}</span>}
               {entry.type == 'movie' &&
                 <a
