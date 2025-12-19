@@ -48,7 +48,7 @@ export default function Example({ id }: { id: string }) {
     let isFirst = true
 
     return schedule.map((entry) => {
-      const posId = `${entry.layer}-${'layer_id' in entry && entry.layer_id}${'type' in entry && entry.type == 'movie' ? '' : '-' + ('type' in entry && entry.type == 'episode' ? entry.id : (colors.custom[(entry as CustomDetails).set as number].indices || []).findIndex((e: number) => e == (entry as CustomDetails).id))}`
+      const posId = `${entry.layer}-${'layer_id' in entry && entry.layer_id}${'type' in entry && entry.type == 'movie' ? '' : '-' + ('type' in entry && entry.type == 'episode' ? entry.id : (colors.custom[(entry as CustomDetails).set as number]?.indices || []).findIndex((e: number) => e == (entry as CustomDetails).id))}`
 
       const height = scale * Math.max(10, ("runtime" in entry && entry.runtime) || ("average_run_time" in entry && entry.average_run_time) || 0) + 4
       const margin = scale * Math.max(0, 30 - (("runtime" in entry && entry.runtime) || ("average_run_time" in entry && entry.average_run_time) || 0)) / 2 + (scale * 15)

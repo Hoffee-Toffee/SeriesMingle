@@ -23,7 +23,7 @@ export default function Schedule({ scheduleData }: { scheduleData: ScheduleData 
   let { streakEnds } = scheduleData
 
   const numOfLayers = layers.reduce(
-    (acc, layer) => (acc += layer.length > 1 ? 1 : 0),
+    (acc, layer) => (acc += layer.length > 0 ? 1 : 0),
     0,
   )
 
@@ -162,6 +162,7 @@ export default function Schedule({ scheduleData }: { scheduleData: ScheduleData 
         {Object.values(colors.movie)
           .concat(Object.values(colors.tv))
           .concat(Object.values(colors.custom))
+          .concat(Object.values(colors.book))
           .sort((a, b) => ((a.indices as number[])[0]) - ((b.indices as number[])[0]))
           .map((color) => (
             <span
@@ -175,7 +176,7 @@ export default function Schedule({ scheduleData }: { scheduleData: ScheduleData 
                     : color.title}
                 </span>
                 <span className="setWatched">
-                  {`(${Math.round(((color.watched || 0) / (color.span || 0)) * 10000) / 100}% watched)`}
+                  {`(${Math.round(((color.watched || 0) / (color.span || 0)) * 10000) / 100}% completed)`}
                 </span>
               </span>
             </span>
@@ -184,11 +185,11 @@ export default function Schedule({ scheduleData }: { scheduleData: ScheduleData 
       {bookmark && (
         <>
           <button onClick={scrollToBookmark}>
-            Jump to Progress ({Math.round(seenPercentage * 100) / 100}% watched)
+            Jump to Progress ({Math.round(seenPercentage * 100) / 100}% completed)
           </button>
           <button onClick={() => document.getElementById('removeWatchedPopup')?.classList.add('show')}
           >
-            Remove Watched
+            Remove Completed
           </button>
         </>
       )}

@@ -108,6 +108,11 @@
   color: var(--textSec);
 }
 
+.search-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.25;
+}
+
 .close-btn {
   background: transparent;
   border: none;

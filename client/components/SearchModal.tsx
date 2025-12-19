@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react';
 import searchApi from '../apis/search';
+import fetchBooks from '../apis/fetchBooks';
 import '../styles/SearchModal.scss';
 
 const TABS = [
   { key: 'tv-movies', label: 'TV / Movies' },
   { key: 'books', label: 'Books' },
-  { key: 'games', label: 'Games' },
+  { key: 'other', label: 'Other' },
 ];
 
 export interface SearchResult {
@@ -75,12 +76,33 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSelect, lo
           ...item
         }));
       } else if (tab === 'books') {
+        const apiResults = await fetchBooks(q);
+        res = apiResults.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          image: item.thumbnail || 'https://via.placeholder.com/80',
+          year: item.publishedYear,
+          description: item.description,
+          media_type: 'book',
+          ...item
+        }));
+      } else if (tab === 'other') {
         res = [
-          { id: 2, title: 'Example Book', image: 'https://via.placeholder.com/80' },
-        ];
-      } else if (tab === 'games') {
-        res = [
-          { id: 3, title: 'Example Game', image: 'https://via.placeholder.com/80' },
+          {
+            id: 'barrier',
+            title: 'Add Barrier',
+            description: 'Insert a barrier to split your schedule into sections.',
+            image: 'https://placehold.co/200x300?text=No+Image+Available',
+            media_type: 'barrier',
+            barrier: true,
+          },
+          {
+            id: 'custom',
+            title: 'Add Custom Entry',
+            description: 'Create a custom entry for activities, events, or anything else.',
+            image: 'https://placehold.co/200x300?text=No+Image+Available',
+            media_type: 'custom',
+          },
         ];
       }
       setResults(prev => ({ ...prev, [tab]: res }));
@@ -103,6 +125,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSelect, lo
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             autoFocus
+            disabled={activeTab === 'other'}
           />
           <button className="close-btn" onClick={onClose}>&times;</button>
         </div>
@@ -119,24 +142,48 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSelect, lo
         </div>
         {error && <div className="error">{error}</div>}
         <div className="results">
-          {(!results[activeTab] || !results[activeTab].length) && (
+          {activeTab !== 'other' && (!results[activeTab] || !results[activeTab].length) && (
             <div className="no-search-message">
               {(loading || externalLoading) ? 'Fetching results...' : 'Type to search.'}
             </div>
           )}
-          {(results[activeTab] || []).map(result => {
-            // Format title as 'title (TV / Movie, YEAR)'
-            const year = (result.release_date || result.first_air_date || '').split('-')[0];
-            let typeLabel = '';
-            if (result.media_type === 'tv') typeLabel = 'TV';
-            else if (result.media_type === 'movie') typeLabel = 'Movie';
-            else typeLabel = '';
-            const displayTitle = `${result.title} ${typeLabel ? `(${typeLabel}${year ? `, ${year}` : ''})` : year ? `(${year})` : ''}`;
-            const description = result.overview || result.description || '';
+          {(activeTab === 'other'
+            ? [
+                {
+                  id: 'barrier',
+                  title: 'Add Barrier',
+                  description: 'Insert a barrier to split your schedule into sections.',
+                  image: 'https://placehold.co/200x300?text=No+Image+Available',
+                  media_type: 'barrier',
+                  barrier: true,
+                },
+                {
+                  id: 'custom',
+                  title: 'Add Custom Entry',
+                  description: 'Create a custom entry for activities, events, or anything else.',
+                  image: 'https://placehold.co/200x300?text=No+Image+Available',
+                  media_type: 'custom',
+                },
+              ]
+            : results[activeTab] || []
+          ).map(result => {
+            let displayTitle = result.title;
+            let description = result.overview || result.description || '';
+            let image = result.image || 'https://placehold.co/200x300?text=No+Image+Available';
+            if (activeTab === 'tv-movies') {
+              const year = (result.release_date || result.first_air_date || '').split('-')[0];
+              let typeLabel = '';
+              if (result.media_type === 'tv') typeLabel = 'TV';
+              else if (result.media_type === 'movie') typeLabel = 'Movie';
+              else typeLabel = '';
+              displayTitle = `${result.title} ${typeLabel ? `(${typeLabel}${year ? `, ${year}` : ''})` : year ? `(${year})` : ''}`;
+            } else if (activeTab === 'books') {
+              displayTitle = `${result.title}${result.year ? ` (${result.year})` : ''}`;
+            }
             return (
               <div key={result.id} className="result-item" onClick={() => !externalLoading && onSelect(result)} style={{ opacity: externalLoading ? 0.6 : 1, pointerEvents: externalLoading ? 'none' : 'auto' }}>
                 <img
-                  src={result.image || 'https://via.placeholder.com/80?text=No+Image'}
+                  src={image}
                   alt={result.title}
                   style={{ background: '#eee' }}
                 />

@@ -88,205 +88,206 @@ export default function Entry({
   // Media or custom entry
   if ('ref' in (entry as LayerMedia)) {
     entryData = data[(entry as LayerMedia).ref[0]][(entry as LayerMedia).ref[1]];
-    settings =
-      entryData.type == 'tv'
-        ? [
-            {
-              title: 'Start',
-              content: (
-                <select
-                  onChange={(e) => {
-                    entries[id] = { ...(entries[id] as LayerMedia), start: e.target.value };
-                    setEntries([...entries], true);
-                  }}
-                  onClick={(e) => {
-                    if (bookmark) (e.target as HTMLSelectElement).blur();
-                    runAfterConfirm(() => {});
-                  }}
-                >
-                  {('end' in (entry as LayerMedia)
-                    ? ((entryData as ShowDetails).seasons || []).slice(
+    if (entryData.type == 'tv') {
+      settings = [
+        {
+          title: 'Start',
+          content: (
+            <select
+              onChange={(e) => {
+                entries[id] = { ...(entries[id] as LayerMedia), start: e.target.value };
+                setEntries([...entries], true);
+              }}
+              onClick={(e) => {
+                if (bookmark) (e.target as HTMLSelectElement).blur();
+                runAfterConfirm(() => {});
+              }}
+            >
+              {('end' in (entry as LayerMedia)
+                ? ((entryData as ShowDetails).seasons || []).slice(
+                    0,
+                    parseInt((entry as LayerMedia).end?.split(':')[0] || '')
+                  )
+                : (entryData as ShowDetails).seasons || []
+              ).map((season: Season) => (
+                <optgroup label={`Season ${season.season}`} key={season.season}>
+                  {((entry as LayerMedia).end
+                    ? season.episodes.slice(
                         0,
-                        parseInt((entry as LayerMedia).end?.split(':')[0] || '')
+                        parseInt((entry as LayerMedia).end?.split(':')[1] || '')
                       )
-                    : (entryData as ShowDetails).seasons || []
-                  ).map((season: Season) => (
-                    <optgroup label={`Season ${season.season}`} key={season.season}>
-                      {((entry as LayerMedia).end
-                        ? season.episodes.slice(
-                            0,
-                            parseInt((entry as LayerMedia).end?.split(':')[1] || '')
-                          )
-                        : season.episodes
-                      ).map((episode: EntryDetails) => (
+                    : season.episodes
+                  ).map((episode: EntryDetails) => (
+                    <option
+                      key={episode.episode}
+                      value={season.season + ':' + episode.episode}
+                      selected={
+                        `${season.season}:${episode.episode}` ==
+                        (entry as LayerMedia).start
+                      }
+                    >{`S${season.season}E${episode.episode}: ${episode.title}`}</option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          ),
+        },
+        {
+          title: 'End',
+          content: (
+            <select
+              onChange={(e) => {
+                entries[id] = { ...(entries[id] as LayerMedia), end: e.target.value };
+                setEntries([...entries], true);
+              }}
+              onClick={(e) => {
+                if (bookmark) (e.target as HTMLSelectElement).blur();
+                runAfterConfirm(() => {});
+              }}
+            >
+              {((entryData as ShowDetails).seasons || [])
+                .slice(
+                  (entry as LayerMedia).start
+                    ? ((entryData as ShowDetails).seasons || []).findIndex(
+                        (s: Season) =>
+                          s.season >=
+                          parseInt((entry as LayerMedia).start?.split(':')[0] || '0') - 1
+                      )
+                    : 0
+                )
+                .map((season: Season) => (
+                  <optgroup label={`Season ${season.season}`} key={season.season}>
+                    {season.episodes
+                      .slice(
+                        (entry as LayerMedia).start &&
+                        parseInt((entry as LayerMedia).start?.split(':')[0] || '0') == season.season
+                          ? season.episodes.findIndex(
+                              (e: EntryDetails) =>
+                                e.episode || 0 >=
+                                parseInt((entry as LayerMedia).start?.split(':')[1] || '0') - 1
+                            )
+                          : 0
+                      )
+                      .map((episode: EntryDetails) => (
                         <option
                           key={episode.episode}
                           value={season.season + ':' + episode.episode}
                           selected={
                             `${season.season}:${episode.episode}` ==
-                            (entry as LayerMedia).start
+                            ((entry as LayerMedia).end ||
+                              `${((entryData as ShowDetails).seasons || []).at(-1)?.season}:$ {
+                                ((entryData as ShowDetails).seasons || [])
+                                  .at(-1)?.episodes.at(-1)?.episode
+                              }`)
                           }
                         >{`S${season.season}E${episode.episode}: ${episode.title}`}</option>
                       ))}
-                    </optgroup>
-                  ))}
-                </select>
-              ),
-            },
-            {
-              title: 'End',
-              content: (
-                <select
-                  onChange={(e) => {
-                    entries[id] = { ...(entries[id] as LayerMedia), end: e.target.value };
-                    setEntries([...entries], true);
-                  }}
-                  onClick={(e) => {
-                    if (bookmark) (e.target as HTMLSelectElement).blur();
-                    runAfterConfirm(() => {});
-                  }}
-                >
-                  {((entryData as ShowDetails).seasons || [])
-                    .slice(
-                      (entry as LayerMedia).start
-                        ? ((entryData as ShowDetails).seasons || []).findIndex(
-                            (s: Season) =>
-                              s.season >=
-                              parseInt((entry as LayerMedia).start?.split(':')[0] || '0') - 1
-                          )
-                        : 0
-                    )
-                    .map((season: Season) => (
-                      <optgroup label={`Season ${season.season}`} key={season.season}>
-                        {season.episodes
-                          .slice(
-                            (entry as LayerMedia).start &&
-                            parseInt((entry as LayerMedia).start?.split(':')[0] || '0') == season.season
-                              ? season.episodes.findIndex(
-                                  (e: EntryDetails) =>
-                                    e.episode || 0 >=
-                                    parseInt((entry as LayerMedia).start?.split(':')[1] || '0') - 1
-                                )
-                              : 0
-                          )
-                          .map((episode: EntryDetails) => (
-                            <option
-                              key={episode.episode}
-                              value={season.season + ':' + episode.episode}
-                              selected={
-                                `${season.season}:${episode.episode}` ==
-                                ((entry as LayerMedia).end ||
-                                  `${((entryData as ShowDetails).seasons || []).at(-1)?.season}:$ {
-                                    ((entryData as ShowDetails).seasons || [])
-                                      .at(-1)?.episodes.at(-1)?.episode
-                                  }`)
-                              }
-                            >{`S${season.season}E${episode.episode}: ${episode.title}`}</option>
-                          ))}
-                      </optgroup>
-                    ))}
-                </select>
-              ),
-            },
-          ]
-        : entryData.type == 'custom'
-        ? [
-            {
-              title: 'Repeat',
-              content: (
-                <input
-                  className="value"
-                  type="number"
-                  min="1"
-                  value={value == '' ? undefined : Math.max(parseInt(value as string) || 1, 1) || entryData.repeat}
-                  onChange={(e) => runAfterConfirm(() => setValue(e.target.value || ''))}
-                  onBlur={() =>
-                    runAfterConfirm(() => {
-                      setCustom({
-                        ...(entryData as CustomDetails),
-                        repeat: parseInt(
-                          value == '' || value == undefined
-                            ? '1'
-                            : String(value) || String((entryData as CustomDetails).repeat) || '1'
-                        ),
-                      });
-                      setValue(value == '' ? 1 : value);
-                    })
-                  }
-                />
-              ),
-            },
-            {
-              title: 'Offset',
-              content: (
-                <input
-                  className="value"
-                  type="number"
-                  min="0"
-                  value={value == '' ? undefined : Math.max(parseInt(value as string) || 0, 0) || entryData.offset}
-                  onChange={(e) => runAfterConfirm(() => setValue(e.target.value || ''))}
-                  onBlur={() =>
-                    runAfterConfirm(() => {
-                      setCustom({
-                        ...(entryData as CustomDetails),
-                        offset: parseInt(
-                          value == '' || value == undefined
-                            ? '0'
-                            : String(value) || String((entryData as CustomDetails).offset) || '0'
-                        ),
-                      });
-                      setValue(value == '' ? 0 : value);
-                    })
-                  }
-                />
-              ),
-            },
-            {
-              title: 'Term',
-              content: (
-                <input
-                  className="value"
-                  type="text"
-                  value={value == undefined ? entryData.term : value}
-                  onChange={(e) => runAfterConfirm(() => setValue(e.target.value))}
-                  onBlur={() =>
-                    runAfterConfirm(() =>
-                      setCustom({
-                        ...(entryData as CustomDetails),
-                        term: String(value) || (entryData as CustomDetails).term,
-                      })
-                    )
-                  }
-                />
-              ),
-            },
-            {
-              title: 'Duration (mins)',
-              content: (
-                <input
-                  className="value"
-                  type="number"
-                  min="1"
-                  value={value == '' ? undefined : Math.max(parseInt(value as string) || 30, 1) || entryData.runtime || 30}
-                  onChange={(e) => runAfterConfirm(() => setValue(e.target.value))}
-                  onBlur={() =>
-                    runAfterConfirm(() => {
-                      setCustom({
-                        ...(entryData as CustomDetails),
-                        runtime: parseInt(
-                          value == '' || value == undefined
-                            ? '30'
-                            : String(value) || String((entryData as CustomDetails).runtime) || '30'
-                        ),
-                      });
-                      setValue(value == '' ? 1 : value);
-                    })
-                  }
-                />
-              ),
-            },
-          ]
-        : null;
+                  </optgroup>
+                ))}
+            </select>
+          ),
+        },
+      ];
+    } else if (entryData.type == 'custom') {
+      settings = [
+        {
+          title: 'Repeat',
+          content: (
+            <input
+              className="value"
+              type="number"
+              min="1"
+              value={value == '' ? undefined : Math.max(parseInt(value as string) || 1, 1) || entryData.repeat}
+              onChange={(e) => runAfterConfirm(() => setValue(e.target.value || ''))}
+              onBlur={() =>
+                runAfterConfirm(() => {
+                  setCustom({
+                    ...(entryData as CustomDetails),
+                    repeat: parseInt(
+                      value == '' || value == undefined
+                        ? '1'
+                        : String(value) || String((entryData as CustomDetails).repeat) || '1'
+                    ),
+                  });
+                  setValue(value == '' ? 1 : value);
+                })
+              }
+            />
+          ),
+        },
+        {
+          title: 'Offset',
+          content: (
+            <input
+              className="value"
+              type="number"
+              min="0"
+              value={value == '' ? undefined : Math.max(parseInt(value as string) || 0, 0) || entryData.offset}
+              onChange={(e) => runAfterConfirm(() => setValue(e.target.value || ''))}
+              onBlur={() =>
+                runAfterConfirm(() => {
+                  setCustom({
+                    ...(entryData as CustomDetails),
+                    offset: parseInt(
+                      value == '' || value == undefined
+                        ? '0'
+                        : String(value) || String((entryData as CustomDetails).offset) || '0'
+                    ),
+                  });
+                  setValue(value == '' ? 0 : value);
+                })
+              }
+            />
+          ),
+        },
+        {
+          title: 'Term',
+          content: (
+            <input
+              className="value"
+              type="text"
+              value={value == undefined ? entryData.term : value}
+              onChange={(e) => runAfterConfirm(() => setValue(e.target.value))}
+              onBlur={() =>
+                runAfterConfirm(() =>
+                  setCustom({
+                    ...(entryData as CustomDetails),
+                    term: String(value) || (entryData as CustomDetails).term,
+                  })
+                )
+              }
+            />
+          ),
+        },
+        {
+          title: 'Duration (mins)',
+          content: (
+            <input
+              className="value"
+              type="number"
+              min="1"
+              value={value == '' ? undefined : Math.max(parseInt(value as string) || 30, 1) || entryData.runtime || 30}
+              onChange={(e) => runAfterConfirm(() => setValue(e.target.value))}
+              onBlur={() =>
+                runAfterConfirm(() => {
+                  setCustom({
+                    ...(entryData as CustomDetails),
+                    runtime: parseInt(
+                      value == '' || value == undefined
+                        ? '30'
+                        : String(value) || String((entryData as CustomDetails).runtime) || '30'
+                    ),
+                  });
+                  setValue(value == '' ? 1 : value);
+                })
+              }
+            />
+          ),
+        },
+      ];
+    } else {
+      settings = null;
+    }
 
     return (
       <div ref={setNodeRef} className={className}>
@@ -303,7 +304,7 @@ export default function Entry({
             {...(bookmark ? { onDragStart: () => runAfterConfirm(() => {}) } : { ...attributes, ...listeners })}
           />
         </span>
-        {entryData.type !== 'movie' && (
+        {settings && settings.length > 0 && (
           <span className="setting">
             <button
               className="setting-label"
@@ -330,7 +331,9 @@ export default function Entry({
               if (!e.target.innerText.trim()) e.target.innerText = entryData.title || '';
               else if (entryData.type == 'custom') {
                 setCustom({ ...entryData, title: e.target.innerText });
-              } else setTitle && setTitle(((entryData as ShowDetails).show_id || entryData.id) as number, e.target.innerText, true);
+              } else if (['tv', 'movie', 'book'].includes(entryData.type) && setTitle) {
+                setTitle(((entryData as ShowDetails).show_id || entryData.id) as number, e.target.innerText, true);
+              }
             }}
           >
             {(entryData as ShowDetails | EntryDetails).userTitle || entryData.title}
