@@ -36,6 +36,13 @@ server.get('/api/v1/secret', (req, res) => {
 })
 
 if (process.env.NODE_ENV === 'production') {
+  server.get('/meta.json', (req, res) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private')
+    res.set('Pragma', 'no-cache')
+    res.set('Expires', '0')
+    res.sendFile(Path.resolve('public', 'meta.json'))
+  })
+
   server.use(
     express.static(Path.resolve('public'), {
       maxAge: '1y',
