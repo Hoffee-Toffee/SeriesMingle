@@ -1,20 +1,27 @@
-# Node modules
-node_modules
-
-# Logs
 *.log
-
-# SQLite DBs
-*.sqlite3
-
-# Jest coverage report
-coverage/*
-
-# Dotenv env settings
+.DS_Store
 .env
-
-# Build directory
-/dist
-
-# Raw easteregg files
-/server/eastereggs/raw
+.env.backup
+.env.production
+.phpactor.json
+.phpunit.result.cache
+/.codex
+/.cursor/
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+/auth.json
+/node_modules
+/public/build
+/public/fonts-manifest.dev.json
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
+_ide_helper.php
+Homestead.json
+Homestead.yaml
+Thumbs.db
