@@ -1,3 +1,94 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+  --textMain: #0a0f1a;
+  --textSec: #ffffff;
+  --bgMain: #0a2553;
+  --bgSec: #0d1626;
+  --bgBorder: #0095fa;
+  --linkSec: #d7e300;
+  --buttonBg: #8b0000;
+  --buttonSec: #ff4500;
+  --laneOdd: #c7c7f0;
+  --linkMain: #ffff00;
+  --linkTert: #bfbf30;
+  --hoverSec: #30bfb3;
+  --bgTert: #2c5aa0;
+  --divider: #888888;
+  --laneEven: #ece6c7;
+  --borderHover: #ffa500;
+  --transition-time: 0.3s;
+}
+
+@font-face {
+  font-family: 'Fredoka One';
+  src: url('https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--bgSec) !important;
+  color: var(--textSec) !important;
+}
+
+.sm-font-fredoka {
+  font-family: 'Fredoka One', cursive, sans-serif !important;
+  font-weight: normal;
+}
+
+/* SeriesMingle Legacy Styled Buttons */
+.sm-button {
+  transition: var(--transition-time);
+  outline: solid transparent 2px;
+  border-radius: 0.3em;
+  color: var(--linkSec);
+  border: var(--buttonSec) 2px solid;
+  background-color: var(--buttonBg);
+  padding: 0.35em 0.8em;
+  margin: 0.25em;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.sm-button:hover {
+  color: var(--textSec);
+  border: var(--borderHover) 2px solid;
+  background-color: var(--buttonSec);
+}
+
+/* Legacy Fieldsets and Containers */
+.sm-container {
+  border: var(--bgBorder) 2px solid;
+  background-color: var(--bgMain);
+  padding: 0.8em;
+  border-radius: 0.4em;
+}
+
+.sm-fieldset {
+  border: var(--bgBorder) 2px solid;
+  color: var(--textSec);
+  background-color: var(--bgMain);
+  padding: 12px;
+  border-radius: 0.4em;
+  position: relative;
+}
+
+.sm-legend {
+  background-color: var(--bgSec);
+  color: var(--linkTert);
+  padding: 4px 12px;
+  font-family: 'Fredoka One', sans-serif;
+  border-radius: 4px;
+  border: 1px solid var(--bgBorder);
+}
