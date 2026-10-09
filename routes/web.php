@@ -10,6 +10,8 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
+Route::get('/projects/{project}', ProjectEditor::class)->name('projects.show');
+
 Route::get('/sitemap.xml', function () {
     $projects = Project::select('id', 'updated_at')->get();
 
@@ -43,7 +45,6 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
-    Route::get('/projects/{project}', ProjectEditor::class)->name('projects.show');
 });
 
 require __DIR__.'/auth.php';

@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Dashboard extends Component
@@ -64,9 +65,12 @@ class Dashboard extends Component
         $userUid = $user->firebase_uid ?? (string)$user->id;
 
         $ownedProjects = Project::where('user_id', $userUid)->orderBy('updated_at', 'desc')->get();
-        $joinedProjects = Project::whereHas('members', function ($query) use ($userUid) {
-            $query->where('user_id', $userUid);
-        })->get();
+
+        $joinedProjectIds = DB::table('project_members')
+            ->where('user_id', $userUid)
+            ->pluck('project_id');
+
+        $joinedProjects = Project::whereIn('id', $joinedProjectIds)->get();
 
         return view('livewire.dashboard', [
             'ownedProjects' => $ownedProjects,

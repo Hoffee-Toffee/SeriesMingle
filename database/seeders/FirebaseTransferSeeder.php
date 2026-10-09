@@ -82,6 +82,35 @@ class FirebaseTransferSeeder extends Seeder
         );
     }
 
+    private function parseFirestoreValue(array $fieldObj)
+    {
+        $type = array_key_first($fieldObj);
+        $val = $fieldObj[$type];
+
+        if ($type === 'stringValue') return (string)$val;
+        if ($type === 'integerValue') return (int)$val;
+        if ($type === 'doubleValue') return (float)$val;
+        if ($type === 'booleanValue') return (bool)$val;
+        if ($type === 'mapValue') {
+            $result = [];
+            $fields = $val['fields'] ?? [];
+            foreach ($fields as $k => $v) {
+                $result[$k] = $this->parseFirestoreValue($v);
+            }
+            return $result;
+        }
+        if ($type === 'arrayValue') {
+            $result = [];
+            $values = $val['values'] ?? [];
+            foreach ($values as $v) {
+                $result[] = $this->parseFirestoreValue($v);
+            }
+            return $result;
+        }
+
+        return $val;
+    }
+
     private function migrateFromFirestoreRest(string $firebaseProjectId): void
     {
         $url = "https://firestore.googleapis.com/v1/projects/{$firebaseProjectId}/databases/(default)/documents/projects";
@@ -95,11 +124,7 @@ class FirebaseTransferSeeder extends Seeder
 
                 $pData = [];
                 foreach ($fields as $key => $valObj) {
-                    $type = array_key_first($valObj);
-                    $val = $valObj[$type];
-                    if ($type === 'integerValue') $val = (int)$val;
-                    if ($type === 'booleanValue') $val = (bool)$val;
-                    $pData[$key] = $val;
+                    $pData[$key] = $this->parseFirestoreValue($valObj);
                 }
 
                 $this->importProject($id, $pData);
