@@ -3,8 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Project;
+use App\Services\ScheduleGeneratorService;
 use App\Services\TmdbService;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class ProjectEditor extends Component
@@ -107,6 +107,15 @@ class ProjectEditor extends Component
 
     public function render()
     {
-        return view('livewire.project-editor')->layout('layouts.app');
+        $generator = app(ScheduleGeneratorService::class);
+        $schedule = $generator->generate([
+            'layers' => $this->layers,
+            'data' => $this->mediaData,
+            'space_multi_parters' => $this->spaceMultiParters,
+        ]);
+
+        return view('livewire.project-editor', [
+            'schedule' => $schedule,
+        ])->layout('layouts.app');
     }
 }

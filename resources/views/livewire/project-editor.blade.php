@@ -1,83 +1,87 @@
-<div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center mb-6">
-        <a href="{{ route('dashboard') }}" class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
+<div class="max-w-7xl mx-auto px-4 py-6">
+    <!-- Header Controls -->
+    <div class="flex justify-between items-center mb-6 border-b border-[#0095fa] pb-3">
+        <a href="{{ route('dashboard') }}" class="sm-button">
             &larr; Back to Dashboard
         </a>
-        <button wire:click="save" class="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium shadow hover:bg-indigo-700 transition">
+        <button wire:click="save" class="sm-button">
             Save Schedule
         </button>
     </div>
 
     <!-- Title & Description -->
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mb-8">
+    <div class="sm-fieldset mb-8">
+        <legend class="sm-legend">Schedule Details</legend>
         <input type="text" wire:model.blur="title" wire:change="save" placeholder="Schedule Title"
-               class="w-full text-2xl font-bold bg-transparent border-0 border-b border-gray-200 dark:border-gray-700 focus:ring-0 focus:border-indigo-500 dark:text-white mb-3">
+               class="w-full text-xl font-bold bg-[#0d1626] border border-[#0095fa] text-[#bfbf30] p-2 rounded mb-3">
         <textarea wire:model.blur="description" wire:change="save" placeholder="Description or notes..."
-                  class="w-full bg-transparent border-0 text-sm text-gray-600 dark:text-gray-300 focus:ring-0 resize-none h-16"></textarea>
+                  class="w-full bg-[#0d1626] border border-[#0095fa] text-xs text-white p-2 rounded h-16 resize-none"></textarea>
     </div>
 
     <!-- Layer Management -->
-    <div class="mb-8">
+    <div class="sm-fieldset mb-8">
+        <legend class="sm-legend">Layers</legend>
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Layers</h2>
-            <button wire:click="addLayer" class="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-sm font-medium rounded-md transition">
+            <span class="text-xs text-gray-300">Drag or configure layers to interleave shows</span>
+            <button wire:click="addLayer" class="sm-button !py-1 !px-2 text-xs">
                 + Add Layer
             </button>
         </div>
 
         <div class="space-y-4">
             @forelse($layers as $index => $layer)
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="p-3 bg-[#0d1626] border border-[#0095fa] rounded flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <span class="font-bold text-gray-400">Layer {{ $index + 1 }}</span>
+                        <span class="sm-font-fredoka text-xs text-[#30bfb3]">Layer {{ $index + 1 }}</span>
                         <div class="flex flex-wrap gap-2">
                             @foreach($layer as $item)
-                                <span class="inline-flex items-center px-3 py-1 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-full text-xs font-medium">
+                                <span class="px-2 py-0.5 bg-[#8b0000] border border-[#ff4500] text-[#d7e300] text-xs rounded">
                                     {{ $item['title'] ?? 'Item' }}
                                 </span>
                             @endforeach
                         </div>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <button wire:click="$set('activeTargetLayer', {{ $index }})" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs rounded-md">
+                        <button wire:click="$set('activeTargetLayer', {{ $index }})" class="sm-button !py-0.5 !px-2 !text-xs">
                             + Add Show/Movie
                         </button>
-                        <button wire:click="removeLayer({{ $index }})" class="text-red-500 hover:text-red-700 text-xs font-medium">
+                        <button wire:click="removeLayer({{ $index }})" class="text-red-400 hover:text-red-300 text-xs font-bold">
                             Remove
                         </button>
                     </div>
                 </div>
             @empty
-                <div class="text-center py-6 bg-gray-50 dark:bg-gray-800/40 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-sm text-gray-500">
-                    No layers added yet. Click "+ Add Layer" to build your timeline schedule.
-                </div>
+                <p class="text-center text-xs text-gray-400 py-4">No layers added yet. Click "+ Add Layer" to start building.</p>
             @endforelse
         </div>
     </div>
 
+    <!-- Schedule Viewer Component -->
+    <x-schedule-viewer :schedule="$schedule" />
+
     <!-- Search Modal / Overlay -->
     @if($activeTargetLayer !== null)
-        <div class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-            <div class="bg-white dark:bg-gray-800 rounded-lg max-w-lg w-full p-6 shadow-xl border border-gray-200 dark:border-gray-700">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Add Media to Layer {{ $activeTargetLayer + 1 }}</h3>
-                    <button wire:click="$set('activeTargetLayer', null)" class="text-gray-400 hover:text-gray-600">&times;</button>
+        <div class="fixed inset-0 bg-black/75 flex items-center justify-center p-4 z-50">
+            <div class="sm-container max-w-lg w-full p-6 shadow-2xl">
+                <div class="flex justify-between items-center mb-4 border-b border-[#0095fa] pb-2">
+                    <h3 class="sm-font-fredoka text-base text-[#bfbf30]">Add Media to Layer {{ $activeTargetLayer + 1 }}</h3>
+                    <button wire:click="$set('activeTargetLayer', null)" class="text-gray-400 hover:text-white font-bold">&times;</button>
                 </div>
                 <input type="text" wire:model.live.debounce.300ms="searchQuery" placeholder="Search TMDb for show or movie..."
-                       class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm mb-4">
+                       class="w-full bg-[#0d1626] border border-[#0095fa] text-white p-2 rounded text-xs mb-4">
 
-                <div class="max-h-60 overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700">
+                <div class="max-h-60 overflow-y-auto space-y-2">
                     @foreach($searchResults as $result)
                         @if(isset($result['media_type']) && in_array($result['media_type'], ['movie', 'tv']))
                             <div wire:click="selectMediaForLayer({{ $activeTargetLayer }}, '{{ $result['media_type'] }}', {{ $result['id'] }})"
-                                 class="p-3 hover:bg-indigo-50 dark:hover:bg-gray-700 rounded cursor-pointer flex justify-between items-center">
+                                 class="p-2 bg-[#0d1626] hover:bg-[#8b0000] border border-[#0095fa] rounded cursor-pointer flex justify-between items-center transition">
                                 <div>
-                                    <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                                    <p class="text-xs font-bold text-[#d7e300]">
                                         {{ $result['title'] ?? $result['name'] ?? '' }}
                                     </p>
-                                    <span class="text-xs text-gray-400 uppercase">{{ $result['media_type'] }}</span>
+                                    <span class="text-[10px] text-gray-400 uppercase">{{ $result['media_type'] }}</span>
                                 </div>
-                                <span class="text-xs text-indigo-600 font-bold">+ Select</span>
+                                <span class="sm-button !py-0.5 !px-2 !text-[10px]">+ Select</span>
                             </div>
                         @endif
                     @endforeach
