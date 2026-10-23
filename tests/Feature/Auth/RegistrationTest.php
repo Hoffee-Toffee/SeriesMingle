@@ -13,7 +13,12 @@ class RegistrationTest extends TestCase
     {
         $response = $this->get('/register');
 
-        $response->assertStatus(200);
+        $response
+            ->assertOk()
+            ->assertSee('Create Account')
+            ->assertSee('Confirm password')
+            ->assertSee('Already have an account?')
+            ->assertDontSee('Name');
     }
 
     public function test_new_users_can_register(): void
@@ -26,6 +31,22 @@ class RegistrationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
+        $response->assertRedirect(route('dashboard', absolute: false));
+    }
+
+    public function test_users_can_register_without_a_name_field_like_the_react_form(): void
+    {
+        $response = $this->post('/register', [
+            'email' => 'new.user@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        $this->assertAuthenticated();
+        $this->assertDatabaseHas('users', [
+            'email' => 'new.user@example.com',
+            'name' => 'new.user',
+        ]);
         $response->assertRedirect(route('dashboard', absolute: false));
     }
 }

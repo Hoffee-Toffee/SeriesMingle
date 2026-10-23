@@ -7,10 +7,10 @@
     @if(empty($schedule['timeline']))
         <p class="text-center text-sm text-gray-400 py-6">Add show or movie layers above to generate your interleaved viewing schedule timeline.</p>
     @else
-        <div id="timelineContainer" class="p-4 bg-[#0a2553] border-2 border-[#0095fa] rounded overflow-x-auto min-h-[300px]">
+        <div id="timelineContainer" class="p-4 bg-[#0a2553] border-2 border-[#0095fa] rounded-sm overflow-x-auto min-h-[300px]">
             <div class="flex space-x-3">
                 @foreach($schedule['timeline'] as $item)
-                    <div class="p-3 bg-[#0d1626] border border-[#ff4500] rounded text-xs min-w-[160px] flex flex-col justify-between">
+                    <div class="p-3 bg-[#0d1626] border border-[#ff4500] rounded-sm text-xs min-w-[160px] flex flex-col justify-between">
                         <div>
                             <span class="text-[10px] uppercase font-bold text-[#30bfb3]">Layer {{ $item['layerIndex'] + 1 }}</span>
                             <h4 class="font-bold text-[#d7e300] mt-1">{{ $item['title'] }}</h4>

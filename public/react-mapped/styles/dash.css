@@ -1,0 +1,314 @@
+#app #dashboard {
+  overflow: hidden;
+}
+#app #dashboard > main {
+  overflow-y: scroll;
+  box-sizing: border-box;
+  padding: 0.5em;
+}
+
+#dashboard > main {
+  padding: 0.5em;
+  padding-top: 1em;
+}
+#dashboard > main h1 {
+  color: var(--textSec);
+  text-align: center;
+  margin-top: 0;
+  font-family: "Fredoka One";
+  font-weight: normal;
+}
+#dashboard > main button,
+#dashboard > main a {
+  transition: var(--transition-time);
+  outline: solid transparent 2px;
+  border-radius: 0.3em;
+  z-index: 1;
+  position: relative;
+  color: var(--linkSec);
+  border: var(--buttonSec) 2px solid;
+  background-color: var(--buttonBg);
+  padding: 0.3em;
+  margin: 0.25em;
+  cursor: pointer;
+  font-size: smaller;
+  text-decoration: none;
+  display: inline-block;
+}
+#dashboard > main button:hover,
+#dashboard > main a:hover {
+  color: var(--textSec);
+  border: var(--borderHover) 2px solid;
+  background-color: var(--buttonSec);
+}
+#dashboard > main .projects-list {
+  gap: 0.75em;
+  display: flex;
+  margin: 0.25em;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+}
+#dashboard > main .projects-list > a {
+  margin: 0;
+  min-width: 200px;
+}
+#dashboard > main .projects-list > a > div > h2 {
+  font-family: "Fredoka One";
+  font-weight: normal;
+}
+#dashboard > main .projects-list > h2 {
+  color: var(--textSec);
+  text-align: center;
+  background-color: var(--bgSec);
+  padding: 0 0.5em;
+  width: max-content;
+  margin: 0 100%;
+  white-space: nowrap;
+  font-family: "Fredoka One";
+  font-weight: normal;
+}
+#dashboard > main .projects-list > h2::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 5px;
+  background-color: var(--bgBorder);
+  margin: 0.5em 0;
+  position: absolute;
+  top: 5px;
+  left: 0;
+  z-index: -1;
+}
+#dashboard > main .projects-list > p {
+  color: var(--textSec);
+}
+#dashboard > main .projects-list #create-new {
+  width: max-content;
+  margin: 0 100%;
+  white-space: nowrap;
+}
+#dashboard > main .project-container {
+  text-align: center;
+  margin: 5px 10px;
+}
+#dashboard > main .project-container i {
+  padding: 5px 10px;
+  position: relative;
+}
+#dashboard > main #contextMenu {
+  opacity: 0;
+  transition: all var(--transition-time);
+  outline: 1px solid var(--bgBorder);
+  z-index: 2;
+  position: absolute;
+  background: var(--bgMain);
+  border-radius: 8px;
+  padding: 8px 0;
+  font-size: 0.75em;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  cursor: default;
+  gap: 8px;
+  pointer-events: none;
+}
+#dashboard > main #contextMenu button {
+  padding: 5px 15px;
+  margin: 0;
+  border: none;
+  background: none;
+  color: var(--textSec);
+  user-select: none;
+  transition: var(--transition-time);
+  border-radius: 0;
+  width: 100%;
+}
+#dashboard > main #contextMenu button:hover {
+  color: var(--bgBorder);
+  background: rgba(0, 0, 0, 0.3333333333);
+  transition: var(--transition-time);
+}
+#dashboard > main #contextMenu.show,
+#dashboard > main #contextMenu:hover {
+  opacity: 1;
+  transition: all var(--transition-time), left 1ms, top 1ms;
+  pointer-events: all;
+}
+#dashboard > main #contextMenu[data-isOwner=false] #deleteProjectButton {
+  display: none;
+}
+#dashboard > main #contextMenu[data-isOwner=true] #leaveProjectButton {
+  display: none;
+}
+#dashboard > main #deletePopup,
+#dashboard > main #leavePopup {
+  position: absolute;
+  z-index: 2;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-time);
+  backdrop-filter: brightness(0.25) blur(10px) grayscale(1);
+}
+#dashboard > main #deletePopup div,
+#dashboard > main #leavePopup div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bgMain);
+  color: var(--textSec);
+  padding: 1em;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  border: 2px solid var(--bgBorder);
+}
+#dashboard > main #deletePopup p,
+#dashboard > main #leavePopup p {
+  font-size: small;
+  width: 100%;
+  text-align: center;
+}
+#dashboard > main #deletePopup span,
+#dashboard > main #leavePopup span {
+  color: var(--linkMain);
+}
+#dashboard > main #deletePopup button,
+#dashboard > main #leavePopup button {
+  padding: 5px 15px;
+  margin: 0;
+}
+#dashboard > main #deletePopup.show,
+#dashboard > main #leavePopup.show {
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity var(--transition-time);
+}
+#dashboard > main .dashboard-project-card {
+  min-width: 200px;
+  width: 200px;
+  position: relative;
+}
+
+#dashboard > main .dashboard-project-card > a {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  min-width: 0;
+}
+
+#dashboard > main .dashboard-project-card > a > div > h2 {
+  font-family: "Fredoka One";
+  font-size: 1.5em;
+  line-height: normal;
+  margin-block: 0.83em;
+  font-weight: normal;
+}
+
+#dashboard > main h1 {
+  font-size: 2em;
+  line-height: normal;
+  margin-bottom: 0.67em;
+}
+
+#dashboard > main .projects-list > h2 {
+  position: relative;
+  z-index: 1;
+  font-size: 1.5em;
+  line-height: normal;
+}
+
+#dashboard > main .projects-list::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 13px;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: var(--bgBorder);
+  z-index: 0;
+}
+
+#dashboard > main .projects-list > h2::after {
+  content: none;
+}
+
+#dashboard > main .dashboard-project-card .project-container > p {
+  margin-block: 1em;
+}
+
+#dashboard > main .dashboard-project-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+}
+
+#dashboard > main .dashboard-project-menu > button:first-child {
+  transition: var(--transition-time);
+  border: 0;
+  background: transparent;
+  color: var(--linkMain);
+  padding: 5px 10px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+#dashboard > main .dashboard-project-menu-items {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 130px;
+  padding: 8px 0;
+  border: 1px solid var(--bgBorder);
+  border-radius: 8px;
+  background: var(--bgMain);
+  font-size: 0.75em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-time);
+}
+
+#dashboard > main .dashboard-project-menu:hover .dashboard-project-menu-items,
+#dashboard > main .dashboard-project-menu:focus-within .dashboard-project-menu-items {
+  opacity: 1;
+  pointer-events: all;
+}
+
+#dashboard > main .dashboard-project-menu-items button {
+  width: 100%;
+  padding: 5px 15px;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: var(--textSec);
+  text-align: left;
+  user-select: none;
+}
+
+#dashboard > main .dashboard-project-menu-items button:hover {
+  color: var(--bgBorder);
+  background: #00000055;
+}
+
+#dashboard > main .dashboard-project-menu > button:first-child:hover {
+  color: var(--hoverMain);
+  border: 0;
+  background: transparent;
+}
+

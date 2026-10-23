@@ -3,76 +3,81 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
+use Symfony\Component\Process\Process;
 
 class ConvertReactToBladeCommand extends Command
 {
-    protected $signature = 'convert:react-to-blade';
-    protected $description = 'Automated two-step mapping converter from React JSX & SCSS into Blade components & Tailwind CSS';
+    protected $signature = 'convert:react-to-blade
+        {--source=client : Path to the source directory containing components/ and styles/}
+        {--output= : Output directory for generated templates and the migration report}
+        {--apply : Apply source-derived pages and styles to the live Laravel app}';
 
-    private array $classMappings = [
-        'bgMain' => 'bg-[#0a2553]',
-        'bgSec' => 'bg-[#0d1626]',
-        'textMain' => 'text-[#0a0f1a]',
-        'textSec' => 'text-white',
-        'bgBorder' => 'border-[#0095fa]',
-        'buttonBg' => 'bg-[#8b0000]',
-        'buttonSec' => 'border-[#ff4500]',
-        'linkSec' => 'text-[#d7e300]',
-        'linkTert' => 'text-[#bfbf30]',
-        'hoverSec' => 'hover:text-[#30bfb3]',
-    ];
+    protected $description = 'Map React content and styles, optionally applying source-derived pages';
 
-    public function handle()
+    public function handle(): int
     {
-        $clientComponentsDir = base_path('client/components');
-        if (!File::exists($clientComponentsDir)) {
-            $this->error("Directory {$clientComponentsDir} not found.");
-            return 1;
+        $scriptPath = base_path('scripts/react-to-blade-mapper.mjs');
+
+        if (! is_file($scriptPath)) {
+            $this->error("Mapper script not found at {$scriptPath}.");
+
+            return self::FAILURE;
         }
 
-        $files = File::files($clientComponentsDir);
-        foreach ($files as $file) {
-            if ($file->getExtension() === 'tsx') {
-                $componentName = $file->getFilenameWithoutExtension();
-                $this->info("Mapping React component: {$componentName}");
-                $this->convertComponent($file->getPathname(), $componentName);
-            }
+        $outputPath = $this->option('output') ?: storage_path('app/react-to-blade');
+
+        $arguments = [
+            'node',
+            $scriptPath,
+            '--root',
+            base_path(),
+            '--source',
+            (string) $this->option('source'),
+            '--output',
+            (string) $outputPath,
+        ];
+
+        if ($this->option('apply')) {
+            $arguments[] = '--apply';
         }
 
-        $this->info("React to Blade mapping complete.");
-        return 0;
-    }
+        $process = new Process($arguments, base_path());
+        $process->setTimeout(120);
+        $process->run();
 
-    private function convertComponent(string $filePath, string $name)
-    {
-        $content = File::get($filePath);
+        if (! $process->isSuccessful()) {
+            $this->error(trim($process->getErrorOutput() ?: $process->getOutput()));
 
-        // Step 1: Parse JSX and convert React expressions to Blade directives
-        $blade = $content;
-
-        // Strip TS imports and exports
-        $blade = preg_replace('/import\s+.*?;/s', '', $blade);
-        $blade = preg_replace('/export\s+default\s+.*?;/s', '', $blade);
-
-        // Map React props / state JSX tags
-        $blade = preg_replace('/className=/i', 'class=', $blade);
-        $blade = preg_replace('/\{/\*', '{{--', $blade);
-        $blade = preg_replace('/\*\}/', '--}}', $blade);
-
-        // Convert {condition && <JSX>}
-        $blade = preg_replace_callback('/\{([a-zA-Z0-9_\$\.\!\s]+)\s*&&\s*\((.*?)\)\}/s', function ($matches) {
-            return "@if(" . trim($matches[1]) . ")\n" . trim($matches[2]) . "\n@endif";
-        }, $blade);
-
-        // Map CSS variable references to Tailwind classes
-        foreach ($this->classMappings as $var => $tailwindClass) {
-            $blade = str_replace("var(--{$var})", $tailwindClass, $blade);
+            return self::FAILURE;
         }
 
-        // Output converted template
-        $targetBlade = resource_path("views/components/mapped-{$name}.blade.php");
-        File::put($targetBlade, $blade);
-        $this->info("Created mapped Blade component: mapped-{$name}.blade.php");
+        $result = json_decode($process->getOutput(), true);
+
+        if (! is_array($result)) {
+            $this->error('The mapper completed without returning a valid migration summary.');
+
+            return self::FAILURE;
+        }
+
+        $this->info(sprintf(
+            'Mapped %d TSX components and extracted %d Tailwind color tokens.',
+            $result['componentCount'] ?? 0,
+            $result['colorTokenCount'] ?? 0,
+        ));
+        $this->line(sprintf(
+            '%d components and %d SCSS files have items flagged for manual migration.',
+            $result['componentsRequiringManualMigration'] ?? 0,
+            $result['styleFilesRequiringManualMigration'] ?? 0,
+        ));
+        $this->line('Generated files and report: '.($result['outputDirectory'] ?? $outputPath));
+
+        if (($result['appliedFileCount'] ?? 0) > 0) {
+            $this->info(sprintf(
+                'Applied source-mapped home, auth, dashboard and project views/styles (%d generated files).',
+                $result['appliedFileCount'],
+            ));
+        }
+
+        return self::SUCCESS;
     }
 }

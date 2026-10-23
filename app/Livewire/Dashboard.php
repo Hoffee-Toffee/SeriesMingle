@@ -14,7 +14,7 @@ class Dashboard extends Component
         $user = Auth::user();
 
         $project = Project::create([
-            'user_id' => $user->firebase_uid ?? (string)$user->id,
+            'user_id' => $user->firebase_uid ?? (string) $user->id,
             'title' => 'Untitled Schedule',
             'description' => '',
             'layers' => [],
@@ -22,17 +22,24 @@ class Dashboard extends Component
             'last_modified' => time() * 1000,
         ]);
 
-        return redirect()->route('projects.show', $project->id);
+        return redirect()->route('project.show', $project->id);
     }
 
     public function cloneProject(string $id)
     {
         $project = Project::findOrFail($id);
         $user = Auth::user();
+        $userUid = $user->firebase_uid ?? (string) $user->id;
+        $ownsProject = $project->user_id === $userUid;
+        $isMember = $project->members()
+            ->where('users.firebase_uid', $userUid)
+            ->exists();
+
+        abort_unless($ownsProject || $isMember, 404);
 
         $cloned = Project::create([
-            'user_id' => $user->firebase_uid ?? (string)$user->id,
-            'title' => "Clone of '" . ($project->title ?: 'Untitled Schedule') . "'",
+            'user_id' => $userUid,
+            'title' => "Clone of '".($project->title ?: 'Untitled Schedule')."'",
             'description' => $project->description,
             'layers' => $project->layers,
             'data' => $project->data,
@@ -45,13 +52,13 @@ class Dashboard extends Component
             'last_modified' => time() * 1000,
         ]);
 
-        return redirect()->route('projects.show', $cloned->id);
+        return redirect()->route('project.show', $cloned->id);
     }
 
     public function deleteProject(string $id)
     {
         $user = Auth::user();
-        $userUid = $user->firebase_uid ?? (string)$user->id;
+        $userUid = $user->firebase_uid ?? (string) $user->id;
 
         $project = Project::where('id', $id)->where('user_id', $userUid)->first();
         if ($project) {
@@ -59,22 +66,39 @@ class Dashboard extends Component
         }
     }
 
+    public function leaveProject(string $id): void
+    {
+        $user = Auth::user();
+        $userUid = $user->firebase_uid ?? (string) $user->id;
+
+        DB::table('project_members')
+            ->where('project_id', $id)
+            ->where('user_id', $userUid)
+            ->delete();
+    }
+
     public function render()
     {
         $user = Auth::user();
-        $userUid = $user->firebase_uid ?? (string)$user->id;
+        $userUid = $user->firebase_uid ?? (string) $user->id;
 
-        $ownedProjects = Project::where('user_id', $userUid)->orderBy('updated_at', 'desc')->get();
+        $ownedProjects = Project::where('user_id', $userUid)
+            ->orderByDesc('last_modified')
+            ->orderByDesc('updated_at')
+            ->get();
 
         $joinedProjectIds = DB::table('project_members')
             ->where('user_id', $userUid)
             ->pluck('project_id');
 
-        $joinedProjects = Project::whereIn('id', $joinedProjectIds)->get();
+        $joinedProjects = Project::whereIn('id', $joinedProjectIds)
+            ->orderByDesc('last_modified')
+            ->orderByDesc('updated_at')
+            ->get();
 
         return view('livewire.dashboard', [
             'ownedProjects' => $ownedProjects,
             'joinedProjects' => $joinedProjects,
-        ])->layout('layouts.app');
+        ])->layout('layouts.app', ['page' => 'dashboard']);
     }
 }

@@ -1,0 +1,260 @@
+@keyframes scroll-indicator {
+  0% {
+    transform: translate(-50%, -75%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -75%);
+  }
+  50% {
+    transform: translate(-50%, 75%);
+    opacity: 1;
+  }
+  85%, 100% {
+    opacity: 0;
+    transform: translate(-50%, 75%);
+  }
+}
+#app #home {
+  height: 100dvh;
+  --bg-alpha: 0.2;
+  overflow: hidden;
+}
+#app #home > main {
+  margin-top: 0;
+  height: 100dvh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  box-sizing: border-box;
+  margin-right: -10px;
+}
+#app #home h1 {
+  font-size: 3rem;
+  align-self: center;
+  margin-top: -2rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 5px var(--textMain), 0 0 10px var(--textMain), 0 0 15px var(--textMain);
+}
+#app #home h1 span {
+  font-family: "Fredoka One";
+  font-weight: normal;
+}
+#app #home h1 span:first-child {
+  color: var(--linkTert);
+}
+#app #home h1 span:last-child {
+  color: var(--hoverSec);
+}
+#app #home a {
+  color: var(--linkTert);
+  text-decoration: none;
+  align-self: center;
+}
+#app #home a:hover {
+  color: var(--hoverSec);
+}
+#app #home p {
+  padding: 0.5em;
+}
+#app #home #overlay a.button {
+  padding: 0 1rem;
+  background-color: var(--buttonBg);
+  color: var(--linkSec);
+  border: var(--buttonSec) 2px solid;
+  border-radius: 0.3em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: fixed;
+  top: 75dvh;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+#app #home #overlay a.button:hover {
+  color: var(--textSec);
+  background-color: var(--buttonSec);
+  border-color: var(--borderHover);
+}
+#app #home #overlay .scroll-indicator {
+  position: fixed;
+  top: 90dvh;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: 2;
+}
+#app #home #overlay .scroll-indicator i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 1.5em;
+  color: var(--linkTert);
+  animation: scroll-indicator 5s infinite ease-in-out;
+}
+#app #home main > div {
+  height: 66.6666666667dvh;
+  width: 100%;
+  overflow: hidden;
+  scroll-snap-align: center;
+  text-align: center;
+  align-content: center;
+  color: var(--textSec);
+  position: sticky;
+  z-index: -1;
+  background: var(--bgSec);
+  clip-path: view-box;
+}
+#app #home main > div > div {
+  position: fixed;
+  top: 33.3333333333dvh;
+  width: 100%;
+}
+#app #home main > div div h2 {
+  font-family: "Aber Mono";
+  text-shadow: 0 0 5px var(--textMain), 0 0 10px var(--textMain), 0 0 15px var(--textMain);
+  position: absolute;
+  font-size: 2rem;
+  margin: 0em 1em;
+  width: calc(100% - 2em);
+  pointer-events: none;
+}
+#app #home main > div:nth-of-type(1) .bg {
+  --custom-col: rgba(0, 191, 255, var(--bg-alpha));
+  background: var(--custom-col);
+}
+#app #home main > div:nth-of-type(2) .bg {
+  --custom-col: rgba(159, 0, 191, var(--bg-alpha));
+  background: var(--custom-col);
+}
+#app #home main > div:nth-of-type(3) .bg {
+  --custom-col: rgba(191, 0, 45, var(--bg-alpha));
+  background: var(--custom-col);
+}
+#app #home main > div:nth-of-type(4) .bg {
+  --custom-col: rgba(191, 134, 0, var(--bg-alpha));
+  background: var(--custom-col);
+}
+#app #home main > div:nth-of-type(5) .bg {
+  --custom-col: rgba(70, 191, 0, var(--bg-alpha));
+  background: var(--custom-col);
+}
+#app #home main > div:nth-of-type(6) .bg {
+  --custom-col: rgba(0, 191, 108, var(--bg-alpha));
+  background: var(--custom-col);
+}
+#app #home main > div:nth-of-type(6) ~ div {
+  z-index: 2;
+  height: 100dvh;
+}
+#app #home main > div:nth-of-type(6) ~ div .bg {
+  top: 40dvh;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  border: none;
+}
+#app #home main > div:nth-of-type(6) + div {
+  z-index: 1;
+}
+#app #home main > div:nth-of-type(8) {
+  --custom-col: rgba(0, 191, 255, calc(var(--bg-alpha) / 2));
+  background: linear-gradient(var(--custom-col), var(--custom-col)), var(--bgSec);
+}
+#app #home .bg {
+  text-align: center;
+  pointer-events: none;
+  position: absolute;
+  top: calc(-16.6666666667dvh - 1px);
+  left: 0;
+  width: 100%;
+  margin: 0;
+  height: calc(66.6666666667dvh - 3px);
+  z-index: -10;
+  border: 2px solid var(--bgMain);
+  border-left: none;
+  border-right: none;
+  border-color: var(--bgMain);
+}
+#app #home .bg #timelineContainer {
+  text-align: left;
+  overflow-y: hidden;
+  height: 100%;
+  border: none;
+  max-height: 100dvh;
+  margin: 0;
+  background: none;
+}
+#app #home .bg #layerTitles span {
+  outline-color: var(--bgMain) !important;
+}
+#app #home .bg #scheduleVisualization::before,
+#app #home .bg #scheduleVisualization::after {
+  display: none;
+}
+#app #home #contact a {
+  pointer-events: auto;
+}
+#app #home main > div:first-of-type {
+  margin-top: calc(16.6666666667dvh - 1px);
+}
+#app #home main > div:first-of-type .episode-marker:not(.highlighted) {
+  opacity: 0.25;
+}
+#app #home main > div:nth-of-type(2) #timelineContainer .episode-marker:not(.highlighted,
+.bookmarked,
+.bookmarked ~ .episode-marker) {
+  opacity: 0.25;
+}
+#app #home main > div [data-id=background] {
+  opacity: 0.25;
+}
+#app #home footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2666666667);
+  color: var(--textSec);
+  text-align: center;
+  z-index: 3;
+}
+#app #home footer p:nth-of-type(1) {
+  font-size: 0.6rem;
+  color: var(--divider);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+}
+#app #home footer p:nth-of-type(1) img {
+  height: 1rem;
+  margin-right: 0.4rem;
+}
+#app #home footer p:nth-of-type(1) a {
+  opacity: 0.75;
+}
+#app #home footer p:nth-of-type(2) {
+  font-size: 0.75rem;
+  margin-top: 0;
+}
+
+@media (max-width: 650px) {
+  #home > main div h2 {
+    font-size: 1.5rem;
+  }
+  #home h3 {
+    font-size: 1rem;
+  }
+  #home p {
+    font-size: 0.9rem;
+  }
+}
+@media (max-width: 420px) {
+  #home > main div h2 {
+    font-size: 1rem;
+  }
+  #home h3 {
+    font-size: 0.75rem;
+  }
+  #home p {
+    font-size: 0.75rem;
+  }
+}

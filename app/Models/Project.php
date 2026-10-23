@@ -11,6 +11,7 @@ class Project extends Model
     use HasFactory;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -19,6 +20,7 @@ class Project extends Model
         'title',
         'description',
         'layers',
+        'titles',
         'data',
         'bookmark',
         'space_multi_parters',
@@ -32,6 +34,7 @@ class Project extends Model
 
     protected $casts = [
         'layers' => 'array',
+        'titles' => 'array',
         'data' => 'array',
         'show_streaks' => 'boolean',
         'group_streaks' => 'boolean',

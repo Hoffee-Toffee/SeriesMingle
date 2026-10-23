@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: http://www.seriesmingle.com/sitemap.xml

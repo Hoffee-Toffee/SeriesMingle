@@ -1,0 +1,164 @@
+#app #login header {
+  display: none;
+}
+#app #login {
+  width: min(37.5dvw + 200px, 90vw);
+  margin: 1em auto;
+  height: calc(100dvh - 2em);
+  outline: 1px solid var(--bgTert);
+}
+#app #login > main {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: var(--textMain);
+}
+#app #login > main #login-form {
+  border: var(--bgBorder) 2px solid;
+  color: var(--textSec);
+  background-color: var(--bgMain);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#app #login > main span {
+  color: var(--textSec);
+}
+#app #login > main h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+#app #login > main h1 span {
+  font-family: "Fredoka One";
+  font-weight: normal;
+}
+#app #login > main h1 span:first-child {
+  color: var(--linkTert);
+}
+#app #login > main h1 span:last-child {
+  color: var(--hoverSec);
+}
+#app #login > main legend {
+  background: var(--bgSec);
+  line-height: 0;
+  padding: inherit;
+  text-align: center;
+  border: solid var(--bgTert) 2px;
+  margin-bottom: 10px;
+}
+#app #login > main h2 {
+  color: var(--textSec);
+  margin-bottom: 1rem;
+  font-family: "Fredoka One";
+  font-weight: normal;
+}
+#app #login > main input {
+  padding: 0.5rem;
+  border: 2px solid var(--bgTert);
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-radius: 5px;
+  width: min(50vw, 300px);
+  color: var(--textSec);
+  background-color: var(--bgSec);
+}
+#app #login > main input:not(:first-of-type) {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+#app #login > main input:not(:last-of-type) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+#app #login > main input:first-of-type {
+  border-top-width: 2px;
+}
+#app #login > main input:last-of-type {
+  border-bottom-width: 2px;
+  margin-bottom: 10px;
+}
+#app #login > main *:not(span) > button {
+  padding: 0 1rem;
+  background-color: var(--buttonBg);
+  color: var(--textSec);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+#app #login > main *:not(span) > button * {
+  font-weight: normal;
+}
+#app #login > main *:not(span) > button:hover {
+  background-color: var(--buttonBorderHover);
+}
+#app #login > main .separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 10px 0;
+}
+#app #login > main .separator .line {
+  border: none;
+  border-top: 1px solid var(--textTert);
+  margin: 0 10px;
+  flex: 1;
+  width: min(20vw, 150px);
+}
+#app #login > main .separator .text {
+  padding: 0 10px;
+  color: var(--linkMain);
+}
+#app #login > main .google-sign-in {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bgSec);
+  border: 1px solid var(--bgTert);
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+#app #login > main .google-sign-in img {
+  width: 24px;
+  height: 24px;
+  margin-right: 0.5rem;
+}
+#app #login > main .google-sign-in,
+#app #login > main input {
+  transition: background-color 0.3s ease;
+}
+#app #login > main :is(.google-sign-in, input):is(:hover, :focus) {
+  background-color: var(--textMain);
+}
+#app #login > main input:focus {
+  z-index: 1;
+}
+#app #login > main .error-message {
+  color: var(--buttonHoverBg);
+  margin: 0;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+#app #login > main > span {
+  margin-top: 25px;
+}
+#app #login > main a,
+#app #login > main span button {
+  color: var(--linkMain);
+  text-decoration: none;
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+#app #login > main :is(a, span button):hover {
+  color: var(--hoverMain);
+}

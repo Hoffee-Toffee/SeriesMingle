@@ -28,6 +28,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'local_auth_email' => env('LOCAL_AUTH_EMAIL'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

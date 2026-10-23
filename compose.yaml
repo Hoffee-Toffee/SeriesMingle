@@ -1,0 +1,37 @@
+services:
+    laravel.test:
+        build:
+            context: './vendor/laravel/sail/runtimes/8.5'
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP:-1000}'
+        image: 'sail-8.5/app'
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '${APP_PORT:-8000}:80'
+            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+        environment:
+            WWWUSER: '${WWWUSER:-1000}'
+            LARAVEL_SAIL: 1
+            APP_KEY: '${APP_KEY:-}'
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            APP_ENV: '${APP_ENV:-local}'
+            APP_DEBUG: '${APP_DEBUG:-true}'
+            APP_URL: '${APP_URL:-http://localhost:8000}'
+            DB_CONNECTION: '${DB_CONNECTION:-sqlite}'
+            DB_DATABASE: '${DB_DATABASE:-/var/www/html/database/database.sqlite}'
+        command:
+            - bash
+            - -lc
+            - php artisan migrate --seed --force && exec php artisan serve --host=0.0.0.0 --port=80
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+        depends_on: {}
+networks:
+    sail:
+        driver: bridge

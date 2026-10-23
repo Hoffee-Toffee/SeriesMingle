@@ -15,6 +15,13 @@ class SocialiteController extends Controller
      */
     public function redirectToGoogle()
     {
+        if (blank(config('services.google.client_id')) || blank(config('services.google.client_secret'))) {
+            return redirect()->route('login')->with(
+                'error',
+                'Google sign-in is not configured. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to your .env file.'
+            );
+        }
+
         return Socialite::driver('google')->redirect();
     }
 

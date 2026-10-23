@@ -1,0 +1,1069 @@
+@keyframes fadein {
+  0%, 75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  75%, 100% {
+    opacity: 0;
+  }
+}
+@keyframes lds-ripple {
+  0%, 4.9% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  5% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  to {
+    top: 0;
+    left: 0;
+    width: 72px;
+    height: 72px;
+    opacity: 0;
+  }
+}
+@keyframes lds-fade {
+  0% {
+    opacity: 0;
+  }
+  50%, 100% {
+    opacity: 1;
+  }
+}
+@keyframes overflowChange {
+  0%, 99.9% {
+    overflow-y: hidden;
+  }
+  100% {
+    overflow-y: auto;
+  }
+}
+#home #project > main {
+  margin: 0;
+  padding: 0;
+}
+
+#app #project {
+  overflow: hidden;
+}
+#app #project > main {
+  overflow-y: scroll;
+  box-sizing: border-box;
+  padding: 0.5em;
+}
+
+#project .layer {
+  border: var(--bgBorder) 2px solid;
+  background-color: var(--bgMain);
+  padding: 0.5em;
+  margin: 0.5em 0.1em;
+  position: relative;
+}
+#project .layer > details legend > span.placeholder:not(:focus) {
+  opacity: 0.5;
+}
+#project .layer > details > button {
+  position: absolute;
+  right: 0.75em;
+  top: 0.5em;
+  bottom: 0.5em;
+}
+#project .dx-state-invisible {
+  display: none;
+}
+#project .options div,
+#project .overlay {
+  min-height: 35px;
+  vertical-align: middle;
+  align-content: center;
+  padding: 0.3em 0.5em;
+  max-width: calc(100vw - 100px);
+  position: relative;
+  padding-left: 17px;
+}
+#project .options > *,
+#project .new input,
+#project fieldset input[type=number],
+#project .layer > details button,
+#project .overlay {
+  border: var(--buttonSec) 2px solid;
+  border-radius: 0.3em;
+  background-color: var(--buttonBg);
+  color: var(--textSec);
+  padding: 0.3em;
+  display: inline-block;
+}
+#project .overlay {
+  padding: 0.3em 0.5em;
+  padding-left: 17px;
+}
+#project div.option {
+  display: inline-block;
+  margin: -10px 0;
+  padding: 0px 0px !important;
+}
+#project div.option div {
+  min-height: 0px;
+  left: -2px;
+  top: -2px;
+  padding: 2px 4px;
+}
+#project .outline {
+  border-style: dashed;
+  opacity: 0.5;
+  filter: grayscale(0.5);
+}
+#project :is(.new, .pick) {
+  display: inline-flex;
+}
+#project .pick {
+  padding-left: 0.3em !important;
+}
+#project .new input,
+#project fieldset input[type=number] {
+  margin: 0.25em;
+  color: var(--buttonSec);
+  background-color: var(--textSec);
+  margin-left: calc(0.25em - 10px);
+}
+#project fieldset input[type=number] {
+  width: 100px;
+  margin-left: 0px;
+}
+#project .new input::placeholder {
+  color: var(--divider);
+}
+#project .options div :is(select, input.value),
+#project .overlay :is(select, input.value) {
+  cursor: pointer;
+  border: none;
+  background-color: var(--buttonBg);
+  appearance: none;
+  padding: 0 0.3em;
+  margin: 0 0.3em;
+  color: var(--linkSec);
+  width: auto;
+  opacity: 1;
+}
+#project .options div select *,
+#project .overlay select optgroup {
+  color: var(--linkSec);
+  background-color: var(--buttonBg);
+}
+#project .options div select,
+#project .overlay select {
+  max-width: max(15vw, 10em);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#project .setting {
+  display: flex;
+}
+#project .setting label {
+  margin-left: -2px;
+  padding: 0 2px;
+}
+#project .setting i {
+  align-content: center;
+  font-size: x-small;
+  margin-right: 2px;
+  opacity: 0.5;
+}
+#project .setting button {
+  color: var(--textSec) !important;
+  margin: 0 !important;
+}
+#project .options span:not(.setting),
+#project .overlay span:not(.setting) {
+  cursor: default;
+  height: 100%;
+  align-content: center;
+  margin: 0 2px;
+}
+#project .options div button,
+#project .layer > details button,
+#project .overlay button {
+  color: var(--linkSec);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  float: right;
+  height: auto;
+  align-self: center;
+  padding: 0 0.3em;
+  margin: 0;
+}
+#project .options div button,
+#project .overlay button {
+  padding: 0 0.3em;
+  margin: 0 0.15em;
+}
+#project .hide {
+  display: none;
+}
+#project .handle {
+  touch-action: none;
+}
+#project > main button,
+#project > main a {
+  color: var(--linkSec);
+  border: var(--buttonSec) 2px solid;
+  background-color: var(--buttonBg);
+  padding: 0.3em;
+  margin: 0.25em;
+  cursor: pointer;
+  font-size: smaller;
+  text-decoration: none;
+  display: inline-block;
+}
+#project > main button,
+#project > main a,
+#project > main select {
+  transition: var(--transition-time);
+  outline: solid transparent 2px;
+  border-radius: 0.3em;
+  z-index: 1;
+  position: relative;
+}
+#project > main button:hover,
+#project > main .options button:hover,
+#project > main a:hover {
+  color: var(--textSec);
+  border: var(--borderHover) 2px solid;
+  background-color: var(--buttonSec);
+}
+#project .layer > details button:hover,
+#project .options div > :is(button, :is(select, input.value)):hover,
+#project .options div > :is(button, :is(select, input.value)):focus,
+#project .options div span > :hover:is(.setting-label, .value, select),
+#project .options div span > :focus:is(.setting-label, .value, select) {
+  color: var(--hoverMain);
+  background: rgba(0, 0, 0, 0.2509803922);
+  border: none;
+  outline: rgba(255, 255, 255, 0.5333333333) solid 2px;
+  border-radius: 5px;
+}
+#project .fa-grip-vertical {
+  cursor: grab;
+  font-size: x-small;
+}
+#project fieldset {
+  border: var(--bgBorder) 2px solid;
+  color: var(--textSec);
+  background-color: var(--bgMain);
+  padding: 6px;
+}
+#project legend {
+  background-color: var(--bgSec);
+  padding: 5px 10px;
+}
+#project input[type=radio] {
+  accent-color: var(--buttonBg);
+}
+#project #timelineContainer {
+  border: var(--bgBorder) 2px solid;
+  background-color: var(--bgMain);
+  max-height: calc(75dvh - 20px);
+  overflow-y: scroll;
+  display: flex;
+  margin-top: 5px;
+  justify-content: center;
+  position: relative;
+}
+#project #timelineContainer #layerTitles {
+  position: sticky;
+  width: 0;
+  top: 0em;
+}
+#project #timelineContainer #layerTitles span {
+  transform: rotate(180deg);
+  position: absolute;
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  line-height: 28px;
+  background-color: var(--laneEven);
+  outline: var(--bgSec) solid 2px;
+  height: 100%;
+  top: 0em;
+  width: 28px;
+  padding-bottom: 1em;
+  text-align: right;
+  color: rgba(0, 0, 0, 0.5);
+}
+#project #timelineContainer #layerTitles span:nth-of-type(2n) {
+  background-color: var(--laneOdd);
+}
+#project #scheduleVisualization {
+  height: fit-content;
+  width: fit-content;
+  padding-right: 1px;
+  z-index: 1;
+}
+#project #scheduleVisualization::before {
+  background: linear-gradient(var(--bgMain), transparent);
+  height: 38px;
+}
+#project #scheduleVisualization::after {
+  background: linear-gradient(transparent, var(--bgMain));
+  height: 53px;
+}
+#project #scheduleVisualization::after,
+#project #scheduleVisualization::before {
+  content: "";
+  display: block;
+  width: 100%;
+  margin-left: 2px;
+}
+#project #key span {
+  padding: 3px;
+  display: inline-grid;
+  text-align: center;
+  vertical-align: top;
+  font-size: small;
+}
+#project #key span .setTitle {
+  line-height: 300%;
+  outline: none;
+  display: block;
+}
+#project #key span .showTitle::before,
+#project #key span .showTitle::after {
+  content: "'";
+}
+#project #key span .setWatched {
+  line-height: 0%;
+  color: transparent;
+}
+#project #key span span > span {
+  transition: var(--transition-time) var(--transition-time), color var(--transition-time);
+  padding: 0 10px;
+  background-color: var(--textMain);
+}
+#project #key > span {
+  border-radius: 1em;
+}
+#project #key > span > span {
+  border-radius: calc(1em - 3px);
+  overflow: hidden;
+  padding: 0;
+  background-color: inherit;
+}
+#project #key > span > span > span + span {
+  background: rgba(0, 0, 0, 0.7333333333);
+}
+#project #key span:hover span {
+  line-height: 150%;
+  transition: var(--transition-time), color var(--transition-time) var(--transition-time);
+}
+#project #key span:hover .setWatched {
+  color: var(--textSec);
+}
+#project #key,
+#project .options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#project span:is(.streakBound, .sessionBound) {
+  display: block;
+  border-top: var(--bgMain) dashed 2px;
+  width: calc(100% - 5px);
+  margin-left: 3px;
+}
+#project span.sessionBound {
+  background: var(--divider);
+  outline: var(--bgMain) solid 3px;
+}
+#project span:is(.streakBound, .sessionBound).fade {
+  opacity: 0.25;
+}
+#project #settings,
+#project #layerContainer,
+#project #stats {
+  margin-top: 20px;
+  padding-left: 11px;
+}
+#project #settings summary,
+#project #layerContainer summary,
+#project #stats summary {
+  list-style-position: outside;
+  margin-top: -20px;
+  margin-left: 20px;
+  width: 0;
+  white-space: nowrap;
+}
+#project #settings summary > legend,
+#project #layerContainer summary > legend,
+#project #stats summary > legend {
+  width: fit-content;
+  padding-left: 20px;
+  margin-left: -25px;
+}
+#project #settings summary > legend span,
+#project #layerContainer summary > legend span,
+#project #stats summary > legend span {
+  padding: 2px 4px;
+  margin-left: -4px;
+  margin-right: -4px;
+}
+#project #settings summary::marker,
+#project #layerContainer summary::marker,
+#project #stats summary::marker {
+  background-color: var(--bgMain);
+  padding-left: 30px;
+}
+#project #settings fieldset,
+#project #layerContainer fieldset,
+#project #stats fieldset {
+  background-color: var(--bgSec);
+  padding: 0.5em;
+  margin: 0.5em 0.1em;
+}
+#project #settings fieldset legend,
+#project #layerContainer fieldset legend,
+#project #stats fieldset legend {
+  background-color: var(--bgMain);
+}
+#project #layerContainer fieldset {
+  margin-top: 0.75em;
+}
+#project #layerContainer fieldset legend {
+  margin-bottom: 0.5em;
+  margin-left: -1.333em;
+}
+#project .part.episode-marker {
+  border-style: dashed;
+}
+#project :is(.options, .overlay) span :is(select, input.value) {
+  font-size: small !important;
+  color: var(--linkSec);
+}
+#project :is(.options, .overlay) label,
+#project :is(.options, .overlay) span :is(select, input.value) {
+  display: flex;
+  font-size: smaller;
+  margin: 0 2px;
+}
+#project .episode-marker {
+  margin-top: 8px;
+  width: 20px;
+  margin-right: 3px;
+  border: 2px solid var(--textMain);
+  transition: var(--transition-time);
+  scroll-margin-top: 5px;
+  scroll-margin-right: 2px;
+  box-shadow: inset rgba(0, 0, 0, 0.33) 0em 0em 0px 1.5px;
+  border-radius: 5px;
+}
+#project .episode-marker.barrier {
+  background: repeating-linear-gradient(45deg, var(--textMain) 0px, var(--textMain) 3px, transparent 3px, transparent 7px);
+}
+#project .barrier.join-l {
+  border-left: none;
+  border-radius: 0 5px 5px 0;
+}
+#project .barrier.join-r {
+  border-right: none;
+  border-radius: 5px 0 0 5px;
+  background: repeating-linear-gradient(45deg, transparent 0px, transparent 2px, var(--textMain) 2px, var(--textMain) 5px, transparent 5px, transparent 7px);
+}
+#project .barrier:is(.join-l, .join-r) {
+  padding: 0 3px;
+}
+#project .barrier.join-lr {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  padding: 0 6px;
+}
+#project .episode-marker:not(.barrier) {
+  outline: 2px solid var(--laneEven);
+}
+#project .episode-marker.barrier + .barrier {
+  margin-top: calc(var(--scale) * -15px - 4px) !important;
+}
+#project .episode-marker.odd:not(.barrier) {
+  outline-color: var(--laneOdd);
+}
+#project .episode-marker.fade:not(:hover, .highlighted) {
+  opacity: 0.25;
+  transition: var(--transition-time) var(--transition-time);
+}
+#project .episode-marker.premier:before,
+#project .episode-marker.finale:after {
+  content: "";
+  background-color: var(--laneEven);
+  display: block;
+  width: 10px;
+  height: 5px;
+  position: relative;
+  border-radius: 10px;
+  border: var(--textMain) solid 2px;
+  left: 3px;
+}
+#project .episode-marker.odd:after,
+#project .episode-marker.odd:before {
+  background-color: var(--laneOdd);
+}
+#project .finale.premier.episode-marker:after {
+  top: calc(100% - 12px);
+}
+#project .finale.episode-marker:after {
+  top: calc(100% - 5px);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: hidden;
+}
+#project .premier.episode-marker:before {
+  top: calc(100% - 5px);
+  top: -2px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: hidden;
+}
+#project .premier.episode-marker .episode-detail {
+  margin-top: -10px;
+}
+#project .episode-detail {
+  position: absolute;
+  left: 4px;
+  background-color: inherit;
+  color: var(--textSec);
+  margin-top: -2px;
+  border-radius: 1em;
+}
+#project .episode-detail * {
+  transition: var(--transition-time);
+  line-height: 125%;
+  transition: var(--transition-time) var(--transition-time);
+}
+#project .episode-detail > div {
+  display: flex;
+  width: calc(100% - 6px);
+  font-size: smaller;
+  flex-direction: column;
+  border-radius: calc(1em + 3px);
+  border: transparent solid 3px;
+  overflow: hidden;
+  flex-direction: column;
+  height: 100%;
+}
+#project .episode-detail div.top-bar {
+  padding: 8px;
+  background: var(--textMain);
+  width: 100%;
+  flex-grow: 1;
+  flex: 1 1 100%;
+}
+#project .episode-detail .title {
+  width: calc(100% - 1em);
+  color: var(--linkSec);
+  padding: 2px;
+  margin: -2px;
+  column-gap: 0.75em;
+  row-gap: 5px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+#project .episode-detail input {
+  display: none;
+}
+#project .episode-detail label {
+  position: absolute;
+  right: 14px;
+  cursor: pointer;
+}
+#project .episode-detail label i:before {
+  transition: var(--transition-time);
+}
+#project .episode-detail label i.fa-regular {
+  opacity: 0;
+  color: var(--divider);
+}
+#project .episode-detail label i.fa-solid:before {
+  color: var(--linkSec);
+}
+#project .episode-detail .spoiler {
+  opacity: 0;
+  line-height: 0;
+  transition: opacity var(--transition-time), line-height var(--transition-time) var(--transition-time), margin-top var(--transition-time) var(--transition-time);
+  font-size: 95%;
+}
+#project .episode-detail .title span.spoiler::before {
+  content: "-";
+  position: absolute;
+  margin-left: -1.25em;
+  transform: translateX(-50%);
+  color: var(--textTert);
+}
+#project .episode-detail .title .spoiler {
+  margin-left: 0.75em;
+  color: var(--textTert);
+  font-size: 0.8em;
+  background: var(--bgMain);
+  padding: 0.1em 0.3em;
+  border-radius: 0.5em;
+  outline: 1px solid var(--bgTert);
+  margin-top: -2px;
+}
+#project .episode-detail .episode-description {
+  scrollbar-gutter: stable;
+  background: var(--textMain);
+  padding: 0 8px;
+  opacity: 1;
+  color: transparent;
+  flex: 1 0 0%;
+  transition: color var(--transition-time), line-height var(--transition-time) var(--transition-time), padding var(--transition-time) var(--transition-time), background var(--transition-time) var(--transition-time);
+}
+#project .episode-detail .title a.spoiler {
+  opacity: 0;
+  margin: 0em;
+  padding: 0;
+  border: none;
+  line-height: 0;
+  background-color: #202830;
+  scrollbar-gutter: auto;
+  border-radius: 0em;
+  width: calc(2em - 5px);
+  height: calc(2em - 5px);
+}
+#project .episode-detail .title a.spoiler img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#project .episode-detail a:hover {
+  opacity: 1;
+  transition: var(--transition-time);
+}
+#project .episode-detail ::-webkit-scrollbar-track-piece {
+  background-color: var(--misc2);
+}
+#project .episode-detail ::-webkit-scrollbar-thumb {
+  outline-color: var(--misc2);
+}
+#project .episode-marker:hover .top-bar,
+#project .highlighted.episode-marker .top-bar {
+  border-radius: 1em 1em 0 0;
+  padding: 8px 8px 4px;
+}
+#project .episode-detail,
+#project #key > span {
+  box-shadow: inset rgba(0, 0, 0, 0.33) 0em 0em 0px 1.5px;
+}
+#project .part .episode-detail > div {
+  border: 3px dashed var(--textMain);
+}
+#project .episode-detail.odd {
+  left: unset;
+  right: 4px;
+}
+#project .episode-detail label i:hover:before,
+#project .highlighted.episode-detail label i:before {
+  color: var(--textSec);
+}
+#project .episode-marker:hover .episode-detail label i.fa-regular,
+#project .highlighted.episode-marker .episode-detail label i.fa-regular {
+  opacity: 1;
+}
+#project .episode-marker:hover div.top-bar > :not(.title, .spoiler, label, i, a),
+#project .highlighted.episode-marker div.top-bar > :not(.title, .spoiler, label, i, a) {
+  opacity: 0;
+  line-height: 0%;
+  transition: var(--transition-time);
+  pointer-events: none;
+}
+#project .episode-marker:hover div.top-bar,
+#project .highlighted.episode-marker div.top-bar {
+  flex: 0 0 auto;
+  line-height: 0%;
+  transition: var(--transition-time);
+}
+#project .episode-marker:hover .episode-detail,
+#project .highlighted.episode-marker .episode-detail {
+  transition: var(--transition-time) var(--transition-time);
+}
+#project .episode-marker:hover .episode-detail .spoiler,
+#project .highlighted.episode-marker .episode-detail .spoiler {
+  opacity: 1;
+  line-height: 1.5;
+  transition: opacity var(--transition-time) var(--transition-time), line-height var(--transition-time), margin-top var(--transition-time);
+}
+#project .episode-marker:hover .episode-detail .episode-description,
+#project .highlighted.episode-marker .episode-detail .episode-description {
+  flex: 1 1 70%;
+  animation: overflowChange var(--transition-time) forwards;
+  color: var(--textSec);
+  background: rgba(0, 0, 0, 0.7333333333);
+  padding: 4px 8px;
+  transition: color var(--transition-time) var(--transition-time), line-height var(--transition-time), padding var(--transition-time), background var(--transition-time);
+}
+#project .left-icons {
+  display: flex;
+  position: absolute;
+  transform: translate(-15px, -50%);
+  top: 50%;
+  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: center;
+}
+#project .barrier .left-icons {
+  padding-left: 3px;
+}
+#project .refetch-icon {
+  font-size: 0.8em;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 2;
+}
+#project .refetch-icon:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+#project #project-details {
+  color: var(--textSec);
+  text-align-last: center;
+  text-align: -webkit-center;
+}
+#project #project-details .setTitle {
+  width: fit-content;
+  padding: 5px 10px;
+  margin: 0;
+  font-family: "Fredoka One";
+  font-weight: normal;
+}
+#project #project-details .setDescription {
+  background: var(--bgMain);
+  color: var(--textSec);
+  max-width: calc(100vw - 2em);
+  width: fit-content;
+  display: block;
+  border: 2px solid var(--bgBorder);
+  padding: 5px 10px;
+  margin-top: 10px;
+}
+#project #project-details .setDescription br {
+  display: none;
+}
+#project #removeWatchedPopup,
+#project #clearSchedulePopup,
+#project #rippleActionPopup {
+  position: fixed;
+  z-index: 2;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-time);
+  backdrop-filter: brightness(0.25) blur(10px) grayscale(1);
+}
+#project #removeWatchedPopup div,
+#project #clearSchedulePopup div,
+#project #rippleActionPopup div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bgMain);
+  color: var(--textSec);
+  padding: 1em;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  border: 2px solid var(--bgBorder);
+}
+#project #removeWatchedPopup p,
+#project #clearSchedulePopup p,
+#project #rippleActionPopup p {
+  font-size: small;
+  width: 100%;
+  text-align: center;
+}
+#project #removeWatchedPopup strong,
+#project #clearSchedulePopup strong,
+#project #rippleActionPopup strong {
+  font-size: smaller;
+  width: 100%;
+  text-align: center;
+  color: var(--linkMain);
+}
+#project #removeWatchedPopup span,
+#project #clearSchedulePopup span,
+#project #rippleActionPopup span {
+  color: var(--linkMain);
+}
+#project #removeWatchedPopup button,
+#project #clearSchedulePopup button,
+#project #rippleActionPopup button {
+  padding: 5px 15px;
+  margin: 0;
+}
+#project #removeWatchedPopup.show,
+#project #clearSchedulePopup.show,
+#project #rippleActionPopup.show {
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity var(--transition-time);
+}
+#project [contenteditable=true] {
+  transition: var(--transition-time);
+  text-decoration: underline dashed transparent 1px;
+  cursor: text !important;
+}
+#project [contenteditable=true]:hover {
+  text-decoration-color: var(--textSec);
+}
+
+@media screen and (max-width: 800px) {
+  :root {
+    --scale: 2 !important;
+    --height-mult: 0 !important;
+  }
+  #project .episode-detail,
+  #project .episode-detail.odd {
+    left: unset;
+    right: 6px;
+  }
+  #project .episode-marker {
+    margin-top: 10px;
+  }
+  #project #timelineContainer {
+    justify-content: left;
+  }
+  #project #scheduleVisualization {
+    margin-left: -2px;
+  }
+}
+@media screen and (max-width: 500px) {
+  #project #layerTitles {
+    display: none;
+  }
+  #project #scheduleVisualization {
+    width: 0;
+    margin-left: 5px;
+    padding-right: 0;
+  }
+  #project .episode-marker {
+    background: linear-gradient(var(--bgMain), var(--bgMain));
+    border-color: transparent;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  #project .episode-marker:before,
+  #project .episode-marker:after {
+    display: none !important;
+  }
+  #project .episode-detail,
+  #project .episode-detail.odd {
+    width: calc(100% - 10px) !important;
+    z-index: 1;
+    left: 5px;
+    right: unset;
+  }
+  #project span:is(.streakBound, .sessionBound) {
+    position: absolute;
+    margin-left: -2px;
+    border-color: var(--textSec);
+    outline-color: var(--textSec);
+    background-color: transparent;
+    margin-top: -15px;
+  }
+}
+@media screen and (max-width: 500px) and (max-width: 500px) {
+  #home div .episode-marker {
+    background: linear-gradient(var(--custom-col), var(--custom-col)), linear-gradient(var(--bgSec), var(--bgSec));
+  }
+}
+.loading,
+.loaded {
+  pointer-events: none;
+  transition-duration: 0.5s;
+  position: absolute;
+  left: calc(50vw - 50px);
+  top: calc(50dvh - 50px);
+}
+
+.loading {
+  opacity: 1;
+  animation: fadein 2s;
+}
+
+.loaded {
+  opacity: 0;
+  animation: fadeout 1s;
+}
+
+.lds-ripple {
+  display: inline-block;
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  box-shadow: 0 0 20px 20px var(--bgSec) inset, 0 0 2px 2px var(--bgSec) inset;
+  outline: solid var(--bgSec) 10px;
+}
+.lds-ripple div {
+  margin-left: 10px;
+  margin-top: 10px;
+  position: absolute;
+  outline: 4px solid var(--laneOdd);
+  opacity: 1;
+  border-radius: 50%;
+  animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  z-index: 1;
+}
+.lds-ripple div:nth-child(2) {
+  animation-delay: -0.5s;
+  outline-color: var(--laneEven);
+}
+
+.fadein {
+  animation: fadein 1s linear;
+}
+#project > main > .project-content {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+#project .error {
+  color: var(--textSec);
+  text-align: center;
+}
+
+#project-details input.setTitle {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--textSec);
+  text-align: center;
+  font-size: 1.5em;
+  line-height: normal;
+  font-weight: normal;
+  outline: none;
+}
+
+#project-details textarea.setDescription {
+  box-sizing: content-box;
+  width: fit-content;
+  max-width: calc(100vw - 4em);
+  background: var(--bgMain);
+  color: var(--textSec);
+  border: 2px solid var(--bgBorder);
+  padding: 5px 10px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+#project-details textarea.setDescription {
+  font: inherit;
+  line-height: normal;
+  min-height: 2.5em;
+  resize: none;
+}
+
+#layerContainer > details > summary {
+  width: max-content;
+}
+
+#layerContainer > details > .layers,
+#layerContainer > details > .layers > .layer > details > .options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+#layerContainer > details > .layers > .layer {
+  flex: 1 1 100%;
+}
+
+#layerContainer > details > .layers > .layer .entry {
+  display: inline-block;
+  min-height: 35px;
+  align-content: center;
+  padding: 0.3em 0.5em;
+  border: var(--buttonSec) 2px solid;
+  border-radius: 0.3em;
+  background-color: var(--buttonBg);
+  color: var(--linkSec);
+}
+
+#layerContainer .sortable-ghost {
+  border-style: dashed;
+  opacity: 0.5;
+  filter: grayscale(0.5);
+}
+
+#layerContainer > details > .layers > .layer .entry-title,
+#layerContainer > details > .layers > .layer > details > summary legend .layer-title {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+
+#layerContainer > details > .layers > .layer .entry-title {
+  font-size: 0.875em;
+  max-width: calc(100vw - 160px);
+  padding: 0;
+}
+
+#layerContainer > details > .layers > .layer > details > summary legend .layer-title {
+  max-width: calc(100vw - 100px);
+  padding: 0;
+}
+
+#layerContainer > details > .layers > .layer > details > summary legend .layer-title::placeholder {
+  color: inherit;
+  opacity: 0.5;
+}
+
+#layerContainer > details > .layers > .layer > details > summary {
+  list-style-position: outside;
+  margin-top: -20px;
+  margin-left: 20px;
+  width: max-content;
+}
+
+#layerContainer > details > .layers > .layer > details > summary legend {
+  width: fit-content;
+  padding: 5px 10px;
+  margin-left: -25px;
+  background-color: var(--bgSec);
+}
+
+#layerContainer > details > .layers > .layer > details > button[aria-label="Remove layer"] {
+  position: absolute;
+  right: 0.75em;
+  top: 0.5em;
+  bottom: 0.5em;
+}
+
+#project .search-modal .result-item.search-result-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}

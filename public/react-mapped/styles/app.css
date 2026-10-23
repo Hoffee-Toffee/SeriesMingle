@@ -1,0 +1,246 @@
+:root {
+  --textMain: #0a0f1a;
+  --textSec: #ffffff;
+  --bgMain: #0a2553;
+  --bgSec: #0d1626;
+  --bgBorder: #0095fa;
+  --linkSec: #d7e300;
+  --buttonBg: #8b0000;
+  --buttonSec: #ff4500;
+  --laneOdd: #c7c7f0;
+  --linkMain: #ffff00;
+  --linkTert: #bfbf30;
+  --hoverSec: #30bfb3;
+  --bgTert: #2c5aa0;
+  --divider: #888888;
+  --laneEven: #ece6c7;
+  --borderHover: #ffa500;
+  --misc2: #223344;
+  --hoverMain: #00f2ea;
+  --misc1: #001122;
+  --buttonHoverBg: #ff8f00;
+  --buttonBorderHover: #cb2600;
+  --scale: 1;
+  --layer-size: 16px;
+  --height-mult: 1;
+  --transition-time: 0.3s;
+}
+
+@font-face {
+  font-family: "Aber Mono";
+  src: url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.eot");
+  src: url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.eot?#iefix") format("embedded-opentype"), url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.woff") format("woff"), url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.woff2") format("woff2"), url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.ttf") format("truetype"), url("https://db.onlinewebfonts.com/t/43366a6208b6906d46c7ef4b4c4eba0f.svg#Aber Mono") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fredoka One";
+  src: url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.eot");
+  src: url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.eot?#iefix") format("embedded-opentype"), url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.woff") format("woff"), url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.woff2") format("woff2"), url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.ttf") format("truetype"), url("https://db.onlinewebfonts.com/t/5165c0facbfede7afe6c9ef3fd635f11.svg#Fredoka One") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track-piece {
+  background-color: var(--misc1);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--bgBorder);
+  outline: 3px solid var(--misc1);
+  outline-offset: -3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--hoverSec);
+}
+
+* {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+html {
+  background: var(--bgSec);
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+header {
+  position: fixed;
+  display: flex;
+  height: min(5vh, 5vw);
+  max-height: 100px;
+  width: calc(100% - 2em);
+  flex-direction: row;
+  padding: 0.5em 1em;
+  outline: 2px solid var(--bgBorder);
+  background: var(--textMain);
+  justify-content: space-between;
+  z-index: 3;
+  top: 0;
+}
+header #home-link {
+  align-self: normal !important;
+}
+header #home-link #logo {
+  height: min(5vh, 5vw);
+  max-height: 100px;
+}
+header nav {
+  display: flex;
+  flex-direction: row;
+  gap: 5%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  justify-content: flex-end;
+}
+header nav a {
+  color: var(--linkTert);
+  text-decoration: none;
+  align-self: center;
+}
+header nav a:hover {
+  color: var(--hoverSec);
+}
+header #nav-toggle {
+  display: none;
+}
+header #nav-toggle-label {
+  height: 100%;
+  display: none;
+}
+header #nav-toggle-label span {
+  display: block;
+  width: 2em;
+  background: var(--textSec);
+  padding: 1px;
+  transition: 0.25s ease-out;
+}
+
+#app main:not(#home) {
+  margin-top: calc(min(5vh, 5vw, 100px) + 18px);
+  height: calc(100dvh - min(5vh, 5vw, 100px) - 18px);
+}
+
+@media (max-width: 650px) {
+  #app main:not(#home) {
+    margin-top: calc(max(min(10vh, 10vw, 100px), 60px) + 18px);
+    height: calc(100dvh - max(min(10vh, 10vw, 100px), 60px) - 18px);
+  }
+  header {
+    flex-direction: column;
+    height: min(10vh, 10vw);
+    min-height: 60px;
+  }
+  header #home-link {
+    align-self: center !important;
+  }
+  header #home-link #logo {
+    height: min(4vh, 4vw);
+    max-height: 60px;
+  }
+  header h1 {
+    font-size: 0.75rem;
+  }
+  header nav {
+    width: 100%;
+    justify-content: center;
+  }
+}
+@media (max-width: 420px) {
+  #app main:not(#home) {
+    margin-top: calc(max(min(7vh, 7vw, 100px), 50px) + 18px);
+    height: calc(100dvh - max(min(7vh, 7vw, 100px), 50px) - 18px);
+  }
+  header {
+    height: min(7vh, 7vw);
+    min-height: 50px;
+    align-items: flex-start;
+    align-content: center;
+    flex-direction: row;
+  }
+  header #home-link #logo {
+    height: min(7vh, 7vw);
+    max-height: 50px;
+  }
+  header h1 {
+    font-size: 1rem;
+  }
+  header #nav-toggle-label {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    justify-content: space-evenly;
+    z-index: 1;
+  }
+  header nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    position: absolute;
+    top: 0;
+    right: -50%;
+    background: var(--bgMain);
+    width: 50%;
+    padding-left: 0.75em;
+    padding-top: 75px;
+    padding-right: 1.5em;
+    padding-bottom: 2em;
+    margin-right: -2.5em;
+    transition: 0.25s ease-out;
+    align-items: flex-end;
+    border-bottom-left-radius: 1em;
+    outline: 2px solid var(--bgBorder);
+    opacity: 0;
+  }
+  header nav a {
+    text-wrap: nowrap;
+    align-self: flex-end !important;
+  }
+  header #nav-toggle:checked + * + nav {
+    right: 0;
+    margin-right: 0;
+    outline: 2px solid var(--bgBorder);
+    opacity: 1;
+  }
+  header #nav-toggle:checked + #nav-toggle-label span:nth-child(1) {
+    transform: rotate(45deg);
+  }
+  header #nav-toggle:checked + #nav-toggle-label span:nth-child(2) {
+    opacity: 0;
+    margin: -75%;
+  }
+  header #nav-toggle:checked + #nav-toggle-label span:nth-child(3) {
+    transform: rotate(-45deg);
+  }
+}
+#app header .react-mapped-logout {
+  display: contents;
+}
+#app header nav .react-mapped-logout-button {
+  align-self: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--linkTert);
+  font: inherit;
+  cursor: pointer;
+}
+#app header nav .react-mapped-logout-button:hover {
+  color: var(--hoverSec);
+}
+#app #dashboard > header,
+#app #project > header {
+  box-sizing: content-box;
+}
